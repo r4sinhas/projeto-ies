@@ -1,4 +1,4 @@
-![logonobackgroundpng](file:///home/dferrero17/Desktop/logo-no-background.png?msec=1667451207977)
+![logonobackgroundpng](/home/dferrero17/Desktop/logo-no-background.png?msec=1667451207977)
 
 ---
 
@@ -10,12 +10,12 @@ PASSIT allows for the persistent permeation of data as well as long-term trackin
 
 ## Team:
 
-| Role | Nome | **Email** | NMEC |
-| --- | --- | --- | --- |
-| Team Manager | Daniel Ferreira | danielmartinsferreira@ua.pt | 102442 |
-| Product Owner | Gonçalo Silva | goncalo.silva02@ua.pt | 103668 |
-| DevOps Master | Guilherme Antunes | guilherme.antunes@ua.pt | 103600 |
-| Architect | Pedro Rasinhas | rasinhas@ua.pt | 103541 |
+| Role          | Nome              | **Email**                   | NMEC   |
+| ------------- | ----------------- | --------------------------- | ------ |
+| Team Manager  | Daniel Ferreira   | danielmartinsferreira@ua.pt | 102442 |
+| Product Owner | Gonçalo Silva     | goncalo.silva02@ua.pt       | 103668 |
+| DevOps Master | Guilherme Antunes | guilherme.antunes@ua.pt     | 103600 |
+| Architect     | Pedro Rasinhas    | rasinhas@ua.pt              | 103541 |
 
 ### Project resources:
 
