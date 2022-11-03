@@ -1,6 +1,4 @@
-![logonobackgroundpng](/home/dferrero17/Desktop/logo-no-background.png?msec=1667451207977)
 
----
 
 # PASSIT
 
