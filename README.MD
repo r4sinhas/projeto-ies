@@ -18,4 +18,4 @@ PASSIT allows for the persistent permeation of data as well as long-term trackin
 ### Project resources:
 
 Jira Scrum Board: [Agile Board - Jira](https://passit.atlassian.net/jira/software/projects/PSIT/boards/1)
-Techincal Report: [PASSIT - Google Docs](https://docs.google.com/document/d/1N7DVuRYFb0eGOUOUquHZEQLNshSghLvL9xRxSQFIoeg/edit?usp=sharing)
+Technical Report: [PASSIT - Google Docs](https://docs.google.com/document/d/1N7DVuRYFb0eGOUOUquHZEQLNshSghLvL9xRxSQFIoeg/edit?usp=sharing)
