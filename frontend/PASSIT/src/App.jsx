@@ -1,6 +1,6 @@
 import { useState } from "react";
 const App = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const Menus = [
     { title: "Dashboard", src: "Chart_fill" },
     { title: "Inbox", src: "Chat" },
@@ -16,13 +16,13 @@ const App = () => {
     <div className="flex">
       <div
         className={` ${open ? "w-72" : "w-20 "
-          } bg-green-700 h-screen p-5  pt-8 relative duration-300`}
+          } bg-green-700 h-screen p-4  pt-8 relative duration-300`}
       >
         <img
           src="./src/assets/control.png"
-          className={`absolute cursor-pointer -right-3 top-9 w-7 border-dark-purple
+          className={`absolute cursor-pointer -right-3 top-10 w-7 border-dark-purple
            border-2 rounded-full  ${!open && "rotate-180"}`}
-          onClick={() => setOpen(!open)}
+          onClick={() => setOpen(!open) }
         />
         <div className="flex gap-x-4 items-center ">
           <img
@@ -31,9 +31,9 @@ const App = () => {
               }`}
           />
           <h1
-            className={`text-white origin-left font-medium text-xl duration-200 ${!open && "scale-0"
+            className={` pb-2 text-white font-light origin-left font-medium text-4xl duration-200 ${!open && "scale-0"
               }`}
-          >
+          > PASSIT
           </h1>
         </div>
         <ul className="pt-6">
