@@ -31,7 +31,7 @@ const App = () => {
               }`}
           />
           <h1
-            className={` pb-2 text-white font-light origin-left font-medium invisible sm:visible text-4xl duration-200 ${!open && "scale-0"
+            className={`pb-2 text-white font-light origin-left  invisible sm:visible text-4xl duration-200 ${!open && "scale-0"
               }`}
           > PASSIT
           </h1>
@@ -40,7 +40,7 @@ const App = () => {
           {Menus.map((Menu, index) => (
             <li
               key={index}
-              className={`flex md:justify-between justify-center rounded-md p-2 cursor-pointer transition ease-in-out delay-0 bg-green-700 hover:-translate-y-1 hover:scale-110 hover:bg-green-900 duration-100 text-gray-300 text-md font-bold items-center gap-x-4 
+              className={`flex md:justify-between justify-center rounded-md p-2 cursor-pointer transition ease-in-out delay-0 bg-green-700 hover:-translate-y-1 hover:scale-105 hover:bg-green-900 duration-100 text-gray-300 text-md font-bold items-center gap-x-4 
               ${Menu.gap ? "mt-9" : "mt-2"} ${index === 0 && "bg-light-white"
                 } `}
             >
