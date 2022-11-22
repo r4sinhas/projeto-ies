@@ -136,7 +136,7 @@
 }
 
 .card-group:hover > .little-card:nth-child(5) {
-  transform: translate(-200%, -170%) rotate(15deg);
+  transform: translate(-580%, -160%) rotate(15deg);
 }
 
 .card-group:hover > .little-card:nth-child(7) {

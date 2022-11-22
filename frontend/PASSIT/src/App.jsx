@@ -17,7 +17,7 @@ const App = () => {
     <div className="flex select-none ">
       <div
         className={` ${open ? "w-72" : "w-20 "
-          } bg-green-700 h-screen p-4  pt-8 relative duration-300`}
+          } bg-secondary-content h-screen p-4  pt-8 relative duration-300`}
       >
         <img
           src="./src/assets/control.png"
@@ -41,7 +41,7 @@ const App = () => {
           {Menus.map((Menu, index) => (
             <li
               key={index}
-              className={`flex md:justify-between justify-center rounded-md p-2 cursor-pointer transition ease-in-out delay-0 bg-green-700 hover:-translate-y-1 hover:scale-105 hover:bg-green-900 duration-100 text-gray-300 text-md font-bold items-center gap-x-4 
+              className={`flex md:justify-between justify-center rounded-md p-2 cursor-pointer transition ease-in-out delay-0 bg-secondary-content hover:-translate-y-1 hover:scale-105 hover:bg-secondary-focus duration-100 text-gray-300 text-md font-bold items-center gap-x-4 
               ${Menu.gap ? "mt-9" : "mt-2"} ${index === 0 && "bg-light-white"
                 } `}
             >
