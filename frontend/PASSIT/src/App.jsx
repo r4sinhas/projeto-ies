@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./App.css";
 const App = () => {
   const [open, setOpen] = useState(false);
   const Menus = [
@@ -13,7 +14,7 @@ const App = () => {
   ];
 
   return (
-    <div className="flex">
+    <div className="flex select-none ">
       <div
         className={` ${open ? "w-72" : "w-20 "
           } bg-green-700 h-screen p-4  pt-8 relative duration-300`}
@@ -22,7 +23,7 @@ const App = () => {
           src="./src/assets/control.png"
           className={`absolute cursor-pointer -right-3 top-10 w-7 border-dark-purple
            border-2 rounded-full  ${!open && "rotate-180"}`}
-          onClick={() => setOpen(!open) }
+          onClick={() => setOpen(!open)}
         />
         <div className="flex gap-x-4 items-center ">
           <img
@@ -31,7 +32,7 @@ const App = () => {
               }`}
           />
           <h1
-            className={`pb-2 text-white font-light origin-left  invisible sm:visible text-4xl duration-200 ${!open && "scale-0"
+            className={`pb-2  select-none text-white font-light origin-left invisible sm:visible text-4xl duration-200 ${!open && "scale-0"
               }`}
           > PASSIT
           </h1>
@@ -52,17 +53,46 @@ const App = () => {
           ))}
         </ul>
       </div>
-        <div className="hero min-h-screen" style={{ backgroundImage: `url("https://www.sopitas.com/wp-content/uploads/2022/11/Cristiano-Ronaldo-y-Lionel-Messi-para-Louis-Vuitton.jpg?w=1200")` }}>
-          <div className="hero-overlay bg-opacity-60"></div>
-          <div className="hero-content text-center text-neutral-content">
-            <div className="max-w-md">
-              <h1 className="mb-5 text-5xl font-bold">como é que se joga isto?</h1>
-              <p className="mb-5">sei lá, sou lindo siuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu</p>
-              <button className="btn btn-primary">Get Started</button>
+      <div className="hero min-h-screen" style={{ backgroundImage: `url("https://img.freepik.com/premium-photo/soccer-field-center-ball-top-view-background-sport-athletic-concept-3d-illustration-rendering_10307-2012.jpg?w=2000")` }}>
+        <div className="hero-overlay bg-opacity-60"></div>
+        <div className="card-swiper absolute top-44">
+          <div className="card-group w-96">
+            <div className="little-card card bg-primary text-accent-content font-light justify-center text-2xl">
+              <p>For Coaches</p>
+            </div>
+            <div className="big-card card m-0">
+            </div>
+            <div className="little-card card bg-primary text-accent-content font-light justify-center text-3xl">
+              <p>Easter Egg</p>
+            </div>
+            <div className="big-card card m-0">
+
+            </div>
+            <div className="little-card card bg-primary text-accent-content font-light justify-center text-2xl">
+              <p>For Players</p>
+            </div>
+            <div className="big-card card m-0">
+
+            </div>
+            <div className="little-card card bg-primary text-accent-content font-light justify-center text-3xl">
+              <p>For Fans</p>
+            </div>
+            <div className="big-card card m-0 bg-secondary-content text-primary-content bg-opacity-90">
+              <div class="card-body text-center">
+                <h2 class="card-title text-2xl">Is <span className="text-secondary">PASSIT</span> for you?</h2>
+                <p className="text-xl"></p>
+
+                <p className="text-xl">PASSIT comes to up the ante, by providing a platform for coaches, players, and fans to deepen their analysis of the game.</p>
+                <p className="text-xl"> We make fans <span className="text-accent">learn</span>, coaches <span className="text-accent">strive</span>, players <span className="text-accent">grow</span>.</p>
+                <div class="card-actions justify-end">
+                  <button class="btn hover:bg-primary-focus">get Started</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-    </div>
+      </div>
+    </div >
   );
 };
 export default App;
