@@ -77,17 +77,17 @@
 }
 
 .big-card:nth-child(2) {
-  background-image: url("https://ca-times.brightspotcdn.com/dims4/default/c268e48/2147483647/strip/true/crop/2048x1152+0+0/resize/1486x836!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F95%2F7c%2F6f56c09a0557a7657b9399c7c448%2Fla-1498180446-f6vy1i79ls-snap-image");
+  background-image: url("https://www.jefebet.com/wp-content/uploads/2022/05/futbolistas-mas-dramaticos-Sergio-Busquets.jpg.webp");
   transform: translateX(-10%) rotate(-1deg);
 }
 
 .big-card:nth-child(4) {
-  background-image: url("https://www.jefebet.com/wp-content/uploads/2022/05/futbolistas-mas-dramaticos-Sergio-Busquets.jpg.webp");
+  background-image: url("https://wps3.dbknews.com/uploads/2021/10/101721_wsocvsind.coach_jr-1.jpg");
   transform: rotate(2deg);
 }
 
 .big-card:nth-child(6) {
-  background-image: url("https://wps3.dbknews.com/uploads/2021/10/101721_wsocvsind.coach_jr-1.jpg");
+  background-image: url("https://ca-times.brightspotcdn.com/dims4/default/c268e48/2147483647/strip/true/crop/2048x1152+0+0/resize/1486x836!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F95%2F7c%2F6f56c09a0557a7657b9399c7c448%2Fla-1498180446-f6vy1i79ls-snap-image");
   transform: translateX(-6%) rotate(-3deg);
 }
 
@@ -128,19 +128,19 @@
 }
 
 .card-group:hover > .little-card:nth-child(1) {
-  transform: translate(200%, -160%) rotate(-15deg);
+  transform: translate(-190%, -135%) rotate(-7deg);
 }
 
 .card-group:hover > .little-card:nth-child(3) {
-  transform: translate(160%, 170%) rotate(15deg);
+  transform: translate(140%, 170%) rotate(15deg);
 }
 
 .card-group:hover > .little-card:nth-child(5) {
-  transform: translate(-580%, -160%) rotate(15deg);
+  transform: translate(-670%, -70%) rotate(-23deg);
 }
 
 .card-group:hover > .little-card:nth-child(7) {
-  transform: translate(-280%, 140%) rotate(-15deg);
+  transform: translate(-220%, -130%) rotate(8deg);
 }
 
 .card-swiper-buttons {
