@@ -1,13 +1,21 @@
-import { useState } from "react";
 import "./Landing.css";
-import { Sidebar } from "../components/Sidebar";
+import React from 'react'
+import { useNavigate } from "react-router-dom";
 
-export function Landing () { 
+export function Landing() {
+  const navigate = useNavigate();
 
+  const coursesPage = () => {
+    navigate("./Login");
+  }
   return (
-    <div className="flex select-none "> 
+    <div className="flex select-none ">
       <div className="hero min-h-screen" style={{ backgroundImage: `url("https://img.freepik.com/premium-photo/soccer-field-center-ball-top-view-background-sport-athletic-concept-3d-illustration-rendering_10307-2012.jpg?w=2000")` }}>
         <div className="hero-overlay bg-opacity-60"></div>
+        <div className="font-3xl absolute left-12 top-12"><img
+          src="./src/assets/logo-no-background.png"
+          className={`w-12`}
+        /></div>
         <div className="card-swiper absolute top-44">
           <div className="card-group w-96">
             <div className="little-card card bg-primary text-accent-content font-light justify-center text-2xl">
@@ -38,7 +46,7 @@ export function Landing () {
                 <p className="text-xl">PASSIT comes to up the ante, by providing a platform for coaches, players, and fans to deepen their analysis of the game.</p>
                 <p className="text-xl"> We make fans <span className="text-accent">learn</span>, coaches <span className="text-accent">strive</span>, players <span className="text-accent">grow</span>.</p>
                 <div className="card-actions justify-end">
-                  <button className="btn hover:bg-primary-focus">get Started</button>
+                  <button className="btn hover:bg-primary-focus" onClick={coursesPage} >Get Started</button>
                 </div>
               </div>
             </div>
