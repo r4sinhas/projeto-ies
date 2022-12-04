@@ -74,15 +74,16 @@
   box-shadow: -1vmin 1vmin 2vmin rgba(0, 0, 0, 0.25);
   pointer-events: none;
   position: absolute;
+  opacity: 0;
 }
 
 .big-card:nth-child(2) {
-  background-image: url("https://www.jefebet.com/wp-content/uploads/2022/05/futbolistas-mas-dramaticos-Sergio-Busquets.jpg.webp");
+  background-image: url("https://wps3.dbknews.com/uploads/2021/10/101721_wsocvsind.coach_jr-1.jpg");
   transform: translateX(-10%) rotate(-1deg);
 }
 
 .big-card:nth-child(4) {
-  background-image: url("https://wps3.dbknews.com/uploads/2021/10/101721_wsocvsind.coach_jr-1.jpg");
+  background-image: url("https://www.jefebet.com/wp-content/uploads/2022/05/futbolistas-mas-dramaticos-Sergio-Busquets.jpg.webp");
   transform: rotate(2deg);
 }
 

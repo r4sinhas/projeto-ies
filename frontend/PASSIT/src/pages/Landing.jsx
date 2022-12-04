@@ -6,7 +6,6 @@ export function Landing () {
 
   return (
     <div className="flex select-none "> 
-      <Sidebar />
       <div className="hero min-h-screen" style={{ backgroundImage: `url("https://img.freepik.com/premium-photo/soccer-field-center-ball-top-view-background-sport-athletic-concept-3d-illustration-rendering_10307-2012.jpg?w=2000")` }}>
         <div className="hero-overlay bg-opacity-60"></div>
         <div className="card-swiper absolute top-44">
