@@ -26,12 +26,12 @@ export function Login() {
             /></div>
             <form type='submit' method='POST'>
               <div class="relative z-0 pb-5">
-                <input type="text" id="floating_standard" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-400 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
-                <label for="floating_standard" class="absolute text-sm text-white dark:text-white duration-300 transform -translate-y-6 scale-75 top-3 right-32 -z-10 origin-[1] peer-focus:right-32  peer-focus:text-primary peer-focus:dark:text-primary-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Username</label>
+                <input type="text" id="floating_standard" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-2 rounded-lg border-gray-300 appearance-none dark:text-white dark:border-gray-400 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+                <label for="floating_standard" class="absolute text-sm text-white dark:text-white duration-300 transform -translate-y-6 scale-75 top-3 right-32 -z-10 origin-[1] peer-focus:right-32   peer-focus:top-1  peer-focus:text-primary peer-focus:dark:text-primary-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Username</label>
               </div>
               <div class="relative z-0">
-                <input type="password" id="floating_standard" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-400 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
-                <label for="floating_standard" class="absolute text-sm text-white dark:text-white duration-300 transform -translate-y-6 scale-75 top-3 right-32 -z-10 origin-[1] peer-focus:right-32 peer-focus:text-primary peer-focus:dark:text-primary-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
+                <input type="password" id="floating_standard" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-2  rounded-lg border-gray-300 appearance-none dark:text-white dark:border-gray-400 dark:focus:border-primary focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+                <label for="floating_standard" class="absolute text-sm text-white dark:text-white duration-300 transform -translate-y-6 scale-75 top-3 right-32 -z-10 origin-[1] peer-focus:right-32 peer-focus:top-1 peer-focus:text-primary peer-focus:dark:text-primary-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
               </div>
               <a href="#" className='mb-8'>
                 <span></span>
