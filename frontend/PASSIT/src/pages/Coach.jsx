@@ -3,7 +3,7 @@ import React from 'react'
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "../components/Sidebar";
 import { LineChart, Line, Tooltip, XAxis, YAxis } from 'recharts';
-
+import { Player } from './Player'; 
 
 export function Coach() {
     const navigate = useNavigate();
@@ -15,12 +15,12 @@ export function Coach() {
         <div className="flex select-none" style={{ fontFamily: 'font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' }}>
             <Sidebar />
             <div className="hero min-h-screen" style={{ backgroundImage: `url("https://img.freepik.com/premium-photo/soccer-field-center-ball-top-view-background-sport-athletic-concept-3d-illustration-rendering_10307-2012.jpg?w=2000")`, backgroundPosition: '20%' }}>
-                <div className="bg-secondary-content bg-opacity-[97%] rounded-lg grid overflow-hidden grid-cols-3 grid-rows-2 gap-1 shadow-2xl" style={{ height: "800px", width: "1330px" }}>
+                <div className="bg-secondary-content bg-opacity-[97%] rounded-lg overflow-hidden  gap-1 shadow-2xl border-[7px]" style={{ height: "800px", width: "1330px" }}>
 
-                    <div className="container ml-[9.5rem] mt-20 w-[1330px] ml-0">
-                        <div className="flex space-x-40 mx-auto w-full mb-10 justify-center">
-                            <a>
-                                <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-150 border-0 hover:-translate-y-1 hover:scale-110 bg-opacity-80 duration-300 hover:opacity-90 cursor-pointer">
+                    <div className="container pr-[4.55rem] mt-[1.675rem] w-[1330px] ">
+                        <div className="flex space-x-60 mx-auto w-full mb-10 justify-center">
+                        <label htmlFor="my-drawer-4" className="w-3/3">
+                                <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-0 border-0 cursor-pointer">
                                     <figure><img src="https://www.biography.com/.image/t_share/MTc5OTcxMjMwMjM1ODk0OTA2/gettyimages-972635212.jpg" alt="Shoes" /></figure>
                                     <div className="card-body">
                                         <h2 className="card-title">Lionel Pessi</h2>
@@ -28,9 +28,9 @@ export function Coach() {
                                         </div>
                                     </div>
                                 </div>
-                            </a>
+                            </label>
                         </div>
-                        <div className="flex space-x-40 mx-auto w-full mb-10 justify-center">
+                        <div className="flex space-x-60 mx-auto w-full mb-10 justify-center">
                             <a>
                                 <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-150 border-0 hover:-translate-y-1 hover:scale-110 bg-opacity-80 duration-300 hover:opacity-90 cursor-pointer">
                                     <figure><img src="https://www.biography.com/.image/t_share/MTc5OTcxMjMwMjM1ODk0OTA2/gettyimages-972635212.jpg" alt="Shoes" /></figure>
@@ -72,7 +72,7 @@ export function Coach() {
                                 </div>
                             </a>
                         </div>
-                        <div className="flex space-x-40 mx-auto w-full  mb-10 justify-center">
+                        <div className="flex space-x-60 mx-auto w-full  mb-10 justify-center">
                             <a>
                                 <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-150 border-0 hover:-translate-y-1 hover:scale-110 bg-opacity-80 duration-300 hover:opacity-90 cursor-pointer">
                                     <figure><img src="https://www.biography.com/.image/t_share/MTc5OTcxMjMwMjM1ODk0OTA2/gettyimages-972635212.jpg" alt="Shoes" /></figure>
@@ -105,7 +105,7 @@ export function Coach() {
                             </a>
 
                         </div>
-                        <div className="flex space-x-40 mx-auto w-full justify-center">
+                        <div className="flex space-x-80 mx-auto w-full justify-center">
                             <a>
                                 <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-150 border-0 hover:-translate-y-1 hover:scale-110 bg-opacity-80 duration-300 hover:opacity-90 cursor-pointer">
                                     <figure><img src="https://www.biography.com/.image/t_share/MTc5OTcxMjMwMjM1ODk0OTA2/gettyimages-972635212.jpg" alt="Shoes" /></figure>
@@ -137,14 +137,24 @@ export function Coach() {
                                 </div>
                             </a>
                         </div>
-                        <div className="ml-[14rem] mb-[20rem]" style={{ zIndex: '-5' }}>
+                        <div className="ml-[23rem] mt-[1rem]" style={{ zIndex: '-5' }}>
                             <div className="bg-white half-circle  ml-[3rem] ">
-                                <div className="half-circle-smol bg-white ml-[13.5rem] mt-[3rem]" style={{ zIndex: '10' }}>
+                                <div className="half-circle-smol bg-white ml-[13.5rem] mt-[5rem]" style={{ zIndex: '10' }}>
                                 </div>
 
                             </div>
                         </div>
 
+                    </div>
+
+                </div>
+                <div className="drawer drawer-end">
+                    <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+                    <div className="drawer-side">
+                        <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
+                        <ul className="menu p-4 w-[1500px]  text-base-content" style={{zIndex: '20'}}>
+                            <Player></Player>
+                        </ul>
                     </div>
                 </div>
             </div>
