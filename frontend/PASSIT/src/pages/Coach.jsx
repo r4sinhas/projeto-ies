@@ -18,7 +18,7 @@ export function Coach() {
                 <div className="bg-secondary-content bg-opacity-70 rounded-lg grid overflow-hidden grid-cols-3 grid-rows-2 gap-1 shadow-2xl" style={{ height: "800px", width: "1330px" }}>
                     <div class="box row-span-2 align-middle mt-0 shadow-2xl">
                         <div className="container ml-[9.5rem] mt-20">
-                            <div className="artboard artboard-horizontal phone-6 bg-secondary bg-opacity-90 rounded-lg p-80">
+                            <div className="artboard artboard-horizontal phone-6 bg-secondary-content bg-opacity-90 rounded-lg p-80">
                                 <div className="mt-[7.2rem]">
                                     <div className="bg-white half-circle">
                                         <div className="half-circle-smol bg-white ml-[10.5rem] mt-[10.5rem]" style={{zIndex:'10'}}>
