@@ -46,7 +46,7 @@ export function Landing() {
                 <p className="text-xl">PASSIT comes to up the ante, by providing a platform for coaches, players, and fans to deepen their analysis of the game.</p>
                 <p className="text-xl"> We make fans <span className="text-accent">learn</span>, coaches <span className="text-accent">strive</span>, players <span className="text-accent">grow</span>.</p>
                 <div className="card-actions justify-end">
-                  <button className="btn hover:bg-primary-focus" onClick={coursesPage} >Get Started</button>
+                  <button className="btn hover:bg-primary-focus rounded-lg border-0" onClick={coursesPage} >Get Started</button>
                 </div>
               </div>
             </div>
