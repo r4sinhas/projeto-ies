@@ -4,14 +4,22 @@ import random
 import time
 import scipy
 import scipy.signal as sig
+import mysql.connector
+import pika
+
+mydb = mysql.connector.connect(
+	  host="localhost",
+	  user="root",
+	  passwd="",
+	  database="mydatabase"
+	)
+
+mycursor = mydb.cursor()
 
 class Player:
 	def __init__(self, id, today=datetime.now()):
 		self.id = id
-		self.name = None #get name from database
-		self.age = None #get age from database
-		self.height = None #get height from database
-		last_stamina = None #get last_stamina from database
+		self.age, self.height, last_stamina = mycursor.execute("SELECT age, height, last_stamina FROM player WHERE id = %s", id).fetchone()[0]
 		self.stamina = min(Player.get_stamina(today) + last_stamina, 100)
 		self.condition = Player.get_condition(id)
 		self.age_factor = max(131/21000*(self.age**2) - 6247/21000*self.age + 1209/350, 0)
@@ -86,7 +94,7 @@ class Player:
 
 
 	def get_stamina(self, actual_day):
-		last_game = None #get last game from database
+		last_game = None # get last game from database
 		n_days = (actual_day-last_game).days+(actual_day-last_game).seconds/86400
 		return (-math.e**(-n_days/(1.8+self.age_factor)+0.1)+1.1)*100
 
