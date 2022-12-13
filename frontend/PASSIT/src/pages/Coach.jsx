@@ -3,7 +3,7 @@ import React from 'react'
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "../components/Sidebar";
 import { LineChart, Line, Tooltip, XAxis, YAxis } from 'recharts';
-import { Player } from './Player'; 
+import { PlayerInfo } from "../components/PlayerInfo"; 
 
 export function Coach() {
     const navigate = useNavigate();
@@ -150,10 +150,10 @@ export function Coach() {
                 </div>
                 <div className="drawer drawer-end">
                     <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
-                    <div className="drawer-side">
+                    <div className="drawer-side mr-[4.45rem]">
                         <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
-                        <ul className="menu p-4 w-[1500px]  text-base-content" style={{zIndex: '20'}}>
-                            <Player></Player>
+                        <ul className="menu p-4 w-[1500px] text-base-content" style={{zIndex: '20'}}>
+                            <PlayerInfo></PlayerInfo>
                         </ul>
                     </div>
                 </div>
