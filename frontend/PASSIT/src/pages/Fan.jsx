@@ -2,13 +2,13 @@ import { useNavigate } from "react-router-dom";
 import { Sidebar } from "../components/Sidebar";
 
 
-export function CoachReview() {
+export function Fan() {
     return (
         <div className="flex select-none" style={{ fontFamily: 'font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' }}>
             <Sidebar />
             <div className="hero min-h-screen" style={{ backgroundImage: `url("https://img.freepik.com/premium-photo/soccer-field-center-ball-top-view-background-sport-athletic-concept-3d-illustration-rendering_10307-2012.jpg?w=2000")`, backgroundPosition: '20%' }}>
                 <div className="bg-secondary-content bg-opacity-[97%] rounded-lg overflow-hidden flex gap-1 shadow-2xl" style={{ height: "800px", width: "1330px" }}>
-                    <div className="overflow-x-auto w-2/3 mt-5 mb-5 ml-5">
+                    <div className="overflow-x-auto w-full m-5">
                         <table className="table w-full text-secondary">
 
                             <thead>
@@ -325,27 +325,6 @@ export function CoachReview() {
 
 
                         </table>
-
-                    </div>
-                    <div className="stats stats-vertical shadow w-1/4 my-5 ml-16">
-
-                        <div className="stat">
-                            <div className="stat-title">Fastest Player</div>
-                            <div className="stat-value text-primary text-5xl mb-0 h-12 ">Lionel Pessi</div>
-                            <div className="stat-value text-3xl ">3.3 m/s</div>
-                        </div>
-
-                        <div className="stat">
-                            <div className="stat-title">Fastest Player</div>
-                            <div className="stat-value text-primary text-5xl h-12">Lionel Pessi</div>
-                            <div className="stat-value text-3xl ">3.3 m/s</div>
-                        </div>
-
-                        <div className="stat">
-                            <div className="stat-title">Fastest Player</div>
-                            <div className="stat-value text-primary text-5xl h-12">Lionel Pessi</div>
-                            <div className="stat-value text-3xl ">3.3 m/s</div>
-                        </div>
 
                     </div>
                 </div>
