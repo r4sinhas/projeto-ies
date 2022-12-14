@@ -8,7 +8,7 @@ export function CoachReview() {
             <Sidebar />
             <div className="hero min-h-screen" style={{ backgroundImage: `url("https://img.freepik.com/premium-photo/soccer-field-center-ball-top-view-background-sport-athletic-concept-3d-illustration-rendering_10307-2012.jpg?w=2000")`, backgroundPosition: '20%' }}>
                 <div className="bg-secondary-content bg-opacity-[97%] rounded-lg overflow-hidden flex gap-1 shadow-2xl" style={{ height: "800px", width: "1330px" }}>
-                    <div className="overflow-x-auto w-2/3 mt-5 mb-5 ml-10">
+                    <div className="overflow-x-auto w-2/3 mt-5 mb-5 ml-5">
                         <table className="table w-full text-secondary">
 
                             <thead>
@@ -127,7 +127,7 @@ export function CoachReview() {
                         </table>
 
                     </div>
-                    <div className="stats stats-vertical shadow w-1/4 my-5 ml-5">
+                    <div className="stats stats-vertical shadow w-1/4 my-5 ml-16">
 
                         <div className="stat">
                             <div className="stat-title">Fastest Player</div>
