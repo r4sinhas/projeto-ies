@@ -3,6 +3,7 @@ import {Landing} from "./pages/Landing";
 import {Login} from "./pages/Login";
 import {Player} from "./pages/Player";
 import {Coach} from "./pages/Coach";
+import { CoachReview } from "./pages/CoachReview";
 function App() {
 
     return (
@@ -13,6 +14,7 @@ function App() {
                 <Route path={"/login"} element={<Login/>}/>
                 <Route path={"/player"} element={<Player/>}/>
                 <Route path={"/coach"} element={<Coach/>}/>
+                <Route path={"/coachreview"} element={<CoachReview/>}/>
             </Routes>
         </BrowserRouter>
     )

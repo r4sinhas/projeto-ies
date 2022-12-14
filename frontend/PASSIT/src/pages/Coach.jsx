@@ -3,7 +3,7 @@ import React from 'react'
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "../components/Sidebar";
 import { LineChart, Line, Tooltip, XAxis, YAxis } from 'recharts';
-import { PlayerInfo } from "../components/PlayerInfo"; 
+import { PlayerInfo } from "../components/PlayerInfo";
 
 export function Coach() {
     const navigate = useNavigate();
@@ -19,7 +19,7 @@ export function Coach() {
 
                     <div className="container pr-[4.55rem] mt-[1.675rem] w-[1330px] ">
                         <div className="flex space-x-60 mx-auto w-full mb-10 justify-center">
-                        <label htmlFor="my-drawer-4" className="w-3/3">
+                            <label htmlFor="my-drawer-4" className="w-3/3">
                                 <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-0 border-0 cursor-pointer">
                                     <figure><img src="https://www.biography.com/.image/t_share/MTc5OTcxMjMwMjM1ODk0OTA2/gettyimages-972635212.jpg" alt="Shoes" /></figure>
                                     <div className="card-body">
@@ -31,8 +31,8 @@ export function Coach() {
                             </label>
                         </div>
                         <div className="flex space-x-60 mx-auto w-full mb-10 justify-center">
-                            <a>
-                                <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-150 border-0 hover:-translate-y-1 hover:scale-110 bg-opacity-80 duration-300 hover:opacity-90 cursor-pointer">
+                            <label htmlFor="my-drawer-5" className="w-3/3">
+                                <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-150 border-0 hover:-translate-y-1 hover:scale-110 bg-opacity-80 duration-300 cursor-pointer">
                                     <figure><img src="https://www.biography.com/.image/t_share/MTc5OTcxMjMwMjM1ODk0OTA2/gettyimages-972635212.jpg" alt="Shoes" /></figure>
                                     <div className="card-body">
                                         <h2 className="card-title">Lionel Pessi</h2>
@@ -40,7 +40,7 @@ export function Coach() {
                                         </div>
                                     </div>
                                 </div>
-                            </a>
+                            </label>
                             <a>
                                 <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-150 border-0 hover:-translate-y-1 hover:scale-110 bg-opacity-80 duration-300 hover:opacity-90 cursor-pointer">
                                     <figure><img src="https://www.biography.com/.image/t_share/MTc5OTcxMjMwMjM1ODk0OTA2/gettyimages-972635212.jpg" alt="Shoes" /></figure>
@@ -152,8 +152,18 @@ export function Coach() {
                     <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
                     <div className="drawer-side mr-[4.45rem]">
                         <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
-                        <ul className="menu p-4 w-[1500px] text-base-content" style={{zIndex: '20'}}>
+                        <ul className="menu p-4 w-[1500px] text-base-content" style={{ zIndex: '20' }}>
                             <PlayerInfo></PlayerInfo>
+                        </ul>
+                    </div>
+                </div>
+                <div className="drawer drawer-end">
+                    <input id="my-drawer-5" type="checkbox" className="drawer-toggle" />
+                    <div className="drawer-side mr-[4.45rem]">
+                        <label htmlFor="my-drawer-5" className="drawer-overlay"></label>
+                        <ul className="menu p-4 w-[1500px] text-base-content" style={{ zIndex: '20' }}>
+                            <PlayerInfo></PlayerInfo>
+                            PUTASSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
                         </ul>
                     </div>
                 </div>

@@ -31,7 +31,8 @@ export function PlayerInfo() {
 
                                     <div className="stat pl-0">
                                         <div className="stat-title">Height</div>
-                                        <div className="stat-value text-secondary">1.69m</div>                                        </div>
+                                        <div className="stat-value text-secondary">1.69m</div>
+                                    </div>
                                 </div>
 
                                 <div className="stat">
