@@ -1,7 +1,12 @@
 package com.PASSIT.model;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -10,28 +15,15 @@ import javax.persistence.Table;
 public class Coach extends User {
 
     @OneToOne
-    @JoinColumn(name = "team_id")
     private int teamId;
 
     public Coach() {
         super();
     }
 
-    public Coach(long id, String name, String username, String password, String email, String role, int teamId) {
-        super(id, name, username, password, email, role);
-        this.teamId = teamId;
-    }
-
-    public Coach(String name, String username, String password, String email, String role, int teamId) {
+    public Coach(String name, String username, String password, String email, String role,
+            int teamId) {
         super(name, username, password, email, role);
-        this.teamId = teamId;
-    }
-
-    public int getTeam() {
-        return teamId;
-    }
-
-    public void setTeam(int teamId) {
         this.teamId = teamId;
     }
 

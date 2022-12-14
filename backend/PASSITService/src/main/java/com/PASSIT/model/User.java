@@ -1,14 +1,19 @@
 package com.PASSIT.model;
 
+import javax.annotation.Generated;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "Users")
 public class User {
-    @Id
+
     private long id;
+
     private String name;
     private String username;
     private String password;
@@ -16,16 +21,6 @@ public class User {
     private String role;
 
     public User() {
-
-    }
-
-    public User(long id, String name, String username, String password, String email, String role) {
-        this.id = id;
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.role = role;
     }
 
     public User(String name, String username, String password, String email, String role) {
@@ -36,14 +31,18 @@ public class User {
         this.role = role;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public long getId() {
         return id;
     }
 
+    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }
 
+    @Column(name = "username", nullable = false)
     public String getUsername() {
         return username;
     }
@@ -52,6 +51,7 @@ public class User {
         return password;
     }
 
+    @Column(name = "email", nullable = false)
     public String getEmail() {
         return email;
     }
@@ -83,4 +83,11 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
+
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", name=" + name + ", username=" + username + ", email=" + email + ", role=" + role
+                + "]";
+    }
+
 }

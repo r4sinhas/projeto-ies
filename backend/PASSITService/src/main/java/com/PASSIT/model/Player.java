@@ -1,5 +1,6 @@
 package com.PASSIT.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -22,17 +23,6 @@ public class Player extends User {
         super();
     }
 
-    public Player(long id, String name, String username, String password, String email, String role, String position,
-            int teamId, int age, int height, int weight, int number) {
-        super(id, name, username, password, email, role);
-        this.position = position;
-        this.teamId = teamId;
-        this.age = age;
-        this.height = height;
-        this.weight = weight;
-        this.number = number;
-    }
-
     public Player(String name, String username, String password, String email, String role, String position,
             int teamId, int age, int height, int weight, int number) {
         super(name, username, password, email, role);
@@ -42,6 +32,11 @@ public class Player extends User {
         this.height = height;
         this.weight = weight;
         this.number = number;
+    }
+
+
+    public String getName() {
+        return super.getName();
     }
 
     public String getPosition() {
