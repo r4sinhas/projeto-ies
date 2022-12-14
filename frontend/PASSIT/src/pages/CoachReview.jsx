@@ -131,19 +131,19 @@ export function CoachReview() {
 
                         <div className="stat">
                             <div className="stat-title">Fastest Player</div>
-                            <div className="stat-value text-primary">Lionel Pessi</div>
+                            <div className="stat-value text-primary text-5xl mb-0 h-12 ">Lionel Pessi</div>
                             <div className="stat-value text-3xl ">3.3 m/s</div>
                         </div>
 
                         <div className="stat">
                             <div className="stat-title">Fastest Player</div>
-                            <div className="stat-value text-primary">Lionel Pessi</div>
+                            <div className="stat-value text-primary text-5xl h-12">Lionel Pessi</div>
                             <div className="stat-value text-3xl ">3.3 m/s</div>
                         </div>
 
                         <div className="stat">
                             <div className="stat-title">Fastest Player</div>
-                            <div className="stat-value text-primary">Lionel Pessi</div>
+                            <div className="stat-value text-primary text-5xl h-12">Lionel Pessi</div>
                             <div className="stat-value text-3xl ">3.3 m/s</div>
                         </div>
 
