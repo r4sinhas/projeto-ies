@@ -121,6 +121,207 @@ export function CoachReview() {
                                         <button className="btn btn-ghost btn-s rounded-lg">details</button>
                                     </th>
                                 </tr>
+                                <tr>
+
+<td>
+    <div className="flex items-center space-x-3">
+        <div className="avatar">
+            <div className="mask mask-squircle w-12 h-12">
+                <img src="https://www.biography.com/.image/t_share/MTc5OTcxMjMwMjM1ODk0OTA2/gettyimages-972635212.jpg" alt="Avatar Tailwind CSS Component" />
+            </div>
+        </div>
+        <div>
+            <div className="font-bold">Marjy Ferencz</div>
+            <div className="text-sm opacity-50">Russia</div>
+        </div>
+    </div>
+</td>
+<td>
+    Rowe-Schoen
+    <br />
+    <span className="badge badge-ghost badge-sm">Office Assistant I</span>
+</td>
+<td>Crimson</td>
+<th>
+    <button className="btn btn-ghost btn-s rounded-lg">details</button>
+</th>
+</tr>
+<tr>
+
+<td>
+    <div className="flex items-center space-x-3">
+        <div className="avatar">
+            <div className="mask mask-squircle w-12 h-12">
+                <img src="https://www.biography.com/.image/t_share/MTc5OTcxMjMwMjM1ODk0OTA2/gettyimages-972635212.jpg" alt="Avatar Tailwind CSS Component" />
+            </div>
+        </div>
+        <div>
+            <div className="font-bold">Marjy Ferencz</div>
+            <div className="text-sm opacity-50">Russia</div>
+        </div>
+    </div>
+</td>
+<td>
+    Rowe-Schoen
+    <br />
+    <span className="badge badge-ghost badge-sm">Office Assistant I</span>
+</td>
+<td>Crimson</td>
+<th>
+    <button className="btn btn-ghost btn-s rounded-lg">details</button>
+</th>
+</tr>
+<tr>
+
+<td>
+    <div className="flex items-center space-x-3">
+        <div className="avatar">
+            <div className="mask mask-squircle w-12 h-12">
+                <img src="https://www.biography.com/.image/t_share/MTc5OTcxMjMwMjM1ODk0OTA2/gettyimages-972635212.jpg" alt="Avatar Tailwind CSS Component" />
+            </div>
+        </div>
+        <div>
+            <div className="font-bold">Marjy Ferencz</div>
+            <div className="text-sm opacity-50">Russia</div>
+        </div>
+    </div>
+</td>
+<td>
+    Rowe-Schoen
+    <br />
+    <span className="badge badge-ghost badge-sm">Office Assistant I</span>
+</td>
+<td>Crimson</td>
+<th>
+    <button className="btn btn-ghost btn-s rounded-lg">details</button>
+</th>
+</tr>
+<tr>
+
+<td>
+    <div className="flex items-center space-x-3">
+        <div className="avatar">
+            <div className="mask mask-squircle w-12 h-12">
+                <img src="https://www.biography.com/.image/t_share/MTc5OTcxMjMwMjM1ODk0OTA2/gettyimages-972635212.jpg" alt="Avatar Tailwind CSS Component" />
+            </div>
+        </div>
+        <div>
+            <div className="font-bold">Marjy Ferencz</div>
+            <div className="text-sm opacity-50">Russia</div>
+        </div>
+    </div>
+</td>
+<td>
+    Rowe-Schoen
+    <br />
+    <span className="badge badge-ghost badge-sm">Office Assistant I</span>
+</td>
+<td>Crimson</td>
+<th>
+    <button className="btn btn-ghost btn-s rounded-lg">details</button>
+</th>
+</tr>
+<tr>
+
+<td>
+    <div className="flex items-center space-x-3">
+        <div className="avatar">
+            <div className="mask mask-squircle w-12 h-12">
+                <img src="https://www.biography.com/.image/t_share/MTc5OTcxMjMwMjM1ODk0OTA2/gettyimages-972635212.jpg" alt="Avatar Tailwind CSS Component" />
+            </div>
+        </div>
+        <div>
+            <div className="font-bold">Marjy Ferencz</div>
+            <div className="text-sm opacity-50">Russia</div>
+        </div>
+    </div>
+</td>
+<td>
+    Rowe-Schoen
+    <br />
+    <span className="badge badge-ghost badge-sm">Office Assistant I</span>
+</td>
+<td>Crimson</td>
+<th>
+    <button className="btn btn-ghost btn-s rounded-lg">details</button>
+</th>
+</tr>
+<tr>
+
+<td>
+    <div className="flex items-center space-x-3">
+        <div className="avatar">
+            <div className="mask mask-squircle w-12 h-12">
+                <img src="https://www.biography.com/.image/t_share/MTc5OTcxMjMwMjM1ODk0OTA2/gettyimages-972635212.jpg" alt="Avatar Tailwind CSS Component" />
+            </div>
+        </div>
+        <div>
+            <div className="font-bold">Marjy Ferencz</div>
+            <div className="text-sm opacity-50">Russia</div>
+        </div>
+    </div>
+</td>
+<td>
+    Rowe-Schoen
+    <br />
+    <span className="badge badge-ghost badge-sm">Office Assistant I</span>
+</td>
+<td>Crimson</td>
+<th>
+    <button className="btn btn-ghost btn-s rounded-lg">details</button>
+</th>
+</tr>
+<tr>
+
+<td>
+    <div className="flex items-center space-x-3">
+        <div className="avatar">
+            <div className="mask mask-squircle w-12 h-12">
+                <img src="https://www.biography.com/.image/t_share/MTc5OTcxMjMwMjM1ODk0OTA2/gettyimages-972635212.jpg" alt="Avatar Tailwind CSS Component" />
+            </div>
+        </div>
+        <div>
+            <div className="font-bold">Marjy Ferencz</div>
+            <div className="text-sm opacity-50">Russia</div>
+        </div>
+    </div>
+</td>
+<td>
+    Rowe-Schoen
+    <br />
+    <span className="badge badge-ghost badge-sm">Office Assistant I</span>
+</td>
+<td>Crimson</td>
+<th>
+    <button className="btn btn-ghost btn-s rounded-lg">details</button>
+</th>
+</tr>
+<tr>
+
+<td>
+    <div className="flex items-center space-x-3">
+        <div className="avatar">
+            <div className="mask mask-squircle w-12 h-12">
+                <img src="https://www.biography.com/.image/t_share/MTc5OTcxMjMwMjM1ODk0OTA2/gettyimages-972635212.jpg" alt="Avatar Tailwind CSS Component" />
+            </div>
+        </div>
+        <div>
+            <div className="font-bold">Marjy Ferencz</div>
+            <div className="text-sm opacity-50">Russia</div>
+        </div>
+    </div>
+</td>
+<td>
+    Rowe-Schoen
+    <br />
+    <span className="badge badge-ghost badge-sm">Office Assistant I</span>
+</td>
+<td>Crimson</td>
+<th>
+    <button className="btn btn-ghost btn-s rounded-lg">details</button>
+</th>
+</tr>
+
                             </tbody>
 
 
