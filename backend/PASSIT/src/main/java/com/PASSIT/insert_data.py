@@ -27,7 +27,8 @@ def insert_data(type_insert, url):
                         "age": 12,
                         "team_id": {
                             "id": 1
-                        }
+                        },
+                        "last_stamina": 100,
                         })
     elif type_insert == 'team':
         post(url, json={'teamName': 'Porto', 'city':

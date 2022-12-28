@@ -58,4 +58,7 @@ public class Player {
     @JoinColumn(name = "team_id")
     private Team team_id;
 
+    @Column(name = "last_stamina", nullable = false)
+    private int last_stamina;
+
 }

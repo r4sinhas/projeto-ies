@@ -5,18 +5,32 @@ import time
 import scipy
 import scipy.signal as sig
 import json
+import mysql.connector
 from queue import Queue
+
+mydb = mysql.connector.connect(
+	host="localhost",
+	user="admin",
+	passwd="admin",
+	database="ies_db"
+)
+
+mycursor = mydb.cursor()
 
 class Player:
 
-	def __init__(self, id, today=datetime.now()):
+	def __init__(self, id, today=datetime.now(), live=False):
 		self.id = id
 		self.queue = Queue("localhost", 5672, "sim_user", "sim_password", "player_data")
+		self.live_queue = None
+		if live:
+			self.live_queue = Queue("localhost", 5672, "sim_user", "sim_password", "live_data")
 		self.queue.connect()
-		self.name = None #get name from database
-		self.age = None #get age from database
-		self.height = None #get height from database
-		last_stamina = None #get last_stamina from database
+		mycursor.execute(f"SELECT age, height, last_stamina FROM player WHERE id={id};")
+		result = mycursor.fetchone()
+		self.age = result[0]
+		self.height = result[1]
+		last_stamina = result[2]
 		self.stamina = min(Player.get_stamina(today) + last_stamina, 100)
 		self.condition = Player.get_condition(id)
 		self.age_factor = max(131/21000*(self.age**2) - 6247/21000*self.age + 1209/350, 0)
@@ -28,6 +42,8 @@ class Player:
 		m = {"id":self.id,"bpm":bpm,"breathing_rate":breathing,"speed":speed,"ecg":(t,ecg)}
 		message = json.dumps(m)
 		self.queue.send(message)
+		if self.live_queue:
+			self.live_queue.send(message)
 
 	def heart_rate(self, run):
 		if len(self.bpm_history)==0:
@@ -64,7 +80,7 @@ class Player:
 
 	def sprint(self, tm):
 		start_point = -math.log(-self.last_speed/self.v_max+1)
-		for i in range(tm):
+		for _ in range(tm):
 			self.stamina-=((self.bpm_history[-1]/90)-1/1.112)*0.024+0.2261+0.05*((self.age_factor/1.8-1)/1.5)+0.05*abs(self.condition-1)
 			speed = self.v_max*(1-math.e**(-tm/(0.7+self.condition*0.3+(self.age_factor/1.8-1)/1.5)-start_point))
 			self.last_speed = speed
@@ -74,7 +90,7 @@ class Player:
 			self.send(bpm, breathing, speed, t, ecg)
 
 	def run(self, tm):
-		for i in range(tm):
+		for _ in range(tm):
 			self.stamina-=((self.bpm_history[-1]/90)-1/1.112)*0.004+0.018+0.01*((self.age_factor/1.8-1)/1.5)+0.01*abs(self.condition-1)
 			speed = random.random()*1+9.5
 			self.last_speed = speed
@@ -84,7 +100,7 @@ class Player:
 			self.send(bpm, breathing, speed, t, ecg)
 
 	def walk(self, tm):
-		for i in range(tm):
+		for _ in range(tm):
 			self.stamina-=((self.bpm_history[-1]/90)-1/1.112)*0.0004+0.0038
 			speed = random.random()*0.5+3.2
 			self.last_speed = speed
@@ -115,7 +131,7 @@ class Player:
 				return True
 
 def main(start_time, id, actual_day = datetime.now(), live = False):
-	player = Player(id, actual_day)
+	player = Player(id, actual_day, live)
 	i=0
 	init = time.time()
 
