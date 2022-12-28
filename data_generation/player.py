@@ -4,10 +4,15 @@ import random
 import time
 import scipy
 import scipy.signal as sig
+import json
+from queue import Queue
 
 class Player:
+
 	def __init__(self, id, today=datetime.now()):
 		self.id = id
+		self.queue = Queue("localhost", 5672, "sim_user", "sim_password", "player_data")
+		self.queue.connect()
 		self.name = None #get name from database
 		self.age = None #get age from database
 		self.height = None #get height from database
@@ -19,6 +24,10 @@ class Player:
 		self.v_max = -4/7*self.height+957/7
 		self.last_speed = 0
 
+	def send(self, bpm, breathing, speed, t, ecg):
+		m = {"id":self.id,"bpm":bpm,"breathing_rate":breathing,"speed":speed,"ecg":(t,ecg)}
+		message = json.dumps(m)
+		self.queue.send(message)
 
 	def heart_rate(self, run):
 		if len(self.bpm_history)==0:
@@ -47,6 +56,7 @@ class Player:
 		pqrst = sig.wavelets.daub(10)
 		ecg = scipy.concatenate([sig.resample(pqrst, int(r*fs)) for r in rr])
 		t = scipy.arange(len(ecg))/fs
+		print(t, ecg)
 		return (t, ecg)
 
 	def breathing_rate(bpm):
@@ -61,7 +71,7 @@ class Player:
 			bpm=self.heart_rate(2)
 			t, ecg = self.eletrocardiogram(bpm)
 			breathing = self.breathing_rate(bpm)
-			# enviar estes dados para a queue
+			self.send(bpm, breathing, speed, t, ecg)
 
 	def run(self, tm):
 		for i in range(tm):
@@ -71,8 +81,7 @@ class Player:
 			bpm=self.heart_rate(1)
 			t, ecg = self.eletrocardiogram(bpm)
 			breathing = self.breathing_rate(bpm)
-			# enviar estes dados para a queue
-
+			self.send(bpm, breathing, speed, t, ecg)
 
 	def walk(self, tm):
 		for i in range(tm):
@@ -82,8 +91,7 @@ class Player:
 			bpm=self.heart_rate(0)
 			t, ecg = self.eletrocardiogram(bpm)
 			breathing = self.breathing_rate(bpm)
-			# enviar estes dados para a queue
-
+			self.send(bpm, breathing, speed, t, ecg)
 
 	def get_stamina(self, actual_day):
 		last_game = None #get last game from database
@@ -110,6 +118,7 @@ def main(start_time, id, actual_day = datetime.now(), live = False):
 	player = Player(id, actual_day)
 	i=0
 	init = time.time()
+
 	while i < (2700-start_time):
 		r=random.randrange(0, 100)
 		tm1 = random.randrange(2, 11)
@@ -127,3 +136,5 @@ def main(start_time, id, actual_day = datetime.now(), live = False):
 		if live:
 			time.sleep(max(tm-time.time()-init, 0))
 			init = time.time()
+
+	player.queue.close()
