@@ -6,7 +6,7 @@ import scipy
 import scipy.signal as sig
 import json
 import mysql.connector
-from queue import Queue
+from rabbitmq import Queue
 
 mydb = mysql.connector.connect(
 	host="localhost",
@@ -21,10 +21,10 @@ class Player:
 
 	def __init__(self, id, today=datetime.now(), live=False):
 		self.id = id
-		self.queue = Queue("localhost", 5672, "sim_user", "sim_password", "player_data")
+		self.queue = Queue("localhost", 5672, "admin", "admin", "player_data")
 		self.live_queue = None
 		if live:
-			self.live_queue = Queue("localhost", 5672, "sim_user", "sim_password", "live_data")
+			self.live_queue = Queue("localhost", 5672, "admin", "admin", "live_data")
 		self.queue.connect()
 		mycursor.execute(f"SELECT age, height, last_stamina FROM player WHERE id={id};")
 		result = mycursor.fetchone()
@@ -110,12 +110,18 @@ class Player:
 			self.send(bpm, breathing, speed, t, ecg)
 
 	def get_stamina(self, actual_day):
-		last_game = None #get last game from database
+		mycursor.execute(f"SELECT g.date FROM game g WHERE EXISTS (SELECT 1 FROM team t WHERE t.id = ANY(g.teams) AND t.id = (SELECT p.team_id FROM player p WHERE p.id = {self.id})) ORDER BY g.date DESC LIMIT 1")
+		last_game = mycursor.fetchone()[0]
+		print(last_game, actual_day)
+		exit()
 		n_days = (actual_day-last_game).days+(actual_day-last_game).seconds/86400
 		return (-math.e**(-n_days/(1.8+self.age_factor)+0.1)+1.1)*100
 
 	def get_condition(self):
-		time_in_last_4_matches = None #get time in minutes in last 4 matches from database
+		mycursor.execute(f"SELECT SUM(s.minutes_played) FROM statsByGame s INNER JOIN game g ON g.id = s.game_id INNER JOIN player p ON p.id = s.player_id WHERE p.id = {self.id} ORDER BY g.date DESC LIMIT 4")
+		time_in_last_4_matches = mycursor.fetchone()[0]
+		print(time_in_last_4_matches)
+		exit()
 		return -math.e**(-2*time_in_last_4_matches/100)+1.00823
 
 	def can_do(self, action, remaining_time, tm):
@@ -153,4 +159,8 @@ def main(start_time, id, actual_day = datetime.now(), live = False):
 			time.sleep(max(tm-time.time()-init, 0))
 			init = time.time()
 
+	mycursor.execute(f"UPDATE player SET last_stamina = {player.stamina} WHERE id = {id};")
 	player.queue.close()
+
+if __name__ == '__main__':
+	main(0, 1)

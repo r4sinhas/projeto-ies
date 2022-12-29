@@ -8,7 +8,6 @@ def post(url, data=None, json=None, headers=None):
 
 
 def get(url, headers=None):
-
     r = requests.get(url, headers=headers)
     print(r.text)
     return r
@@ -16,34 +15,61 @@ def get(url, headers=None):
 
 def insert_data(type_insert, url):
     if type_insert == 'player':
-        post(url, json={'name': 'Gonçalo',
-                        'username': "gon",
-                        'password': "gon",
-                        'email': "gon",
-                        'position': "pos",
-                        "height": 185,
-                        "weight": 85,
-                        "number": 10,
-                        "age": 12,
-                        "team_id": {
-                            "id": 1
-                        },
-                        "last_stamina": 100,
-                        })
+        with open('players.txt', 'r') as f:
+            for line in f:
+                line = line.split(';')
+                if len(line) == 12:
+                    post(url, json={'name': line[0],
+                                    'username': line[1],
+                                    'password': line[2],
+                                    'email': line[3],
+                                    'position': line[4],
+                                    "height": line[5],
+                                    "weight": line[6],
+                                    "number": line[7],
+                                    "age": line[8],
+                                    "team_id": {
+                                        "id": line[9]
+                                    },
+                                    "last_stamina": line[10],
+                                    "img_url": line[11]
+                                    })
+                elif len(line) == 11:
+                    post(url, json={'name': line[0],
+                                    'username': line[1],
+                                    'password': line[2],
+                                    'email': line[3],
+                                    'position': line[4],
+                                    "height": line[5],
+                                    "weight": line[6],
+                                    "number": line[7],
+                                    "age": line[8],
+                                    "team_id": {
+                                        "id": line[9]
+                                    },
+                                    "last_stamina": line[10]
+                                    })
     elif type_insert == 'team':
-        post(url, json={'teamName': 'Porto', 'city':
-                        'Porto',
-                        'country': 'Portugal'}
-             )
+        with open('teams.txt', 'r') as f:
+            for line in f:
+                line = line.split(';')
+                post(url, json={'teamName': line[0],
+                                'city': line[1],
+                                'country': line[2]
+                                })
+
     elif type_insert == 'coach':
-        post(url, json={'name': 'Gonçalo',
-                        'username': 'goncalo',
-                        'password': 'goncalo',
-                        'email': 'goncalo@',
-                        'team_id': {
-                            'id': 1
-                        }
-                        })
+        with open('coaches.txt', 'r') as f:
+            for line in f:
+                line = line.split(';')
+                post(url, json={'name': line[0],
+                                'username': line[1],
+                                'password': line[2],
+                                'email': line[3],
+                                'team_id': {
+                                    'id': line[4]
+                                }
+                                })
 
     elif type_insert == 'fan':
         post(url, json={'name': 'Pedro',
@@ -55,6 +81,34 @@ def insert_data(type_insert, url):
                         }
                         })
 
+    elif type_insert == 'game':
+        with open('games.txt', 'r') as f:
+            for line in f:
+                line = line.split(';')
+                post(url, json={'date': line[0],
+                                'teams': [
+                                    {
+                                        'id': line[1]
+                                    },
+                                    {
+                                        'id': line[2]
+                                    }
+                                ]
+                                })
+
+    elif type_insert == 'statsbygame':
+        with open('statsbygame.txt', 'r') as f:
+            for line in f:
+                line = line.split(';')
+                post(url, json={'game_id': {
+                    'id': line[0]
+                },
+                    'player_id': {
+                    'id': line[1]
+                },
+                "minutes_played": line[2]
+                })
+
 
 def main():
     # **Post**
@@ -62,6 +116,8 @@ def main():
     insert_data('player', 'http://localhost:8080/api/v1/player/add')
     insert_data('coach', 'http://localhost:8080/api/v1/coach/add')
     insert_data('fan', 'http://localhost:8080/api/v1/fan/add')
+    insert_data('game', 'http://localhost:8080/api/v1/game/add')
+    insert_data('statsbygame', 'http://localhost:8080/api/v1/statsbygame/add')
 
 
 if __name__ == '__main__':

@@ -2,8 +2,8 @@ package com.PASSIT.controller;
 
 
 
-import com.PASSIT.model.*;
-import com.PASSIT.services.*;
+import com.PASSIT.model.Fan;
+import com.PASSIT.services.FanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

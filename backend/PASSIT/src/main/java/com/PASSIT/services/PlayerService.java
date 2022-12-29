@@ -4,7 +4,6 @@ import com.PASSIT.model.Player;
 import com.PASSIT.repository.PlayerRepository;
 import com.PASSIT.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

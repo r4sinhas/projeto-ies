@@ -5,6 +5,8 @@ import com.PASSIT.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class GameService {
 
@@ -15,12 +17,16 @@ public class GameService {
         this.gameRepository = gameRepository;
     }
 
-    public void addGame(Game game) {
-        gameRepository.save(game);
+    public Game addGame(Game game) {
+        return gameRepository.save(game);
     }
 
     public Game getGameById(Long id) {
         return gameRepository.findById(id).orElse(null);
+    }
+
+    public List<Game> getGames() {
+        return gameRepository.findAll();
     }
 
 }

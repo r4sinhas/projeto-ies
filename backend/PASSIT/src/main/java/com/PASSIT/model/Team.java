@@ -13,14 +13,14 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Team")
+@Table(name = "team")
 public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "team_id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "TeamName", nullable = false)
+    @Column(name = "teamName", nullable = false)
     private String teamName;
 
     @Column(name = "city", nullable = false)
@@ -38,7 +38,11 @@ public class Team {
     // connect team to players
     @JsonIgnore
     @OneToMany()
-    @JoinColumn(name = "team")
+    @JoinColumn(name = "player_list")
     private List<Player> players = new ArrayList<>();
+
+    @ManyToMany
+    @JoinColumn(name = "games_list")
+    private List<Game> game_id = new ArrayList<>();
 
 }

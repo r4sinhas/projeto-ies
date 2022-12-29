@@ -15,7 +15,7 @@ import java.util.TreeMap;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "statsByGame")
+@Table(name = "stats_by_game")
 public class StatsByGame {
 
     // Connect statsByGame to a Player
@@ -24,12 +24,12 @@ public class StatsByGame {
     @Column(name = "id")
     private long id;
 
-    @OneToOne
-    @JoinColumn(name = "game_id")
+    @ManyToOne()
+    @JoinColumn(name = "game_id", nullable = false)
     private Game game_id;
 
-    @OneToOne
-    @JoinColumn(name = "player_id")
+    @OneToOne()
+    @JoinColumn(name = "player_id", nullable = false)
     private Player player_id;
 
     //map with keys heart_rate,breathing_rate,wgc,speed... and values are a list with a map with time:value
@@ -38,5 +38,8 @@ public class StatsByGame {
     @MapKeyColumn(name = "stat_name")
     @Column(name = "stat_value")
     private Map<String, ArrayList<Map<String, Double>>> stats = new HashMap<>();
+
+    @Column(name = "minutes_played")
+    private int minutesPlayed=0;
 
 }

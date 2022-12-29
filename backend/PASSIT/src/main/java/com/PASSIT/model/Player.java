@@ -61,4 +61,7 @@ public class Player {
     @Column(name = "last_stamina", nullable = false)
     private int last_stamina;
 
+    @Column(name = "img_url")
+    private String img_url="default.png";
+
 }

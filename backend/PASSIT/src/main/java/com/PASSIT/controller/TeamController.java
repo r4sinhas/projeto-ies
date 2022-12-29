@@ -23,7 +23,6 @@ public class TeamController {
     public String add(@RequestBody Team team) {
         teamService.addTeam(team);
         return "New team ADDED!";
-
     }
 
     @GetMapping("/all")
