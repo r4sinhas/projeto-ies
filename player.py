@@ -113,25 +113,3 @@ class Player:
 				return False
 			else:
 				return True
-
-def main(start_time, id, actual_day = datetime.now(), live = False):
-	player = Player(id, actual_day)
-	i=0
-	init = time.time()
-	while i < (2700-start_time):
-		r=random.randrange(0, 100)
-		tm1 = random.randrange(2, 11)
-		tm2 = random.randrange(3, 16)
-		if r < 7 and player.can_do(1, 2700-start_time-i, tm1):
-			player.sprint(tm1)
-			tm=tm1
-		elif r < 28 and player.can_do(0, 2700-start_time-i, tm2):
-			player.run(tm2)
-			tm=tm2
-		else:
-			tm=random.randrange(1, 11)
-			player.walk(tm)
-		i+=tm
-		if live:
-			time.sleep(max(tm-time.time()-init, 0))
-			init = time.time()
