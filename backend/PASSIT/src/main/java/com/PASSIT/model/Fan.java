@@ -38,7 +38,7 @@ public class Fan {
 
     @JsonIgnore
     @OneToMany()
-    @JoinColumn(name = "fan")
-    private List<Player>favoritePlayers = new ArrayList<>();
+    @JoinColumn(name = "fav_players")
+    private List<Player>fav_players = new ArrayList<>();
 
 }

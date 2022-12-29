@@ -34,7 +34,7 @@ public class FanService {
     public void addFavoritePlayer(Long id, Long idPlayer) {
         Fan fan = fanRepository.findById(id).orElse(null);
         Player player = playerService.getPlayerById(idPlayer);
-        fan.getFavoritePlayers().add(player);
+        fan.getFav_players().add(player);
         fanRepository.save(fan);
     }
 }

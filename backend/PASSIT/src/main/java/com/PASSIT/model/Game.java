@@ -28,10 +28,10 @@ public class Game {
 
     @ManyToMany()
     @JoinColumn(name = "teams_list", nullable = false)
-    private List<Team> teams;
+    private List<Team> teams_list;
 
     @OneToMany()
     @JoinColumn(name = "stats_list")
-    private List<StatsByGame> stats = new ArrayList<>();
+    private List<StatsByGame> stats_list = new ArrayList<>();
 }
 

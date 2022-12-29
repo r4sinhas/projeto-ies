@@ -35,11 +35,11 @@ public class StatsByGame {
     //map with keys heart_rate,breathing_rate,wgc,speed... and values are a list with a map with time:value
     @ElementCollection
     @CollectionTable(name = "stats", joinColumns = @JoinColumn(name = "id"))
-    @MapKeyColumn(name = "stat_name")
-    @Column(name = "stat_value")
-    private Map<String, ArrayList<Map<String, Double>>> stats = new HashMap<>();
+    @MapKeyColumn(name = "stats_name")
+    @Column(name = "stats_values")
+    private Map<String, ArrayList<Map<String, Double>>> stats_values = new HashMap<>();
 
     @Column(name = "minutes_played")
-    private int minutesPlayed=0;
+    private int minutes_played = 0;
 
 }

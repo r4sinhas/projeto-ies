@@ -53,7 +53,7 @@ def insert_data(type_insert, url):
         with open('teams.txt', 'r') as f:
             for line in f:
                 line = line.split(';')
-                post(url, json={'teamName': line[0],
+                post(url, json={'team_name': line[0],
                                 'city': line[1],
                                 'country': line[2]
                                 })

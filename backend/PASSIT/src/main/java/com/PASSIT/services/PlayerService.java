@@ -23,7 +23,7 @@ public class PlayerService {
 
     public Player savePlayer(Player player) {
         player.setTeam_id(teamRepository.findById(player.getTeam_id().getId()).get());
-        player.getTeam_id().getPlayers().add(player);
+        player.getTeam_id().getPlayers_list().add(player);
         return playerRepository.save(player);
     }
 
@@ -34,7 +34,5 @@ public class PlayerService {
     public Player getPlayerById(Long id) {
         return playerRepository.findById(id).orElse(null);
     }
-
-
 
 }

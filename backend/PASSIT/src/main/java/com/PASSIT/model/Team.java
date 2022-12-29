@@ -18,10 +18,10 @@ public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private long id;
 
-    @Column(name = "teamName", nullable = false)
-    private String teamName;
+    @Column(name = "team_name", nullable = false)
+    private String team_name;
 
     @Column(name = "city", nullable = false)
     private String city;
@@ -38,11 +38,11 @@ public class Team {
     // connect team to players
     @JsonIgnore
     @OneToMany()
-    @JoinColumn(name = "player_list")
-    private List<Player> players = new ArrayList<>();
+    @JoinColumn(name = "players_list")
+    private List<Player> players_list = new ArrayList<>();
 
     @ManyToMany
     @JoinColumn(name = "games_list")
-    private List<Game> game_id = new ArrayList<>();
+    private List<Game> games_list = new ArrayList<>();
 
 }

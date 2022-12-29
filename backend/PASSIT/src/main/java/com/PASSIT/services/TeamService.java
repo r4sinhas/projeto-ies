@@ -1,7 +1,6 @@
 package com.PASSIT.services;
 
-import com.PASSIT.model.Player;
-import com.PASSIT.model.Team;
+import com.PASSIT.model.*;
 import com.PASSIT.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +30,7 @@ public class TeamService {
     }
 
     public List<Player> getPlayers(Long id) {
-        return teamRepository.findById(id).get().getPlayers();
+        return teamRepository.findById(id).get().getPlayers_list();
     }
 
     public Team findById(Long id) {
