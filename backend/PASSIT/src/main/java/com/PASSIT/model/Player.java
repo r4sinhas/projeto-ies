@@ -59,7 +59,7 @@ public class Player {
     private Team team_id;
 
     @Column(name = "last_stamina", nullable = false)
-    private int last_stamina;
+    private float last_stamina;
 
     @Column(name = "img_url")
     private String img_url="default.png";
