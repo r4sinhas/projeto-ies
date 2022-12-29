@@ -15,7 +15,7 @@ class Queue:
 		parameters = pika.ConnectionParameters(host=self.host, port=self.port, credentials=credentials)
 		self.connection = pika.BlockingConnection(parameters)
 		self.channel = self.connection.channel()
-		self.channel.queue_declare(queue=self.queue_name, durable=True)
+		self.channel.queue_declare(queue=self.queue_name, durable=False) # durable=True makes the queue persistent
 
 	def send(self, message):
 		self.channel.basic_publish(exchange='', routing_key=self.queue_name, body=message)
