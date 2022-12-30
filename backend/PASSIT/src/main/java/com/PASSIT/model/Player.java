@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -54,14 +55,22 @@ public class Player {
     private int number;
 
     // Connect player to a Team
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "team_id")
     private Team team_id;
 
+    @OneToMany()
+    @JoinColumn(name = "stats_list")
+    private List<StatsByGame> stats_list = new ArrayList<>();
+
     @Column(name = "last_stamina", nullable = false)
-    private float last_stamina;
+    private Double last_stamina;
 
     @Column(name = "img_url")
-    private String img_url="default.png";
+    private String img_url = "https://img.a.transfermarkt.technology/portrait/header/default.jpg";
+    
+    public void setStamina(Double stamina) {
+        this.last_stamina = stamina;
+    }
 
 }
