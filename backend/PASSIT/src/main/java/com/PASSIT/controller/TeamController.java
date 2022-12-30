@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("api/v1/team")
 public class TeamController {
     private final TeamService teamService;

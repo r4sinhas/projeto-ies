@@ -62,6 +62,6 @@ public class Player {
     private float last_stamina;
 
     @Column(name = "img_url")
-    private String img_url="default.png";
+    private String img_url = "https://img.a.transfermarkt.technology/portrait/header/default.jpg";
 
 }
