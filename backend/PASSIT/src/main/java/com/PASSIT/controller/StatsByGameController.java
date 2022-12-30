@@ -10,6 +10,7 @@ import java.util.TreeMap;
 import java.util.HashMap;
 
 @RestController
+@CrossOrigin
 @RequestMapping("api/v1/statsbygame")
 public class StatsByGameController {
     private final StatsByGameService statsByGameService;
