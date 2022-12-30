@@ -9,7 +9,7 @@ import mysql.connector
 from rabbitmq import Queue
 import argparse
 
-GAME_TIME = 45
+GAME_TIME = 90
 GAME_TIME = GAME_TIME*60
 
 mydb = mysql.connector.connect(
@@ -44,7 +44,7 @@ class Player:
 		self.day = today
 
 	def send(self, bpm, breathing, speed, t, ecg):
-		m = {"type":"stats","id":self.id,"bpm":bpm,"breathing_rate":breathing,"speed":speed,"ecg":[t,ecg],"day":self.day.strftime("%Y-%m-%d")}
+		m = {"type":"stats","id":self.id,"data":{"bpm":bpm,"breathing_rate":breathing,"speed":speed,"ecg":[t,ecg],"day":self.day.strftime("%Y-%m-%d")}}
 		message = json.dumps(m)
 		self.queue.send(message)
 		if self.live_queue:
@@ -155,7 +155,7 @@ def main(start_time, id, live, actual_day = date.today()):
 			time.sleep(max(tm-time.time()-init, 0))
 			init = time.time()
 
-	player.queue.send(json.dumps({"type":"rem_stamina","id":id,"val":player.stamina,"day":actual_day.strftime("%Y-%m-%d"), "minutes_played":(GAME_TIME-start_time)//60}))
+	player.queue.send(json.dumps({"type":"rem_stamina","id":id,"data":{"val":player.stamina,"day":actual_day.strftime("%Y-%m-%d"), "minutes_played":(GAME_TIME-start_time)//60}}))
 	player.queue.close()
 
 if __name__ == "__main__":
@@ -164,11 +164,11 @@ if __name__ == "__main__":
 	parser.add_argument("start_time", type=int, help="Start time of the game in seconds")
 	parser.add_argument("id", type=int, help="Player id")
 	parser.add_argument("--live", action="store_true", help="Live mode")
-	parser.add_argument("--actual_day", type=str, help="Actual day (YYYY-MM-DD)")
+	parser.add_argument("--day", type=str, help="Day (YYYY-MM-DD)")
 	args = parser.parse_args()
 
-	if args.actual_day:
-		actual_day = date.fromisoformat(args.actual_day)
-		main(args.start_time, args.id, args.live, actual_day)
+	if args.day:
+		day = date.fromisoformat(args.day)
+		main(args.start_time, args.id, args.live, day)
 	else:
 		main(args.start_time, args.id, args.live)

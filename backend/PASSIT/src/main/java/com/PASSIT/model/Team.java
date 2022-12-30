@@ -30,13 +30,13 @@ public class Team {
     private String country;
 
     // connect team to coach
-    @JsonIgnore
+
     @OneToOne
     @JoinColumn(name = "coach_id")
     private Coach coach_id;
 
     // connect team to players
-    @JsonIgnore
+
     @OneToMany()
     @JoinColumn(name = "players_list")
     private List<Player> players_list = new ArrayList<>();

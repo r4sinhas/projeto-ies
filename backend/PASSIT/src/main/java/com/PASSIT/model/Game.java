@@ -33,5 +33,6 @@ public class Game {
     @OneToMany()
     @JoinColumn(name = "stats_list")
     private List<StatsByGame> stats_list = new ArrayList<>();
+
 }
 

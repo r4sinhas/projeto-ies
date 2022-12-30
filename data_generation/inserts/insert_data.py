@@ -86,7 +86,7 @@ def insert_data(type_insert, url):
             for line in f:
                 line = line.split(';')
                 post(url, json={'date': line[0],
-                                'teams': [
+                                'teams_list': [
                                     {
                                         'id': line[1]
                                     },

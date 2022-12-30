@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -28,18 +27,29 @@ public class StatsByGame {
     @JoinColumn(name = "game_id", nullable = false)
     private Game game_id;
 
-    @OneToOne()
+    @ManyToOne()
     @JoinColumn(name = "player_id", nullable = false)
     private Player player_id;
 
-    //map with keys heart_rate,breathing_rate,wgc,speed... and values are a list with a map with time:value
-    @ElementCollection
-    @CollectionTable(name = "stats", joinColumns = @JoinColumn(name = "id"))
-    @MapKeyColumn(name = "stats_name")
-    @Column(name = "stats_values")
-    private Map<String, ArrayList<Map<String, Double>>> stats_values = new HashMap<>();
-
+    
     @Column(name = "minutes_played")
     private int minutes_played = 0;
+
+
+    @ElementCollection
+    @CollectionTable(name="stats_values", joinColumns=@JoinColumn(name="stats_by_game_id"))
+    @MapKeyColumn(name="stat_name")
+    @Column(name="stat_values")
+    private Map<String, TreeMap<Double, Double>> stats_values = new HashMap<>() {{
+        put("bpm", new TreeMap<>());
+        put("breathing_rate", new TreeMap<>());
+        put("egc", new TreeMap<>());
+        put("speed", new TreeMap<>());
+      }};
+
+    public void setStats_values(HashMap<String, TreeMap<Double, Double>> stats_values) {
+        for (String key : stats_values.keySet())
+            this.stats_values.get(key).putAll(stats_values.get(key));
+    }
 
 }
