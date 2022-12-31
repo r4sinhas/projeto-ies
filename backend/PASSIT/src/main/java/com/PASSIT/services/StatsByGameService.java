@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class StatsByGameService {
 
-    private StatsByGameRepository statsByGameRepository;
+    private final StatsByGameRepository statsByGameRepository;
 
     @Autowired
     public StatsByGameService(StatsByGameRepository statsByGameRepository) {
@@ -33,25 +33,34 @@ public class StatsByGameService {
         return statsByGameRepository.findAll();
     }
 
-    public void addToStats(Long id, HashMap<String, TreeMap<Double, Double>> stats, Date day) {
-        for (StatsByGame statsByGame : statsByGameRepository.findAll()) {
-            if (statsByGame.getPlayer_id().getId() == id && statsByGame.getGame_id().getDate().compareTo(day) == 0) {
-                statsByGame.setStats_values(stats);
-                statsByGameRepository.save(statsByGame);
-                break;
-            }
-        }
+    public void addBPM(Long id, TreeMap<Double, Double> bpm) {
+        StatsByGame statsByGame = statsByGameRepository.findById(id).get();
+        statsByGame.setBpm(bpm);
+        statsByGameRepository.save(statsByGame);
     }
 
-    public Date getLastGame(Long id) {
-        Date date = new Date(0);
-        for (StatsByGame statsByGame : statsByGameRepository.findAll()) {
-            if (statsByGame.getPlayer_id().getId() == id) {
-                if (date.compareTo(statsByGame.getGame_id().getDate()) < 0)
-                    date = statsByGame.getGame_id().getDate();
-            }
-        }
-        return date;
+    public void addBreathingRate(Long id, TreeMap<Double, Double> breathing_rate) {
+        StatsByGame statsByGame = statsByGameRepository.findById(id).get();
+        statsByGame.setBreathing_rate(breathing_rate);
+        statsByGameRepository.save(statsByGame);
+    }
+
+    public void addSpeed(Long id, TreeMap<Double, Double> speed) {
+        StatsByGame statsByGame = statsByGameRepository.findById(id).get();
+        statsByGame.setSpeed(speed);
+        statsByGameRepository.save(statsByGame);
+    }
+
+    public void addEcg(Long id, TreeMap<Double, Double> ecg) {
+        StatsByGame statsByGame = statsByGameRepository.findById(id).get();
+        statsByGame.setEcg(ecg);
+        statsByGameRepository.save(statsByGame);
+    }
+    
+    public void setMinutesPlayed(Long id, int minutesPlayed) {
+        StatsByGame statsByGame = statsByGameRepository.findById(id).get();
+        statsByGame.setMinutes_played(minutesPlayed);
+        statsByGameRepository.save(statsByGame);
     }
 
 }

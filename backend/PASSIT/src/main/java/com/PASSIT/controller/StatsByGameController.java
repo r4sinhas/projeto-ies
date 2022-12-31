@@ -30,31 +30,39 @@ public class StatsByGameController {
     }
 
     @PutMapping("/addstat/{id}")
-    public String addStat(@PathVariable("id") Long id, @RequestParam("bpm") List<Double> bpm, @RequestParam("breathing_rate") List<Double> breathing_rate, @RequestParam("speed") List<Double> speed, @RequestParam("ecg") List<List<Double>> ecg, @RequestParam("day") Date day) {
-        HashMap<String, TreeMap<Double, Double>> stats = new HashMap<>();
-        for (int i = 0; i < bpm.size(); i++) {
-            TreeMap<Double, Double> bpmMap = new TreeMap<>();
-            bpmMap.put((double) i, bpm.get(i));
-            stats.put("bpm", bpmMap);
-        }
-        for (int i = 0; i < breathing_rate.size(); i++) {
-            TreeMap<Double, Double> breathing_rateMap = new TreeMap<>();
-            breathing_rateMap.put((double) i, breathing_rate.get(i));
-            stats.put("breathing_rate", breathing_rateMap);
-        }
-        for (int i = 0; i < speed.size(); i++) {
-            TreeMap<Double, Double> speedMap = new TreeMap<>();
-            speedMap.put((double) i, speed.get(i));
-            stats.put("speed", speedMap);
-        }
-        for (int i = 0; i < ecg.get(0).size(); i++) {
-            TreeMap<Double, Double> ecgMap = new TreeMap<>();
-            ecgMap.put(ecg.get(0).get(i), ecg.get(1).get(i));
-            stats.put("ecg", ecgMap);
-        }
+    public String addStat(@PathVariable("id") Long id, @RequestParam("bpm") List<Double> bpm,
+            @RequestParam("breathing_rate") List<Double> breathing_rate, @RequestParam("speed") List<Double> speed,
+            @RequestParam("ecg") List<Double> ecg, @RequestParam("t") List<Double> t) {
 
-        statsByGameService.addToStats(id, stats,day);
+        TreeMap<Double, Double> bpmMap = new TreeMap<>();
+        TreeMap<Double, Double> breathing_rateMap = new TreeMap<>();
+        TreeMap<Double, Double> speedMap = new TreeMap<>();
+        TreeMap<Double, Double> ecgMap = new TreeMap<>();
+
+        for (int i = 0; i < bpm.size(); i++)
+            bpmMap.put((double) i, bpm.get(i));
+
+        for (int i = 0; i < breathing_rate.size(); i++)
+            breathing_rateMap.put((double) i, breathing_rate.get(i));
+
+        for (int i = 0; i < speed.size(); i++)
+            speedMap.put((double) i, speed.get(i));
+
+        for (int i = 0; i < ecg.size(); i++)
+            ecgMap.put(t.get(i), ecg.get(i));
+
+        statsByGameService.addBPM(id, bpmMap);
+        statsByGameService.addBreathingRate(id, breathing_rateMap);
+        statsByGameService.addSpeed(id, speedMap);
+        statsByGameService.addEcg(id, ecgMap);
+        
         return "New stat ADDED!";
+    }
+    
+    @PutMapping("/minutesplayed/{id}")
+    public String setMinutesPlayed(@PathVariable("id") Long id, @RequestParam("minutes_played") int minutes_played) {
+        statsByGameService.setMinutesPlayed(id, minutes_played);
+        return "Minutes played UPDATED!";
     }
 
 }

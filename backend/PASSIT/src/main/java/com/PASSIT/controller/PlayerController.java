@@ -1,14 +1,13 @@
 package com.PASSIT.controller;
 
 import com.PASSIT.model.Player;
-import com.PASSIT.services.StatsByGameService;
 import com.PASSIT.services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -16,13 +15,10 @@ import java.util.Objects;
 public class PlayerController {
 
     private final PlayerService playerService;
-    private final StatsByGameService statsByGameService;
 
     @Autowired
-    public PlayerController(PlayerService playerService,
-                            StatsByGameService statsByGameService) {
+    public PlayerController(PlayerService playerService) {
         this.playerService = playerService;
-        this.statsByGameService = statsByGameService;
     }
 
     @PostMapping("/add")
@@ -42,16 +38,24 @@ public class PlayerController {
     }
 
     @PutMapping("/remstamina/{id}")
-    public String remStamina(@PathVariable("id") Long id, @RequestParam("val") double stamina, @RequestParam("day") Date day, @RequestParam("minutes_played") int minutes_played) {
+    public String remStamina(@PathVariable("id") Long id, @RequestParam("stamina") Double stamina) {
         playerService.remStamina(id, stamina);
-        playerService.setMinutesPlayed(id, day, minutes_played);
-        
         return "Stamina UPDATED!";
     }
 
     @GetMapping("/lastgame/{id}")
     public Date getLastGame(@PathVariable("id") Long id) {
-        Date d = statsByGameService.getLastGame(id);
-        return d;
+        return playerService.getLastGame(id);
     }
+
+    @GetMapping("/stats_user_game/{id}/{game}")
+    public Map<String, Double> getStatsUserGame(@PathVariable("id") Long id, @PathVariable("game") Long game) {
+        return playerService.getStatsUserGame(id, game);
+    }
+
+    @GetMapping("/stats_user_game/{id}")
+    public Map<String, Double> getStatsUserGame(@PathVariable("id") Long id) {
+        return playerService.getStatsUserGame(id);
+    }
+
 }

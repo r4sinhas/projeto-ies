@@ -5,10 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TreeMap;
+import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Data
@@ -31,25 +31,68 @@ public class StatsByGame {
     @JoinColumn(name = "player_id", nullable = false)
     private Player player_id;
 
-    
     @Column(name = "minutes_played")
     private int minutes_played = 0;
 
+    @ElementCollection
+    @CollectionTable(name = "bpm_values")
+    @MapKeyColumn(name = "bpm_time")
+    @Column(name = "bpm")
+    private Map<Double, Double> bpm = new TreeMap<>();
 
     @ElementCollection
-    @CollectionTable(name="stats_values", joinColumns=@JoinColumn(name="stats_by_game_id"))
-    @MapKeyColumn(name="stat_name")
-    @Column(name="stat_values")
-    private Map<String, TreeMap<Double, Double>> stats_values = new HashMap<>() {{
-        put("bpm", new TreeMap<>());
-        put("breathing_rate", new TreeMap<>());
-        put("egc", new TreeMap<>());
-        put("speed", new TreeMap<>());
-      }};
+    @CollectionTable(name = "breathing_rate_values")
+    @MapKeyColumn(name = "breathing_rate_time")
+    @Column(name = "breathing_rate")
+    private Map<Double, Double> breathing_rate = new TreeMap<>();
 
-    public void setStats_values(HashMap<String, TreeMap<Double, Double>> stats_values) {
-        for (String key : stats_values.keySet())
-            this.stats_values.get(key).putAll(stats_values.get(key));
+    @ElementCollection
+    @CollectionTable(name = "ecg_values")
+    @MapKeyColumn(name = "ecg_time")
+    @Column(name = "ecg")
+    private Map<Double, Double> ecg = new TreeMap<>();
+
+    @ElementCollection
+    @CollectionTable(name = "speed_values")
+    @MapKeyColumn(name = "speed_time")
+    @Column(name = "speed")
+    private Map<Double, Double> speed = new TreeMap<>();
+
+
+    public void setBpm(TreeMap<Double, Double> bpm_map) {
+        this.bpm.putAll(bpm_map);
     }
 
+    public void setBreathing_rate(TreeMap<Double, Double> breathing_rate_map) {
+        this.breathing_rate.putAll(breathing_rate_map);
+    }
+
+    public void setEcg(TreeMap<Double, Double> ecg_map) {
+        this.ecg.putAll(ecg_map);
+    }
+
+    public void setSpeed(TreeMap<Double, Double> speed_map) {
+        this.speed.putAll(speed_map);
+    }
+
+    public Double getAvgBpm() {
+        Double sum = 0.0;
+        for (Double bpm : this.bpm.values())
+            sum += bpm;
+        return sum / this.bpm.size();
+    }
+
+    public Double getAvgBreathingRate() {
+        Double sum = 0.0;
+        for (Double breathing_rate : this.breathing_rate.values())
+            sum += breathing_rate;
+        return sum / this.breathing_rate.size();
+    }
+
+    public Double getAvgSpeed() {
+        Double sum = 0.0;
+        for (Double ecg : this.speed.values())
+            sum += ecg;
+        return sum / this.speed.size();
+    }
 }
