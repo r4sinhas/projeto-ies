@@ -1,7 +1,8 @@
 package com.PASSIT.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -12,7 +13,8 @@ import java.util.List;
 
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "game")
@@ -30,9 +32,12 @@ public class Game {
     @JoinColumn(name = "teams_list", nullable = false)
     private List<Team> teams_list;
 
-    @OneToMany()
+    @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "stats_list")
     private List<StatsByGame> stats_list = new ArrayList<>();
 
+    public void addStatsByGame(StatsByGame stats) {
+        this.stats_list.add(stats);
+    }
 }
 

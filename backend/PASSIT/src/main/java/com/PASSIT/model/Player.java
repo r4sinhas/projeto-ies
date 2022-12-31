@@ -1,7 +1,8 @@
 package com.PASSIT.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -10,10 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.annotation.processing.Generated;
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "player")
@@ -59,7 +62,7 @@ public class Player {
     @JoinColumn(name = "team_id")
     private Team team_id;
 
-    @OneToMany()
+    @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "stats_list")
     private List<StatsByGame> stats_list = new ArrayList<>();
 
@@ -71,6 +74,19 @@ public class Player {
     
     public void setStamina(Double stamina) {
         this.last_stamina = stamina;
+    }
+
+    public StatsByGame getStatsByGame(Game game) {
+        for (StatsByGame stats : stats_list) {
+            if (stats.getGame_id().getId() == game.getId()) {
+                return stats;
+            }
+        }
+        return null;
+    }
+
+    public void addStatsByGame(StatsByGame stats) {
+        stats_list.add(stats);
     }
 
 }

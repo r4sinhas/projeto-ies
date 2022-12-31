@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -39,5 +40,10 @@ public class TeamController {
     @GetMapping("/{id}/players")
     public List<Player> getPlayers(@PathVariable("id") Long id) {
         return teamService.getPlayers(id);
+    }
+
+    @GetMapping("/stats_team_game/{id}/{game}")
+    public Map<String,Double> getStatsTeamGame(@PathVariable("id") Long id, @PathVariable("game") Long game) {
+        return teamService.getStatsTeamGame(id, game);
     }
 }

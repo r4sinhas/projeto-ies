@@ -113,8 +113,8 @@ def insert_data(type_insert, url):
 def main():
     # **Post**
     insert_data('team', 'http://localhost:8080/api/v1/team/add')
-    insert_data('player', 'http://localhost:8080/api/v1/player/add')
     insert_data('coach', 'http://localhost:8080/api/v1/coach/add')
+    insert_data('player', 'http://localhost:8080/api/v1/player/add')
     insert_data('fan', 'http://localhost:8080/api/v1/fan/add')
     insert_data('game', 'http://localhost:8080/api/v1/game/add')
     insert_data('statsbygame', 'http://localhost:8080/api/v1/statsbygame/add')

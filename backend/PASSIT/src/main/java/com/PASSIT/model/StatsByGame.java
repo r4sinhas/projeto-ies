@@ -1,17 +1,18 @@
 package com.PASSIT.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.TreeMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "stats_by_game")
@@ -94,5 +95,14 @@ public class StatsByGame {
         for (Double ecg : this.speed.values())
             sum += ecg;
         return sum / this.speed.size();
+    }
+
+    public Map<String, Map<Double,Double>> getAllStats() {
+        Map<String, Map<Double,Double>> allStats = new TreeMap<>();
+        allStats.put("bpm", this.bpm);
+        allStats.put("breathing_rate", this.breathing_rate);
+        allStats.put("ecg", this.ecg);
+        allStats.put("speed", this.speed);
+        return allStats;
     }
 }

@@ -4,6 +4,9 @@ import requests
 
 from rabbitmq import Queue
 
+def post(url, data=None, json=None, headers=None):
+	return requests.post(url, data=data, json=json, headers=headers)
+
 def put(url, data=None, json=None, headers=None):
 	return requests.put(url, data=data, json=json, headers=headers)
 
@@ -17,15 +20,12 @@ def recv(queue):
 
 def process_message(message):
 	
-	try:
 		if message['type'] == 'stats':
 				put(f'http://localhost:8080/api/v1/statsbygame/addstat/{message["id"]}', data=message['data'])
 		elif message['type'] == 'minutes_played':
 			put(f'http://localhost:8080/api/v1/player/minutesplayed/{message["id"]}', data=message['data'])
 		elif message['type'] == 'rem_stamina':
 			put(f'http://localhost:8080/api/v1/player/remstamina/{message["id"]}', data=message['data'])
-	except Exception as e:
-		print(f'Erro ao enviar a mensagem: {e}')
 
 def main():
 	try:
