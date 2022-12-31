@@ -2,8 +2,6 @@ from datetime import date
 import math
 import random
 import time
-import numpy
-import scipy.signal as sig
 import json
 import mysql.connector
 from rabbitmq import Queue
@@ -23,8 +21,9 @@ mycursor = mydb.cursor()
 
 class Player:
 
-	def __init__(self, id, today, live=False):
+	def __init__(self, id, statsid, live=False):
 		self.id = id
+		self.statsid = statsid
 		self.queue = Queue("localhost", 5672, "admin", "admin", "player_data")
 		self.live_queue = None
 		if live:
@@ -36,22 +35,26 @@ class Player:
 		self.height = result[1]
 		last_stamina = result[2]
 		self.age_factor = max(131/21000*(self.age**2) - 6247/21000*self.age + 1209/350, 0)
-		self.stamina = min(self.get_stamina(today) + last_stamina, 100)
+		self.stamina = min(self.get_stamina() + last_stamina, 100)
 		self.condition = min(self.get_condition(), 1)
 		self.v_max = -4/7*self.height+957/7
 		self.last_speed = 0
 		self.last_bpm = 100
-		self.day = today
+		self.last_t = 0
+		self.tm = None
+		self.start_point = None
 
 	def send(self, bpm, breathing, speed, t, ecg):
-		m = {"type":"stats","id":self.id,"data":{"bpm":bpm,"breathing_rate":breathing,"speed":speed,"ecg":[t,ecg],"day":self.day.strftime("%Y-%m-%d")}}
+		t.append(self.last_t)
+		ecg.append(0)
+		m = {"type":"stats","id":self.statsid,"data":{"bpm":bpm,"breathing_rate":breathing,"speed":speed,"ecg":ecg,"t":t}}
 		message = json.dumps(m)
 		self.queue.send(message)
 		if self.live_queue:
 			self.live_queue.send(message)
 
 	def heart_rate(self, run):
-		init = self.last_bpm
+		init = int(self.last_bpm)
 		if run == 0:
 			if init > 125:
 				self.last_bpm = init-(4/3*self.stamina/100)
@@ -63,52 +66,86 @@ class Player:
 			elif init < 125:
 				self.last_bpm = init+0.21+self.stamina/20000+0.05*((self.age_factor/1.8-1)/1.5)
 			else:
-				self.last_bpm = max(init-(0.8*self.stamina/100), 135)
+				self.last_bpm = min(init-(0.8*self.stamina/100), 135)
 		else:
-			self.last_bpm = max(20*math.e**(-2*init-1), 195)
-		return self.last_bpm
+			self.last_bpm = min(20*math.e**(2*init-1), 195)
+		return int(self.last_bpm)
 
-	def eletrocardiogram(bpm):
-		r = int(bpm//60 if bpm%60 < 0.5 else bpm//60+1)
-		rr = [60/bpm for _ in range(r)]
-		fs = 500.0
-		ecg = list(numpy.concatenate([sig.resample(sig.daub(10), int(r*fs)) for r in rr]))
-		return (list(numpy.arange(len(ecg))/fs), ecg)
+	def eletrocardiogram(self, bpm):
+		t=[self.last_t]
+		ecg=[0]
+		sec = 1 - self.last_t%1
+		nbps = int(bpm/60*sec)
+		pr=0.224653-0.000846939*bpm
+		qrs=0.098-0.0003*bpm
+		qt=0.535988-0.00192237*bpm-qrs
+
+		if self.last_t == int(self.last_t): 
+			nbps+=1
+			start = self.last_t
+		else:
+			start = self.last_t+(sec-nbps*60/bpm)/2
+
+		for _ in range(nbps):
+			#pr
+			for i in range(11):
+				t.append(start+pr/20*i)
+				ecg.append(math.sqrt(max((pr/2)**2-(pr/20*i-pr/4)**2/((pr/4)**2)*((pr/2)**2), 0)))
+			#qrs
+			t.extend([start+pr, start+pr+qrs/4, start+pr+qrs/2, start+pr+3*qrs/4, start+pr+qrs, start+pr+qrs+qt/2-0.01])
+			ecg.extend([-0.01, -0.1, 1, -0.4, -0.05, 0])
+			#qrs
+			for i in range(1,10):
+				t.append(start+pr+qrs+qt/2+qt/20*i)
+				ecg.append(math.sqrt(max((qt/2)**2-(qt/20*i-qt/4)**2/((qt/4)**2)*((qt/2)**2),0)))
+			#final
+			t.append(start+pr+qrs+qt+0.01)
+			start+=60/bpm
+			t.append(start)
+			ecg.extend([0,0])
+
+		if self.last_t == int(self.last_t):
+			self.last_t=start
+		else:
+			self.last_t = int(self.last_t)+1
+
+		return t, ecg
 
 	def breathing_rate(bpm):
 		return bpm/(random.random()*0.8+3.6)
 
-	def sprint(self, tm):
-		start_point = -math.log(-self.last_speed/self.v_max+1)
-		for _ in range(tm):
-			bpm=self.heart_rate(2)
-			self.stamina-=(((self.last_bpm/90)-1/1.112)*0.024+0.2261+0.15*(self.age_factor/2.7)+0.05*abs(self.condition-1))/2
-			speed = self.v_max*(1-math.e**(-tm/(0.7+self.condition*0.3+(self.age_factor/2.7)-start_point)))
-			self.last_speed = speed
-			t, ecg = Player.eletrocardiogram(bpm)
-			self.send(bpm, Player.breathing_rate(bpm), speed, t, ecg)
+	def sprint(self):
+		bpm=self.heart_rate(2)
+		self.stamina-=(((self.last_bpm/90)-1/1.112)*0.024+0.2261+0.15*(self.age_factor/2.7)+0.05*abs(self.condition-1))/2
+		speed = self.v_max*(1-math.e**(-self.tm/(0.7+self.condition*0.3+(self.age_factor/2.7)-self.start_point)))
+		self.last_speed = speed
+		t, ecg = self.eletrocardiogram(bpm)
+		return bpm, Player.breathing_rate(bpm), speed, t, ecg
 
-	def run(self, tm):
-		for _ in range(tm):
-			bpm=self.heart_rate(1)
-			self.stamina-=(((self.last_bpm/90)-1/1.112)*0.004+0.018+0.015*(self.age_factor/2.7)+0.005*abs(self.condition-1))/2
-			speed = random.random()*1+9.5
-			self.last_speed = speed
-			t, ecg = Player.eletrocardiogram(bpm)
-			self.send(bpm, Player.breathing_rate(bpm), speed, t, ecg)
+	def run(self):
+		bpm=self.heart_rate(1)
+		self.stamina-=(((self.last_bpm/90)-1/1.112)*0.004+0.018+0.015*(self.age_factor/2.7)+0.005*abs(self.condition-1))/2
+		speed = random.random()*1+9.5
+		self.last_speed = speed
+		t, ecg = self.eletrocardiogram(bpm)
+		return bpm, Player.breathing_rate(bpm), speed, t, ecg
 
-	def walk(self, tm):
-		for _ in range(tm):
-			bpm=self.heart_rate(0)
-			self.stamina-=(((self.last_bpm/90)-1/1.112)*0.0005+0.0055)/2
-			speed = random.random()*0.5+3.2
-			self.last_speed = speed
-			t, ecg = Player.eletrocardiogram(bpm)
-			self.send(bpm, Player.breathing_rate(bpm), speed, t, ecg)
+	def walk(self):
+		bpm=self.heart_rate(0)
+		self.stamina-=(((self.last_bpm/90)-1/1.112)*0.0005+0.0055)/2
+		speed = random.random()*0.5+3.2
+		self.last_speed = speed
+		t, ecg = self.eletrocardiogram(bpm)
+		return bpm, Player.breathing_rate(bpm), speed, t, ecg
 
-	def get_stamina(self, actual_day):
-		mycursor.execute(f"SELECT g.date FROM game g INNER JOIN stats_by_game s ON s.game_id = g.id INNER JOIN player p ON p.id = s.player_id WHERE p.id = {self.id} ORDER BY g.date DESC LIMIT 1")
-		last_game = mycursor.fetchone()[0]
+	def get_stamina(self):
+		mycursor.execute(f"SELECT g.date FROM game g INNER JOIN stats_by_game s ON s.game_id = g.id WHERE s.id = {self.statsid} ")
+		actual_day = mycursor.fetchone()[0]
+		mycursor.execute(f"SELECT g.date FROM game g INNER JOIN stats_by_game s ON s.game_id = g.id INNER JOIN player p ON p.id = s.player_id WHERE p.id = {self.id} AND g.date < '{actual_day}' ORDER BY g.date DESC LIMIT 1")
+		try:
+			last_game = mycursor.fetchone()[0]
+		except:
+			last_game = date(1900,1,1)
 		if last_game == date.today():
 			n_days = 0.01
 		else:
@@ -122,40 +159,60 @@ class Player:
 
 	def can_do(self, action, remaining_time, tm):
 		if action:
-			if self.stamina-1 < remaining_time*0.00575+0.45715*tm:
+			if self.stamina-1 < (remaining_time-tm)*0.00575+0.45715*tm:
 				return False
 			else:
 				return True
 		else:
-			if self.stamina-1 < remaining_time*0.00575-0.03*tm:
+			if self.stamina-1 < (remaining_time-tm)*0.00575+0.03*tm:
 				return False
 			else:
 				return True
 
-def main(start_time, id, live, actual_day = date.today()):
-	player = Player(id, actual_day, live)
+def main(start_time, id, statsid, live):
+	player = Player(id, statsid, live)
 	i=0
 	init = time.time()
+	if not live:
+		bpm_list= []
+		breathing_rate_list = []
+		speed_list = []
+		t_list = []
+		ecg_list = []
 
 	while i < (GAME_TIME-start_time):
 		r=random.randrange(0, 100)
 		tm1 = random.randrange(1, 11)
 		tm2 = random.randrange(3, 16)
 		if r < 7 and player.can_do(1, GAME_TIME-start_time-i, tm1):
-			player.sprint(tm1)
+			func = player.sprint
 			tm=tm1
+			player.tm = tm
+			player.start_point = -math.log(-player.last_speed/player.v_max+1)
 		elif r < 28 and player.can_do(0, GAME_TIME-start_time-i, tm2):
-			player.run(tm2)
+			func = player.run
 			tm=tm2
 		else:
 			tm=random.randrange(1, 11)
-			player.walk(tm)
+			func = player.walk
+		for _ in range(tm):
+			bpm, breathing_rate, speed, t, ecg = func()
+			if live:
+				player.send(bpm, breathing_rate, speed, t, ecg)
+				time.sleep(max(tm-time.time()-init, 0))
+				init = time.time()
+			else:
+				bpm_list.append(bpm)
+				breathing_rate_list.append(breathing_rate)
+				speed_list.append(speed)
+				t_list.extend(t)
+				ecg_list.extend(ecg)
 		i+=tm
-		if live:
-			time.sleep(max(tm-time.time()-init, 0))
-			init = time.time()
 
-	player.queue.send(json.dumps({"type":"rem_stamina","id":id,"data":{"val":player.stamina,"day":actual_day.strftime("%Y-%m-%d"), "minutes_played":(GAME_TIME-start_time)//60}}))
+	print(bpm_list)
+	player.send(bpm_list, breathing_rate_list, speed_list, t_list, ecg_list)
+	player.queue.send(json.dumps({"type":"rem_stamina","id":player.statsid,"data":{"stamina":player.stamina}}))
+	player.queue.send(json.dumps({"type":"minutes_played","id":player.statsid,"data":{"minutes_played":(GAME_TIME-start_time)//60}}))
 	player.queue.close()
 
 if __name__ == "__main__":
@@ -163,12 +220,8 @@ if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
 	parser.add_argument("start_time", type=int, help="Start time of the game in seconds")
 	parser.add_argument("id", type=int, help="Player id")
+	parser.add_argument("statsid", type=str, help="StatsByGame Id")
 	parser.add_argument("--live", action="store_true", help="Live mode")
-	parser.add_argument("--day", type=str, help="Day (YYYY-MM-DD)")
 	args = parser.parse_args()
 
-	if args.day:
-		day = date.fromisoformat(args.day)
-		main(args.start_time, args.id, args.live, day)
-	else:
-		main(args.start_time, args.id, args.live)
+	main(args.start_time, args.id, args.statsid, args.live)

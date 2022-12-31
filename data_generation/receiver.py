@@ -7,18 +7,6 @@ from rabbitmq import Queue
 def put(url, data=None, json=None, headers=None):
 	return requests.put(url, data=data, json=json, headers=headers)
 
-def get(url, data=None, json=None, headers=None):
-    try:
-        response = requests.get(url, data=data, json=json, headers=headers)
-        if response.status_code == 200:
-            return response
-        else:
-            print(f'A solicitação HTTP falhou com o código de status {response.status_code}')
-            return None
-    except Exception as e:
-        print(f'Ocorreu um erro ao fazer a solicitação HTTP: {e}')
-        return None
-
 def callback(ch, method, properties, body):
 	message = json.loads(body)
 	process_message(message)
@@ -28,12 +16,16 @@ def recv(queue):
 	queue.channel.start_consuming()
 
 def process_message(message):
-	if message['type'] == 'stats':
-		put(f'http://localhost:8080/api/v1/statsbygame/addstat/{message["id"]}', data=message['data'])
-	elif message['type'] == 'rem_stamina':
-		if message['data']['minutes_played'] > 0:
-			if message['data']['day'] > get(f'http://localhost:8080/api/v1/player/lastgame/{message["id"]}').text:
-				put(f'http://localhost:8080/api/v1/player/remstamina/{message["id"]}', data=message['data'])
+	
+	try:
+		if message['type'] == 'stats':
+				put(f'http://localhost:8080/api/v1/statsbygame/addstat/{message["id"]}', data=message['data'])
+		elif message['type'] == 'minutes_played':
+			put(f'http://localhost:8080/api/v1/player/minutesplayed/{message["id"]}', data=message['data'])
+		elif message['type'] == 'rem_stamina':
+			put(f'http://localhost:8080/api/v1/player/remstamina/{message["id"]}', data=message['data'])
+	except Exception as e:
+		print(f'Erro ao enviar a mensagem: {e}')
 
 def main():
 	try:
