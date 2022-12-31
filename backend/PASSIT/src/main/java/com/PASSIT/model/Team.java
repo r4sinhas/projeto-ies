@@ -1,5 +1,7 @@
 package com.PASSIT.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,17 +33,17 @@ public class Team {
     private String country;
 
     // connect team to coach
-    @OneToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "coach_id")
+    @OneToOne(mappedBy = "team_id")
     private Coach coach_id;
 
     // connect team to players
+    @JsonManagedReference
     @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "players_list")
     private List<Player> players_list = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "games_list")
+    @JoinColumn(name = "games_list", referencedColumnName = "id")
     private List<Game> games_list = new ArrayList<>();
 
     public void addPlayer(Player player) {

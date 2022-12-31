@@ -1,5 +1,6 @@
 package com.PASSIT.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,8 +39,8 @@ public class Coach {
     private String role="coach";
 
     // connect coach to team
-    @OneToOne()
-    @JoinColumn(name = "team_id")
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "team_id", referencedColumnName = "id")
     private Team team_id;
 
 }

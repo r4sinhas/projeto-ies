@@ -27,7 +27,7 @@ public class TeamService {
     }
 
     public Team getTeam(Long id) {
-        return teamRepository.findById(id).orElse(null);
+        return teamRepository.findById(id).get();
     }
 
     public Team addTeam(Team team) {
@@ -59,9 +59,9 @@ public class TeamService {
         List<Player> players_list = teamRepository.findById(id).get().getPlayers_list();
         for (Player player : players_list) {
             StatsByGame statsByGame = player.getStatsByGame(game);
-            statsMap.put("bpm", statsMap.get("bpm") + statsByGame.getAvgBpm());
-            statsMap.put("speed", statsMap.get("speed") + statsByGame.getAvgSpeed());
-            statsMap.put("breathing_rate", statsMap.get("breathing_rate") + statsByGame.getAvgBreathingRate());
+            statsMap.put("bpm", statsMap.get("bpm") + statsByGame.avgBpm());
+            statsMap.put("speed", statsMap.get("speed") + statsByGame.avgSpeed());
+            statsMap.put("breathing_rate", statsMap.get("breathing_rate") + statsByGame.avgBreathingRate());
         }
         System.out.println(statsMap);
         statsMap.put("bpm", statsMap.get("bpm") / players_list.size());

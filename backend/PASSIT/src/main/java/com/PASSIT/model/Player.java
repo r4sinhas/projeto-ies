@@ -1,5 +1,7 @@
 package com.PASSIT.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -58,10 +60,12 @@ public class Player {
     private int number;
 
     // Connect player to a Team
+    @JsonBackReference
     @ManyToOne()
     @JoinColumn(name = "team_id")
     private Team team_id;
 
+    @JsonManagedReference
     @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "stats_list")
     private List<StatsByGame> stats_list = new ArrayList<>();

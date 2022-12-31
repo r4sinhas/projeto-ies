@@ -66,9 +66,9 @@ public class PlayerService {
         Map<String, Double> stats = new HashMap<>();
         for (StatsByGame statsByGame : statsByGameRepository.findAll()) {
             if (statsByGame.getPlayer_id().getId() == id && statsByGame.getGame_id().getId() == game_id) {
-                stats.put("speed", statsByGame.getAvgSpeed());
-                stats.put("breathing_rate", statsByGame.getAvgBreathingRate());
-                stats.put("bpm", statsByGame.getAvgBpm());
+                stats.put("speed", statsByGame.avgSpeed());
+                stats.put("breathing_rate", statsByGame.avgBreathingRate());
+                stats.put("bpm", statsByGame.avgBpm());
             }
         }
         return stats;
@@ -77,9 +77,9 @@ public class PlayerService {
     public Map<String, Double> getStatsUserGame(Long id) {
         Map<String, Double> stats = new HashMap<>();
         StatsByGame statsByGame = statsByGameRepository.findById(id).get();
-        stats.put("speed", statsByGame.getAvgSpeed());
-        stats.put("breathing_rate", statsByGame.getAvgBreathingRate());
-        stats.put("bpm", statsByGame.getAvgBpm());
+        stats.put("speed", statsByGame.avgSpeed());
+        stats.put("breathing_rate", statsByGame.avgBreathingRate());
+        stats.put("bpm", statsByGame.avgBpm());
         return stats;
     }
 

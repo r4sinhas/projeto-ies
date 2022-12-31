@@ -1,5 +1,6 @@
 package com.PASSIT.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,6 +38,7 @@ public class Fan {
     @Column(name = "role")
     private String role="FAN";
 
+    @JsonManagedReference
     @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "fav_players")
     private List<Player>fav_players = new ArrayList<>();
