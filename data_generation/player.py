@@ -7,6 +7,8 @@ import mysql.connector
 from rabbitmq import Queue
 import argparse
 
+import matplotlib.pyplot as plt
+
 GAME_TIME = 90
 GAME_TIME = GAME_TIME*60
 
@@ -54,21 +56,21 @@ class Player:
 			self.live_queue.send(message)
 
 	def heart_rate(self, run):
-		init = int(self.last_bpm)
+		init = self.last_bpm
 		if run == 0:
-			if init > 125:
-				self.last_bpm = init-(4/3*self.stamina/100)
+			if init > 125+10*(1-self.stamina/100):
+				self.last_bpm = init-0.5-0.5*(1-self.stamina/100)
 			else:
-				self.last_bpm = max(init-1, 100)
+				self.last_bpm = max(init-0.25, 100+10*(1-self.stamina/100))
 		elif run == 1:
-			if init > 145:
-				self.last_bpm = init-1/3-1*((self.age_factor/1.8-1)/1.5)
-			elif init < 125:
-				self.last_bpm = init+0.21+self.stamina/20000+0.05*((self.age_factor/1.8-1)/1.5)
+			if init > 145+10*(1-self.stamina/100):
+				self.last_bpm = init-0.1-0.1*(((self.age_factor+1)/3.7))
+			elif init < 125+10*(1-self.stamina/100):
+				self.last_bpm = init+0.21+2*self.stamina/100+0.5*((self.age_factor+1)/3.7)
 			else:
-				self.last_bpm = min(init-(0.8*self.stamina/100), 135)
+				self.last_bpm = max(init-(0.8*self.stamina/100), 135+10*(1-self.stamina/100))
 		else:
-			self.last_bpm = min(20*math.e**(2*init-1), 195)
+			self.last_bpm = min(init*(1.1+0.1*(((self.age_factor+1)/3.7)-0.1*(self.stamina/100))), 190+10*(1-self.stamina/100))
 		return int(self.last_bpm)
 
 	def eletrocardiogram(self, bpm):
@@ -93,7 +95,7 @@ class Player:
 				ecg.append(math.sqrt(max((pr/2)**2-(pr/20*i-pr/4)**2/((pr/4)**2)*((pr/2)**2), 0)))
 			#qrs
 			t.extend([start+pr, start+pr+qrs/4, start+pr+qrs/2, start+pr+3*qrs/4, start+pr+qrs, start+pr+qrs+qt/2-0.01])
-			ecg.extend([-0.01, -0.1, 1, -0.4, -0.05, 0])
+			ecg.extend([-0.01, -0.08-0.02*random.random(), 0.8+0.2*random.random(), -0.35-0.05*random.random(), -0.05, 0])
 			#qrs
 			for i in range(1,10):
 				t.append(start+pr+qrs+qt/2+qt/20*i)
@@ -116,15 +118,15 @@ class Player:
 
 	def sprint(self):
 		bpm=self.heart_rate(2)
-		self.stamina-=(((self.last_bpm/90)-1/1.112)*0.024+0.2261+0.15*(self.age_factor/2.7)+0.05*abs(self.condition-1))/2
-		speed = self.v_max*(1-math.e**(-self.tm/(0.7+self.condition*0.3+(self.age_factor/2.7)-self.start_point)))
+		self.stamina-=(((self.last_bpm/90)-1/1.112)*0.024+0.2261+0.15*((self.age_factor+1)/3.7)+0.05*abs(self.condition-1))/2
+		speed = self.v_max*(1-math.e**(-self.tm/(0.7+self.condition*0.3+((self.age_factor+1)/3.7)-self.start_point)))
 		self.last_speed = speed
 		t, ecg = self.eletrocardiogram(bpm)
 		return bpm, Player.breathing_rate(bpm), speed, t, ecg
 
 	def run(self):
 		bpm=self.heart_rate(1)
-		self.stamina-=(((self.last_bpm/90)-1/1.112)*0.004+0.018+0.015*(self.age_factor/2.7)+0.005*abs(self.condition-1))/2
+		self.stamina-=(((self.last_bpm/90)-1/1.112)*0.004+0.018+0.015*((self.age_factor+1)/3.7)+0.005*abs(self.condition-1))/2
 		speed = random.random()*1+9.5
 		self.last_speed = speed
 		t, ecg = self.eletrocardiogram(bpm)
@@ -182,8 +184,8 @@ def main(start_time, statsid, live):
 
 	while i < (GAME_TIME-start_time):
 		r=random.randrange(0, 100)
-		tm1 = random.randrange(1, 11)
-		tm2 = random.randrange(3, 16)
+		tm1 = random.randrange(1, 8)
+		tm2 = random.randrange(3, 25)
 		if r < 7 and player.can_do(1, GAME_TIME-start_time-i, tm1):
 			func = player.sprint
 			tm=tm1
@@ -193,7 +195,7 @@ def main(start_time, statsid, live):
 			func = player.run
 			tm=tm2
 		else:
-			tm=random.randrange(1, 11)
+			tm=random.randrange(1, 20)
 			func = player.walk
 		for _ in range(tm):
 			bpm, breathing_rate, speed, t, ecg = func()
@@ -214,11 +216,14 @@ def main(start_time, statsid, live):
 	if not live:
 		t_list.append(player.last_t)
 		ecg_list.append(0)
-		print(bpm_list)
 		player.send({"type":"stats","id":player.statsid,"data":{"bpm":bpm_list,"breathing_rate":breathing_rate_list,"speed":speed_list,"ecg":ecg_list,"t":t_list}})
 	player.send({"type":"rem_stamina","id":player.statsid,"data":{"stamina":player.stamina}})
 	player.send({"type":"minutes_played","id":player.statsid,"data":{"minutes_played":(GAME_TIME-start_time)//60}})
 	player.queue.close()
+
+	plt.ylim(0, 200)
+	plt.plot(bpm_list)
+	plt.show()
 
 if __name__ == "__main__":
 
