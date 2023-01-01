@@ -1,6 +1,9 @@
 package com.PASSIT.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +15,7 @@ import java.util.ArrayList;
 import javax.persistence.*;
 
 @Entity
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -38,9 +42,8 @@ public class Fan {
     @Column(name = "role")
     private String role="FAN";
 
-    @JsonManagedReference
-    @OneToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "fav_players")
+    @ManyToMany(cascade = {CascadeType.ALL, CascadeType.DETACH})
+    @JoinTable(name = "fav_players", joinColumns = @JoinColumn(name = "fan_id"), inverseJoinColumns = @JoinColumn(name = "player_id"))
     private List<Player>fav_players = new ArrayList<>();
 
 }

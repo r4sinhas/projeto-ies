@@ -24,6 +24,11 @@ public class CoachController {
         return "New coach ADDED!";
     }
 
+    @GetMapping("/{id}")
+    public Coach getCoach(@PathVariable Long id) {
+        return coachService.getCoach(id);
+    }
+
     @GetMapping("/all")
     public List<Coach> getCoaches() {
         return coachService.getCoaches();

@@ -43,7 +43,12 @@ public class TeamController {
     }
 
     @GetMapping("/stats_team_game/{id}/{game}")
-    public Map<String,Double> getStatsTeamGame(@PathVariable("id") Long id, @PathVariable("game") Long game) {
-        return teamService.getStatsTeamGame(id, game);
+    public Map<String,Double> statsTeamGame(@PathVariable("id") Long id, @PathVariable("game") Long game) {
+        return teamService.statsTeamGame(id, game);
+    }
+
+    @GetMapping("/higher_player_stat/{id}/{stat}")
+    public Player highestPlayerByStat(@PathVariable("id") Long id, @PathVariable("stat") String stat) {
+        return teamService.highestPlayerByStat(id, stat);
     }
 }
