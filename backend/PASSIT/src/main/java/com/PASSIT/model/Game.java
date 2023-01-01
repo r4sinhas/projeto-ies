@@ -1,7 +1,9 @@
 package com.PASSIT.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -12,7 +14,8 @@ import java.util.List;
 
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "game")
@@ -26,13 +29,16 @@ public class Game {
     @Column(name = "date")
     private Date date;
 
-    @ManyToMany()
-    @JoinColumn(name = "teams_list", nullable = false)
+    @ManyToMany(mappedBy = "games_list")
     private List<Team> teams_list;
 
-    @OneToMany()
+    @JsonManagedReference
+    @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "stats_list")
     private List<StatsByGame> stats_list = new ArrayList<>();
 
+    public void addStatsByGame(StatsByGame stats) {
+        this.stats_list.add(stats);
+    }
 }
 

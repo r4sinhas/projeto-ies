@@ -1,8 +1,10 @@
 package com.PASSIT.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import java.util.*;
@@ -10,7 +12,8 @@ import java.util.*;
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "team")
@@ -30,19 +33,25 @@ public class Team {
     private String country;
 
     // connect team to coach
-
-    @OneToOne
-    @JoinColumn(name = "coach_id")
+    @OneToOne(mappedBy = "team_id")
     private Coach coach_id;
 
     // connect team to players
-
-    @OneToMany()
+    @JsonManagedReference
+    @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "players_list")
     private List<Player> players_list = new ArrayList<>();
 
-    @ManyToMany
-    @JoinColumn(name = "games_list")
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "games_list", referencedColumnName = "id")
     private List<Game> games_list = new ArrayList<>();
+
+    public void addPlayer(Player player) {
+        players_list.add(player);
+    }
+
+    public void addGame(Game game) {
+        games_list.add(game);
+    }
 
 }

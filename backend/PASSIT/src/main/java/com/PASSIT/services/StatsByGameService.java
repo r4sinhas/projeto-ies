@@ -1,8 +1,11 @@
 package com.PASSIT.services;
 
+import com.PASSIT.model.Player;
+import com.PASSIT.model.Game;
 import com.PASSIT.model.StatsByGame;
 import com.PASSIT.repository.GameRepository;
 import com.PASSIT.repository.StatsByGameRepository;
+import com.PASSIT.repository.PlayerRepository;
 
 import java.sql.Date;
 import java.util.HashMap;
@@ -17,15 +20,20 @@ import org.springframework.stereotype.Service;
 public class StatsByGameService {
 
     private final StatsByGameRepository statsByGameRepository;
+    private final PlayerRepository playerRepository;
+    private final GameRepository gameRepository;
+
 
     @Autowired
-    public StatsByGameService(StatsByGameRepository statsByGameRepository) {
+    public StatsByGameService(StatsByGameRepository statsByGameRepository, PlayerRepository playerRepository, GameRepository gameRepository) {
         this.statsByGameRepository = statsByGameRepository;
+        this.playerRepository = playerRepository;
+        this.gameRepository = gameRepository;
     }
 
     public StatsByGame saveStatsByGame(StatsByGame statsByGame) {
-        statsByGame.getGame_id().getStats_list().add(statsByGame);
-        statsByGame.getPlayer_id().getStats_list().add(statsByGame);
+        gameRepository.findById(statsByGame.getGame_id().getId()).get().addStatsByGame(statsByGame);
+        playerRepository.findById(statsByGame.getPlayer_id().getId()).get().addStatsByGame(statsByGame);
         return statsByGameRepository.save(statsByGame);
     }
 
@@ -33,28 +41,13 @@ public class StatsByGameService {
         return statsByGameRepository.findAll();
     }
 
-    public void addBPM(Long id, TreeMap<Double, Double> bpm) {
+    public StatsByGame addStats(Long id, List<TreeMap<Double,Double>> stats) {
         StatsByGame statsByGame = statsByGameRepository.findById(id).get();
-        statsByGame.setBpm(bpm);
-        statsByGameRepository.save(statsByGame);
-    }
-
-    public void addBreathingRate(Long id, TreeMap<Double, Double> breathing_rate) {
-        StatsByGame statsByGame = statsByGameRepository.findById(id).get();
-        statsByGame.setBreathing_rate(breathing_rate);
-        statsByGameRepository.save(statsByGame);
-    }
-
-    public void addSpeed(Long id, TreeMap<Double, Double> speed) {
-        StatsByGame statsByGame = statsByGameRepository.findById(id).get();
-        statsByGame.setSpeed(speed);
-        statsByGameRepository.save(statsByGame);
-    }
-
-    public void addEcg(Long id, TreeMap<Double, Double> ecg) {
-        StatsByGame statsByGame = statsByGameRepository.findById(id).get();
-        statsByGame.setEcg(ecg);
-        statsByGameRepository.save(statsByGame);
+        statsByGame.setBpm(stats.get(0));
+        statsByGame.setSpeed(stats.get(1));
+        statsByGame.setBreathing_rate(stats.get(2));
+        statsByGame.setEcg(stats.get(3));
+        return statsByGameRepository.save(statsByGame);
     }
     
     public void setMinutesPlayed(Long id, int minutesPlayed) {

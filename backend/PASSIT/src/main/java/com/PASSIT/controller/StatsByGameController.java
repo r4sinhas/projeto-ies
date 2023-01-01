@@ -5,9 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.HashMap;
+import java.util.*;
 
 @RestController
 @CrossOrigin
@@ -51,10 +49,13 @@ public class StatsByGameController {
         for (int i = 0; i < ecg.size(); i++)
             ecgMap.put(t.get(i), ecg.get(i));
 
-        statsByGameService.addBPM(id, bpmMap);
-        statsByGameService.addBreathingRate(id, breathing_rateMap);
-        statsByGameService.addSpeed(id, speedMap);
-        statsByGameService.addEcg(id, ecgMap);
+        List<TreeMap<Double,Double>> stats = new ArrayList<>();
+        stats.add(bpmMap);
+        stats.add(breathing_rateMap);
+        stats.add(speedMap);
+        stats.add(ecgMap);
+
+        statsByGameService.addStats(id, stats);
         
         return "New stat ADDED!";
     }

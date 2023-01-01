@@ -1,4 +1,5 @@
 import requests
+import json as j
 
 
 def post(url, data=None, json=None, headers=None):
@@ -100,12 +101,8 @@ def insert_data(type_insert, url):
         with open('statsbygame.txt', 'r') as f:
             for line in f:
                 line = line.split(';')
-                post(url, json={'game_id': {
-                    'id': line[0]
-                },
-                    'player_id': {
-                    'id': line[1]
-                },
+                post(url, json={'game': line[0],
+                'player': line[1],
                 "minutes_played": line[2]
                 })
 
@@ -113,11 +110,11 @@ def insert_data(type_insert, url):
 def main():
     # **Post**
     insert_data('team', 'http://localhost:8080/api/v1/team/add')
-    insert_data('player', 'http://localhost:8080/api/v1/player/add')
     insert_data('coach', 'http://localhost:8080/api/v1/coach/add')
-    insert_data('fan', 'http://localhost:8080/api/v1/fan/add')
+    insert_data('player', 'http://localhost:8080/api/v1/player/add')
     insert_data('game', 'http://localhost:8080/api/v1/game/add')
     insert_data('statsbygame', 'http://localhost:8080/api/v1/statsbygame/add')
+    insert_data('fan', 'http://localhost:8080/api/v1/fan/add')
 
 
 if __name__ == '__main__':

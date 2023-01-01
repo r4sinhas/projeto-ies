@@ -2,8 +2,11 @@ package com.PASSIT.services;
 
 import com.PASSIT.model.Player;
 import com.PASSIT.model.StatsByGame;
+import com.PASSIT.model.Team;
 import com.PASSIT.repository.PlayerRepository;
 import com.PASSIT.repository.StatsByGameRepository;
+import com.PASSIT.repository.TeamRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +20,17 @@ public class PlayerService {
 
     private final PlayerRepository playerRepository;
     private final StatsByGameRepository statsByGameRepository;
+    private final TeamRepository teamRepository;
 
     @Autowired
-    public PlayerService(PlayerRepository playerRepository, StatsByGameRepository statsByGameRepository) {
+    public PlayerService(PlayerRepository playerRepository, StatsByGameRepository statsByGameRepository, TeamRepository teamRepository) {
         this.playerRepository = playerRepository;
         this.statsByGameRepository = statsByGameRepository;
+        this.teamRepository = teamRepository;
     }
 
     public Player savePlayer(Player player) {
-        player.getTeam_id().getPlayers_list().add(player);
+        teamRepository.findById(player.getTeam_id().getId()).get().addPlayer(player);
         return playerRepository.save(player);
     }
 
@@ -61,9 +66,9 @@ public class PlayerService {
         Map<String, Double> stats = new HashMap<>();
         for (StatsByGame statsByGame : statsByGameRepository.findAll()) {
             if (statsByGame.getPlayer_id().getId() == id && statsByGame.getGame_id().getId() == game_id) {
-                stats.put("speed", statsByGame.getAvgSpeed());
-                stats.put("breathing_rate", statsByGame.getAvgBreathingRate());
-                stats.put("bpm", statsByGame.getAvgBpm());
+                stats.put("speed", statsByGame.avgSpeed());
+                stats.put("breathing_rate", statsByGame.avgBreathingRate());
+                stats.put("bpm", statsByGame.avgBpm());
             }
         }
         return stats;
@@ -72,12 +77,10 @@ public class PlayerService {
     public Map<String, Double> getStatsUserGame(Long id) {
         Map<String, Double> stats = new HashMap<>();
         StatsByGame statsByGame = statsByGameRepository.findById(id).get();
-        stats.put("speed", statsByGame.getAvgSpeed());
-        stats.put("breathing_rate", statsByGame.getAvgBreathingRate());
-        stats.put("bpm", statsByGame.getAvgBpm());
+        stats.put("speed", statsByGame.avgSpeed());
+        stats.put("breathing_rate", statsByGame.avgBreathingRate());
+        stats.put("bpm", statsByGame.avgBpm());
         return stats;
     }
-    
-
 
 }

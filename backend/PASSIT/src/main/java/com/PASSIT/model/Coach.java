@@ -1,7 +1,9 @@
 package com.PASSIT.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -9,7 +11,8 @@ import java.util.ArrayList;
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "coach")
@@ -36,8 +39,8 @@ public class Coach {
     private String role="coach";
 
     // connect coach to team
-    @OneToOne
-    @JoinColumn(name = "team_id")
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "team_id", referencedColumnName = "id")
     private Team team_id;
 
 }

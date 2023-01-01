@@ -10,6 +10,7 @@ import argparse
 GAME_TIME = 90
 GAME_TIME = GAME_TIME*60
 
+
 mydb = mysql.connector.connect(
 	host="localhost",
 	user="admin",
@@ -21,15 +22,17 @@ mycursor = mydb.cursor()
 
 class Player:
 
-	def __init__(self, id, statsid, live=False):
-		self.id = id
+	def __init__(self, statsid, live):
+		mycursor.execute(f"SELECT player_id FROM stats_by_game WHERE id={statsid};")
+		self.id = mycursor.fetchone()[0]
 		self.statsid = statsid
-		self.queue = Queue("localhost", 5672, "admin", "admin", "player_data")
-		self.live_queue = None
 		if live:
-			self.live_queue = Queue("localhost", 5672, "admin", "admin", "live_data")
+			self.queue = Queue("localhost", 5672, "admin", "admin", "live_data", durable=False)
+		else:
+			self.queue = Queue("localhost", 5672, "admin", "admin", "player_data")
+		self.live_queue = None
 		self.queue.connect()
-		mycursor.execute(f"SELECT age, height, last_stamina FROM player WHERE id={id};")
+		mycursor.execute(f"SELECT age, height, last_stamina FROM player WHERE id={self.id};")
 		result = mycursor.fetchone()
 		self.age = result[0]
 		self.height = result[1]
@@ -44,10 +47,7 @@ class Player:
 		self.tm = None
 		self.start_point = None
 
-	def send(self, bpm, breathing, speed, t, ecg):
-		t.append(self.last_t)
-		ecg.append(0)
-		m = {"type":"stats","id":self.statsid,"data":{"bpm":bpm,"breathing_rate":breathing,"speed":speed,"ecg":ecg,"t":t}}
+	def send(self, m):
 		message = json.dumps(m)
 		self.queue.send(message)
 		if self.live_queue:
@@ -169,8 +169,8 @@ class Player:
 			else:
 				return True
 
-def main(start_time, id, statsid, live):
-	player = Player(id, statsid, live)
+def main(start_time, statsid, live):
+	player = Player(statsid, live)
 	i=0
 	init = time.time()
 	if not live:
@@ -198,8 +198,10 @@ def main(start_time, id, statsid, live):
 		for _ in range(tm):
 			bpm, breathing_rate, speed, t, ecg = func()
 			if live:
-				player.send(bpm, breathing_rate, speed, t, ecg)
-				time.sleep(max(tm-time.time()-init, 0))
+				t.append(player.last_t)
+				ecg.append(0)
+				player.send({"type":"live","id":player.id,"data":{"bpm":bpm,"breathing_rate":breathing_rate,"speed":speed,"ecg":ecg,"t":t}})
+				time.sleep(max(1-time.time()+init, 0))
 				init = time.time()
 			else:
 				bpm_list.append(bpm)
@@ -209,19 +211,21 @@ def main(start_time, id, statsid, live):
 				ecg_list.extend(ecg)
 		i+=tm
 
-	print(bpm_list)
-	player.send(bpm_list, breathing_rate_list, speed_list, t_list, ecg_list)
-	player.queue.send(json.dumps({"type":"rem_stamina","id":player.statsid,"data":{"stamina":player.stamina}}))
-	player.queue.send(json.dumps({"type":"minutes_played","id":player.statsid,"data":{"minutes_played":(GAME_TIME-start_time)//60}}))
+	if not live:
+		t_list.append(player.last_t)
+		ecg_list.append(0)
+		print(bpm_list)
+		player.send({"type":"stats","id":player.statsid,"data":{"bpm":bpm_list,"breathing_rate":breathing_rate_list,"speed":speed_list,"ecg":ecg_list,"t":t_list}})
+	player.send({"type":"rem_stamina","id":player.statsid,"data":{"stamina":player.stamina}})
+	player.send({"type":"minutes_played","id":player.statsid,"data":{"minutes_played":(GAME_TIME-start_time)//60}})
 	player.queue.close()
 
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser()
 	parser.add_argument("start_time", type=int, help="Start time of the game in seconds")
-	parser.add_argument("id", type=int, help="Player id")
 	parser.add_argument("statsid", type=str, help="StatsByGame Id")
-	parser.add_argument("--live", action="store_true", help="Live mode")
+	parser.add_argument("--live", action="store_true", default=False, help="If the game is live or not")
 	args = parser.parse_args()
 
-	main(args.start_time, args.id, args.statsid, args.live)
+	main(args.start_time, args.statsid, args.live)

@@ -1,8 +1,9 @@
 package com.PASSIT.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 import java.util.List;
 
@@ -11,7 +12,8 @@ import java.util.ArrayList;
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "fan")
@@ -36,8 +38,8 @@ public class Fan {
     @Column(name = "role")
     private String role="FAN";
 
-    @JsonIgnore
-    @OneToMany()
+    @JsonManagedReference
+    @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "fav_players")
     private List<Player>fav_players = new ArrayList<>();
 

@@ -1,17 +1,19 @@
 package com.PASSIT.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.TreeMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "stats_by_game")
@@ -23,10 +25,12 @@ public class StatsByGame {
     @Column(name = "id")
     private long id;
 
+    @JsonBackReference
     @ManyToOne()
     @JoinColumn(name = "game_id", nullable = false)
     private Game game_id;
 
+    @JsonBackReference
     @ManyToOne()
     @JoinColumn(name = "player_id", nullable = false)
     private Player player_id;
@@ -75,24 +79,33 @@ public class StatsByGame {
         this.speed.putAll(speed_map);
     }
 
-    public Double getAvgBpm() {
+    public Double avgBpm() {
         Double sum = 0.0;
         for (Double bpm : this.bpm.values())
             sum += bpm;
         return sum / this.bpm.size();
     }
 
-    public Double getAvgBreathingRate() {
+    public Double avgBreathingRate() {
         Double sum = 0.0;
         for (Double breathing_rate : this.breathing_rate.values())
             sum += breathing_rate;
         return sum / this.breathing_rate.size();
     }
 
-    public Double getAvgSpeed() {
+    public Double avgSpeed() {
         Double sum = 0.0;
         for (Double ecg : this.speed.values())
             sum += ecg;
         return sum / this.speed.size();
+    }
+
+    public Map<String, Map<Double,Double>> allStats() {
+        Map<String, Map<Double,Double>> allStats = new TreeMap<>();
+        allStats.put("bpm", this.bpm);
+        allStats.put("breathing_rate", this.breathing_rate);
+        allStats.put("ecg", this.ecg);
+        allStats.put("speed", this.speed);
+        return allStats;
     }
 }
