@@ -61,6 +61,7 @@ public class Player {
 
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
+    @JsonIdentityReference(alwaysAsId = true)
     private Team team_id;
 
     @Column(name = "last_stamina", nullable = false)
@@ -69,10 +70,8 @@ public class Player {
     @Column(name = "img_url")
     private String img_url = "https://img.a.transfermarkt.technology/portrait/header/default.jpg";
 
-    @ManyToMany(mappedBy = "fav_players")
-    private List<Fan> fans_list = new ArrayList<>();
-
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "player_id")
+    @JsonIdentityReference(alwaysAsId = true)
     private List<StatsByGame> stats_list = new ArrayList<>();
     
     public void setStamina(Double stamina) {
@@ -92,16 +91,11 @@ public class Player {
         stats_list.add(stats);
     }
 
-    public void addFan(Fan fan) {
-        fans_list.add(fan);
+    public String getPassword() {
+        return null;
     }
 
-    @JsonIgnore
-    public List<Fan> getFans_list() {
-        return fans_list;
-    }
-    @JsonIgnore
-    public List<StatsByGame> getStats_list() {
-        return stats_list;
+    public String password() {
+        return password;
     }
 }

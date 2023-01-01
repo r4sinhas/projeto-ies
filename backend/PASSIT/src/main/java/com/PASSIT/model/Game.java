@@ -31,6 +31,7 @@ public class Game {
     private Date date;
 
     @ManyToMany(mappedBy ="games_list")
+    @JsonIdentityReference(alwaysAsId = true)
     private List<Team> teams_list = new ArrayList<>();
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "game_id")
@@ -44,5 +45,6 @@ public class Game {
     public List<StatsByGame> getStats_list() {
         return stats_list;
     }
+
 }
 

@@ -15,19 +15,26 @@ def post(url, data=None, json=None, headers=None):
 def put(url, data=None, json=None, headers=None):
 	pool.apply_async(requests.put, [url], {'data':data, 'json':json, 'headers':headers})
 
-def callback(ch, method, properties, body):
+def callback_True(ch, method, properties, body):
+	print(process_message(json.loads(body)))
+
+def callback_False(ch, method, properties, body):
 	print(process_message(json.loads(body)))
 	ch.basic_ack(delivery_tag=method.delivery_tag)
 
-def recv(queue: Queue):
-	queue.channel.basic_consume(queue=queue.queue_name, on_message_callback=callback, auto_ack=False)
-	queue.channel.start_consuming()
+def recv(queue: Queue, live=False):
+	if live:
+		queue.channel.basic_consume(queue=queue.queue_name, on_message_callback=callback_True, auto_ack=True)
+		queue.channel.start_consuming()
+	else:
+		queue.channel.basic_consume(queue=queue.queue_name, on_message_callback=callback_False, auto_ack=False)
+		queue.channel.start_consuming()
 
 def process_message(message):
 	
 		if message['type'] == 'stats':
 			try:
-				put(f'http://localhost:8080/api/v1/statsbygame/addstat/{message["id"]}', data=message['data'])
+				put(f'http://localhost:8080/api/v1/statsbygame/addstats/{message["id"]}', data=message['data'])
 				return "Stats sent"
 			except Exception as e:
 				return e

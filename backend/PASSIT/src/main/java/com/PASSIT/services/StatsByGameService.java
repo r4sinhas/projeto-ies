@@ -21,7 +21,7 @@ public class StatsByGameService {
     private final PlayerRepository playerRepository;
     private final GameRepository gameRepository;
 
-    private static float last_sec = 0;
+    private static float last_sec;
 
 
     @Autowired
@@ -45,31 +45,41 @@ public class StatsByGameService {
         return statsByGameRepository.findAll();
     }
 
-    public StatsByGame addStats(Long id, TreeMap<Float,Float>[] stats) {
+    public StatsByGame addStats(Long id, Map<Float,Float>[] stats, int minutes_played) {
+        System.out.println("StatsByGameService.addStats");
         StatsByGame statsByGame = statsByGameRepository.findById(id).get();
         statsByGame.setBpm(stats[0]);
-        statsByGame.setSpeed(stats[1]);
-        statsByGame.setBreathing_rate(stats[2]);
+        /*statsByGame.setSpeed(stats[1]);
+        statsByGame.setBreathing_rate(stats[2]);*/
         statsByGame.setEcg(stats[3]);
+        statsByGame.setMinutes_played(minutes_played);
+        System.out.println("Pan");
         return statsByGameRepository.save(statsByGame);
     }
 
-    public StatsByGame addStatsLive(Long id, Float bpm, Float breathing_rate, Float speed, TreeMap<Float,Float> ecg) {
+    public StatsByGame addStatsLive(Long id, Float bpm, Float breathing_rate, Float speed, HashMap<Float,Float> ecg, Float time) {
         StatsByGame statsByGame = statsByGameRepository.findById(id).get();
-        statsByGame.getBpm().put(last_sec,bpm);
-        statsByGame.getBreathing_rate().put(last_sec,breathing_rate);
-        statsByGame.getSpeed().put(last_sec,speed);
+        if (time > 0)
+            this.last_sec = time-1;
+        statsByGame.getBpm().put(time,bpm);
+        statsByGame.getBreathing_rate().put(time,breathing_rate);
+        statsByGame.getSpeed().put(time,speed);
         statsByGame.getEcg().putAll(ecg);
-        this.last_sec += 1;
         return statsByGameRepository.save(statsByGame);
     }
 
 
-    public List<TreeMap<Float,Float>> getStatsByGameLive(Long id) {
+    public Map<String,Map<Float,Float>> getStatsByGameLive(Long id) {
         StatsByGame statsByGame = statsByGameRepository.findById(id).get();
-        return Arrays.asList(statsByGame.getLastBpm(last_sec-1), statsByGame.getLastSpeed(last_sec-1), statsByGame.getLastBreathingRate(last_sec-1), statsByGame.getLastEcg(last_sec-1));
+        System.out.println("Last sec: "+this.last_sec+"\nBPM: "+statsByGame.getBpm().get(this.last_sec)+ "\nBreathing Rate: "+statsByGame.getBreathing_rate().get(this.last_sec)+ "\nSpeed: "+statsByGame.getSpeed().get(this.last_sec));
+        return Map.of("bpm",statsByGame.getLastBpm(last_sec), "speed",statsByGame.getLastSpeed(last_sec), "breathing_rate", statsByGame.getLastBreathingRate(last_sec), "ecg", statsByGame.getLastEcg(last_sec));
     }
-    
+
+    public Map<String, Map<Float,Float>> getStatsByGame(Long id) {
+        StatsByGame statsByGame = statsByGameRepository.findById(id).get();
+        return Map.of("bpm",statsByGame.getBpm(), "speed",statsByGame.getSpeed(), "breathing_rate", statsByGame.getBreathing_rate(), "ecg", statsByGame.getEcg());
+    }
+
     public void setMinutesPlayed(Long id, int minutesPlayed) {
         StatsByGame statsByGame = statsByGameRepository.findById(id).get();
         statsByGame.setMinutes_played(minutesPlayed);

@@ -24,15 +24,3 @@ class Queue:
 
 	def close(self):
 		self.connection.close()
-
-	def recv(self):
-		self.channel.basic_consume(queue=self.queue_name, on_message_callback=self.callback, auto_ack=True)
-		self.channel.start_consuming()
-
-	def callback(self, ch, method, properties, body):
-		self.process_message(body)
-		print(" [x] Received ")
-
-	def process_message(self, body):
-		message = json.loads(body)
-		print(message)

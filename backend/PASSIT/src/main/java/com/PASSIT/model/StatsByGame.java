@@ -1,9 +1,6 @@
 package com.PASSIT.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.sun.source.tree.Tree;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +8,7 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,10 +36,12 @@ public class StatsByGame {
 
     @ManyToOne
     @JoinColumn(name = "game_id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Game game_id;
 
     @ManyToOne
     @JoinColumn(name = "player_id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Player player_id;
 
     @Column(name = "minutes_played", nullable = false)
@@ -51,25 +51,25 @@ public class StatsByGame {
     @CollectionTable(name = "bpm_values")
     @MapKeyColumn(name = "bpm_time")
     @Column(name = "bpm")
-    private Map<Float, Float> bpm = new TreeMap<>();
+    private Map<Float, Float> bpm = new HashMap<>();
 
     @ElementCollection
     @CollectionTable(name = "speed_values")
     @MapKeyColumn(name = "speed_time")
     @Column(name = "speed")
-    private Map<Float, Float> speed = new TreeMap<>();
+    private Map<Float, Float> speed = new HashMap<>();
 
     @ElementCollection
     @CollectionTable(name = "breathing_rate_values")
     @MapKeyColumn(name = "breathing_rate_time")
     @Column(name = "breathing_rate")
-    private Map<Float, Float> breathing_rate = new TreeMap<>();
+    private Map<Float, Float> breathing_rate = new HashMap<>();
 
     @ElementCollection
     @CollectionTable(name = "ecg_values")
     @MapKeyColumn(name = "ecg_time")
     @Column(name = "ecg")
-    private Map<Float, Float> ecg = new TreeMap<>();
+    private Map<Float, Float> ecg = new HashMap<>();
 
 
     public float avgBpm() {
@@ -102,30 +102,20 @@ public class StatsByGame {
         return allStats;
     }
 
-    public TreeMap<Float,Float> getLastBpm(float last_sec) {
-        return new TreeMap<>() {{put(last_sec,bpm.get(last_sec));}};
+    public Map<Float,Float> getLastBpm(float last_sec) {
+        return new HashMap<>() {{put(last_sec,bpm.get(last_sec));}};
     }
 
-    public TreeMap<Float,Float> getLastBreathingRate(float last_sec) {
-        return new TreeMap<>() {{put(last_sec,breathing_rate.get(last_sec));}};
+    public Map<Float,Float> getLastBreathingRate(float last_sec) {
+        return new HashMap<>() {{put(last_sec,breathing_rate.get(last_sec));}};
     }
 
-    public TreeMap<Float,Float> getLastSpeed(float last_sec) {
-        return new TreeMap<>() {{put(last_sec,speed.get(last_sec));}};
+    public Map<Float,Float> getLastSpeed(float last_sec) {
+        return new HashMap<>() {{put(last_sec,speed.get(last_sec));}};
     }
 
-    public TreeMap<Float,Float> getLastEcg(float last_sec) {
-        return new TreeMap<>(ecg.entrySet().stream().filter(e -> e.getKey() >= last_sec).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+    public Map<Float,Float> getLastEcg(float last_sec) {
+        return new HashMap<>(ecg.entrySet().stream().filter(e -> e.getKey() >= last_sec).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
-
-    @JsonIgnore
-    public Player getPlayer_id() {
-        return player_id;
-    }
-
-    @JsonIgnore
-    public Game getGame_id() {
-        return game_id;
-    }
 }
