@@ -8,6 +8,9 @@ public class PassitServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PassitServiceApplication.class, args);
+
+		// insert data
+
 	}
 
 }

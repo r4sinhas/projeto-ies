@@ -4,34 +4,38 @@ import { useNavigate } from "react-router-dom";
 import { Sidebar } from "../components/Sidebar";
 import { PlayerInfo } from "../components/PlayerInfo";
 import { useParams } from "react-router-dom";
-import ReactLoading from "react-loading";
 import Loading from "../components/Loading";
 
-var name = "Cristiano Ronaldo";
-var age = "36";
-var height = "185";
-var weight = "80";
-var position = "Forward";
-var team = "Juventus";
-
 export function Player() {
-  const navigate = useNavigate();
+  const { id, gameId } = useParams();
+  console.log("id: ", id);
+  console.log("gameId: ", gameId);
   const API = "http://localhost:8080/api/v1/player/";
   const [player, setPlayers] = useState([]);
+  const API2 =
+    "http://localhost:8080/api/v1/player/stats_user_game/" + id + "/" + gameId;
 
-  /* FIX THIS useParams()  */
-  const playerId = 7;
-  const { id } = useParams();
-  // console.log("turururur", id);
+  const [stats, setStats] = useState([]);
 
   useEffect(() => {
-    fetch(API + playerId)
+    fetch(API + id)
       .then((res) => res.json())
       .then((result) => {
         setPlayers(result);
       });
   }, []);
   console.log("player: ", player);
+  useEffect(() => {
+    fetch(API2)
+      .then((res) => res.json())
+      .then((result) => {
+        setStats(result);
+      });
+  }, []);
+  console.log("stats: ", stats);
+  const br_rate = stats.breathing_rate;
+  const bpm_rate = stats.bpm;
+  const speed = stats.speed;
   if (player.length === 0)
     return (
       <div>
@@ -56,6 +60,8 @@ export function Player() {
         }}
       >
         <PlayerInfo
+          id={player.id}
+          gameId={1}
           img={
             player.img_url ? player.img_url : "https://i.imgur.com/5uGqXtG.png"
           }
@@ -65,6 +71,9 @@ export function Player() {
           weight={player.weight}
           position={player.position}
           team={player.team_id.team_name}
+          br_rate={br_rate}
+          bpm_rate={bpm_rate}
+          speed={speed}
         />
       </div>
     </div>
