@@ -49,12 +49,12 @@ public class PlayerController {
     }
 
     @GetMapping("/stats_user_game/{id}/{game}")
-    public Map<String, Double> getStatsUserGame(@PathVariable("id") Long id, @PathVariable("game") Long game) {
+    public Map<String, Float> getStatsUserGame(@PathVariable("id") Long id, @PathVariable("game") Long game) {
         return playerService.getStatsUserGame(id, game);
     }
 
     @GetMapping("/stats_user_game/{id}")
-    public Map<String, Double> getStatsUserGame(@PathVariable("id") Long id) {
+    public Map<String, Float> getStatsUserGame(@PathVariable("id") Long id) {
         return playerService.getStatsUserGame(id);
     }
 

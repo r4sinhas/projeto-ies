@@ -23,6 +23,11 @@ public class GameController {
         return "New Game ADDED!";
     }
 
+    @GetMapping("{id}")
+    public Game getGameById(@PathVariable Long id) {
+        return gameService.getGameById(id);
+    }
+
     @GetMapping("/all")
     public List<Game> getGames() {
         return gameService.getGames();

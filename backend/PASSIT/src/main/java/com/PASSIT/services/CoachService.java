@@ -21,10 +21,14 @@ public class CoachService {
         this.teamRepository = teamRepository;
     }
 
-
     public Coach saveCoach(Coach coach) {
-        teamRepository.findById(coach.getTeam_id().getId()).get().setCoach_id(coach);
+        Team team = teamRepository.findById(coach.getTeam_id().getId()).orElse(null);
+        coach.setTeam_id(team);
         return coachRepository.save(coach);
+    }
+
+    public Coach getCoach(Long id) {
+        return coachRepository.findById(id).get();
     }
 
     public List<Coach> getCoaches() {

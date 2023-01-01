@@ -22,8 +22,10 @@ public class GameService {
     }
 
     public Game addGame(Game game) {
-        for (Team team : game.getTeams_list())
-            teamRepository.findById(team.getId()).get().addGame(game);
+        for (Team team : game.getTeams_list()) {
+            Team team2 = teamRepository.findById(team.getId()).orElse(null);
+            team2.addGame(game);
+        }
         return gameRepository.save(game);
     }
 

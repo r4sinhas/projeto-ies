@@ -1,6 +1,6 @@
 package com.PASSIT.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import javax.persistence.*;
 
 @Entity
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -38,9 +39,8 @@ public class Coach {
     @Column(name = "role")
     private String role="coach";
 
-    // connect coach to team
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name = "team_id", referencedColumnName = "id")
+    @OneToOne(cascade = {CascadeType.ALL, CascadeType.DETACH})
+    @JoinColumn(name = "team_id", nullable = false)
     private Team team_id;
 
 }

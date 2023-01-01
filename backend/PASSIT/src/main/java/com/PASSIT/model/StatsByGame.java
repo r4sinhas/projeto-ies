@@ -1,6 +1,10 @@
 package com.PASSIT.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.sun.source.tree.Tree;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +13,10 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.TreeMap;
 import java.util.Map;
-
+import java.util.stream.Collectors;
 
 @Entity
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,87 +30,102 @@ public class StatsByGame {
     @Column(name = "id")
     private long id;
 
-    @JsonBackReference
-    @ManyToOne()
-    @JoinColumn(name = "game_id", nullable = false)
+    @Column(name = "player", nullable = false)
+    private long player;
+
+    @Column(name = "game", nullable = false)
+    private long game;
+
+    @ManyToOne
+    @JoinColumn(name = "game_id")
     private Game game_id;
 
-    @JsonBackReference
-    @ManyToOne()
-    @JoinColumn(name = "player_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "player_id")
     private Player player_id;
 
-    @Column(name = "minutes_played")
-    private int minutes_played = 0;
+    @Column(name = "minutes_played", nullable = false)
+    private int minutes_played;
 
     @ElementCollection
     @CollectionTable(name = "bpm_values")
     @MapKeyColumn(name = "bpm_time")
     @Column(name = "bpm")
-    private Map<Double, Double> bpm = new TreeMap<>();
-
-    @ElementCollection
-    @CollectionTable(name = "breathing_rate_values")
-    @MapKeyColumn(name = "breathing_rate_time")
-    @Column(name = "breathing_rate")
-    private Map<Double, Double> breathing_rate = new TreeMap<>();
-
-    @ElementCollection
-    @CollectionTable(name = "ecg_values")
-    @MapKeyColumn(name = "ecg_time")
-    @Column(name = "ecg")
-    private Map<Double, Double> ecg = new TreeMap<>();
+    private Map<Float, Float> bpm = new TreeMap<>();
 
     @ElementCollection
     @CollectionTable(name = "speed_values")
     @MapKeyColumn(name = "speed_time")
     @Column(name = "speed")
-    private Map<Double, Double> speed = new TreeMap<>();
+    private Map<Float, Float> speed = new TreeMap<>();
+
+    @ElementCollection
+    @CollectionTable(name = "breathing_rate_values")
+    @MapKeyColumn(name = "breathing_rate_time")
+    @Column(name = "breathing_rate")
+    private Map<Float, Float> breathing_rate = new TreeMap<>();
+
+    @ElementCollection
+    @CollectionTable(name = "ecg_values")
+    @MapKeyColumn(name = "ecg_time")
+    @Column(name = "ecg")
+    private Map<Float, Float> ecg = new TreeMap<>();
 
 
-    public void setBpm(TreeMap<Double, Double> bpm_map) {
-        this.bpm.putAll(bpm_map);
-    }
-
-    public void setBreathing_rate(TreeMap<Double, Double> breathing_rate_map) {
-        this.breathing_rate.putAll(breathing_rate_map);
-    }
-
-    public void setEcg(TreeMap<Double, Double> ecg_map) {
-        this.ecg.putAll(ecg_map);
-    }
-
-    public void setSpeed(TreeMap<Double, Double> speed_map) {
-        this.speed.putAll(speed_map);
-    }
-
-    public Double avgBpm() {
-        Double sum = 0.0;
-        for (Double bpm : this.bpm.values())
+    public float avgBpm() {
+        float sum = 0;
+        for (float bpm : this.bpm.values())
             sum += bpm;
-        return sum / this.bpm.size();
+        return sum / this.bpm.keySet().size();
     }
 
-    public Double avgBreathingRate() {
-        Double sum = 0.0;
-        for (Double breathing_rate : this.breathing_rate.values())
+    public Float avgBreathingRate() {
+        float sum = 0;
+        for (Float breathing_rate : this.breathing_rate.values())
             sum += breathing_rate;
-        return sum / this.breathing_rate.size();
+        return sum / this.breathing_rate.keySet().size();
     }
 
-    public Double avgSpeed() {
-        Double sum = 0.0;
-        for (Double ecg : this.speed.values())
+    public Float avgSpeed() {
+        float sum = 0;
+        for (Float ecg : this.speed.values())
             sum += ecg;
-        return sum / this.speed.size();
+        return sum / this.speed.keySet().size();
     }
 
-    public Map<String, Map<Double,Double>> allStats() {
-        Map<String, Map<Double,Double>> allStats = new TreeMap<>();
+    public Map<String, Map<Float,Float>> allStats() {
+        Map<String, Map<Float,Float>> allStats = new TreeMap<>();
         allStats.put("bpm", this.bpm);
         allStats.put("breathing_rate", this.breathing_rate);
         allStats.put("ecg", this.ecg);
         allStats.put("speed", this.speed);
         return allStats;
+    }
+
+    public TreeMap<Float,Float> getLastBpm(float last_sec) {
+        return new TreeMap<>() {{put(last_sec,bpm.get(last_sec));}};
+    }
+
+    public TreeMap<Float,Float> getLastBreathingRate(float last_sec) {
+        return new TreeMap<>() {{put(last_sec,breathing_rate.get(last_sec));}};
+    }
+
+    public TreeMap<Float,Float> getLastSpeed(float last_sec) {
+        return new TreeMap<>() {{put(last_sec,speed.get(last_sec));}};
+    }
+
+    public TreeMap<Float,Float> getLastEcg(float last_sec) {
+        return new TreeMap<>(ecg.entrySet().stream().filter(e -> e.getKey() >= last_sec).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+    }
+
+
+    @JsonIgnore
+    public Player getPlayer_id() {
+        return player_id;
+    }
+
+    @JsonIgnore
+    public Game getGame_id() {
+        return game_id;
     }
 }

@@ -30,7 +30,8 @@ public class PlayerService {
     }
 
     public Player savePlayer(Player player) {
-        teamRepository.findById(player.getTeam_id().getId()).get().addPlayer(player);
+        Team team = teamRepository.findById(player.getTeam_id().getId()).orElse(null);
+        team.addPlayer(player);
         return playerRepository.save(player);
     }
 
@@ -62,8 +63,8 @@ public class PlayerService {
         return date;
     }
 
-    public Map<String, Double> getStatsUserGame(Long id, Long game_id) {
-        Map<String, Double> stats = new HashMap<>();
+    public Map<String, Float> getStatsUserGame(Long id, Long game_id) {
+        Map<String, Float> stats = new HashMap<>();
         for (StatsByGame statsByGame : statsByGameRepository.findAll()) {
             if (statsByGame.getPlayer_id().getId() == id && statsByGame.getGame_id().getId() == game_id) {
                 stats.put("speed", statsByGame.avgSpeed());
@@ -74,8 +75,8 @@ public class PlayerService {
         return stats;
     }
 
-    public Map<String, Double> getStatsUserGame(Long id) {
-        Map<String, Double> stats = new HashMap<>();
+    public Map<String, Float> getStatsUserGame(Long id) {
+        Map<String, Float> stats = new HashMap<>();
         StatsByGame statsByGame = statsByGameRepository.findById(id).get();
         stats.put("speed", statsByGame.avgSpeed());
         stats.put("breathing_rate", statsByGame.avgBreathingRate());

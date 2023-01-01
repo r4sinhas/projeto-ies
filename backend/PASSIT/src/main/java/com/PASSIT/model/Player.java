@@ -1,7 +1,6 @@
 package com.PASSIT.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +16,7 @@ import javax.annotation.processing.Generated;
 import javax.persistence.*;
 
 @Entity
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -59,22 +59,21 @@ public class Player {
     @Column(name = "number", nullable = false)
     private int number;
 
-    // Connect player to a Team
-    @JsonBackReference
-    @ManyToOne()
-    @JoinColumn(name = "team_id")
+    @ManyToOne
+    @JoinColumn(name = "team_id", nullable = false)
     private Team team_id;
-
-    @JsonManagedReference
-    @OneToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "stats_list")
-    private List<StatsByGame> stats_list = new ArrayList<>();
 
     @Column(name = "last_stamina", nullable = false)
     private Double last_stamina;
 
     @Column(name = "img_url")
     private String img_url = "https://img.a.transfermarkt.technology/portrait/header/default.jpg";
+
+    @ManyToMany(mappedBy = "fav_players")
+    private List<Fan> fans_list = new ArrayList<>();
+
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "player_id")
+    private List<StatsByGame> stats_list = new ArrayList<>();
     
     public void setStamina(Double stamina) {
         this.last_stamina = stamina;
@@ -93,4 +92,16 @@ public class Player {
         stats_list.add(stats);
     }
 
+    public void addFan(Fan fan) {
+        fans_list.add(fan);
+    }
+
+    @JsonIgnore
+    public List<Fan> getFans_list() {
+        return fans_list;
+    }
+    @JsonIgnore
+    public List<StatsByGame> getStats_list() {
+        return stats_list;
+    }
 }
