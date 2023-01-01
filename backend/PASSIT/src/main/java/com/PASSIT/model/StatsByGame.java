@@ -1,9 +1,6 @@
 package com.PASSIT.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.sun.source.tree.Tree;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,10 +35,12 @@ public class StatsByGame {
 
     @ManyToOne
     @JoinColumn(name = "game_id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Game game_id;
 
     @ManyToOne
     @JoinColumn(name = "player_id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Player player_id;
 
     @Column(name = "minutes_played", nullable = false)
@@ -117,4 +116,5 @@ public class StatsByGame {
     public TreeMap<Float,Float> getLastEcg(float last_sec) {
         return new TreeMap<>(ecg.entrySet().stream().filter(e -> e.getKey() >= last_sec).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
+
 }

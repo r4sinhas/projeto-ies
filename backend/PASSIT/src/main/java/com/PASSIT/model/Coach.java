@@ -41,6 +41,14 @@ public class Coach {
 
     @OneToOne(cascade = {CascadeType.ALL, CascadeType.DETACH})
     @JoinColumn(name = "team_id", nullable = false)
+    @JsonIdentityReference(alwaysAsId = true)
     private Team team_id;
 
+    public String getPassword() {
+        return null;
+    }
+
+    public String password() {
+        return password;
+    }
 }

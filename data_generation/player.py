@@ -7,8 +7,6 @@ import mysql.connector
 from rabbitmq import Queue
 import argparse
 
-import matplotlib.pyplot as plt
-
 GAME_TIME = 90
 GAME_TIME = GAME_TIME*60
 
@@ -24,7 +22,7 @@ mycursor = mydb.cursor()
 
 class Player:
 
-	def __init__(self, statsid, live):
+	def __init__(self, start_time, statsid, live):
 		mycursor.execute(f"SELECT player_id FROM stats_by_game WHERE id={statsid};")
 		self.id = mycursor.fetchone()[0]
 		self.statsid = statsid
@@ -45,7 +43,7 @@ class Player:
 		self.v_max = -4/7*self.height+957/7
 		self.last_speed = 0
 		self.last_bpm = 100
-		self.last_t = 0
+		self.last_t = start_time
 		self.tm = None
 		self.start_point = None
 
@@ -103,12 +101,13 @@ class Player:
 			#final
 			t.append(start+pr+qrs+qt+0.01)
 			start+=60/bpm
-			t.append(start)
-			ecg.extend([0,0])
+			ecg.append(0)
 
 		if self.last_t == int(self.last_t):
 			self.last_t=start
 		else:
+			t.append(start)
+			ecg.append(0)
 			self.last_t = int(self.last_t)+1
 
 		return t, ecg
@@ -172,7 +171,7 @@ class Player:
 				return True
 
 def main(start_time, statsid, live):
-	player = Player(statsid, live)
+	player = Player(start_time, statsid, live)
 	i=0
 	init = time.time()
 	if not live:
@@ -197,12 +196,10 @@ def main(start_time, statsid, live):
 		else:
 			tm=random.randrange(1, 20)
 			func = player.walk
-		for _ in range(tm):
+		for e in range(tm):
 			bpm, breathing_rate, speed, t, ecg = func()
 			if live:
-				t.append(player.last_t)
-				ecg.append(0)
-				player.send({"type":"live","id":player.id,"data":{"bpm":bpm,"breathing_rate":breathing_rate,"speed":speed,"ecg":ecg,"t":t}})
+				player.send({"type":"live","id":player.id,"data":{"bpm":bpm,"breathing_rate":breathing_rate,"speed":speed,"ecg":ecg,"t":t, "time":i+e+start_time}})
 				time.sleep(max(1-time.time()+init, 0))
 				init = time.time()
 			else:
@@ -213,17 +210,14 @@ def main(start_time, statsid, live):
 				ecg_list.extend(ecg)
 		i+=tm
 
+	player.send({"type":"rem_stamina","id":player.statsid,"data":{"stamina":player.stamina}})
 	if not live:
 		t_list.append(player.last_t)
 		ecg_list.append(0)
-		player.send({"type":"stats","id":player.statsid,"data":{"bpm":bpm_list,"breathing_rate":breathing_rate_list,"speed":speed_list,"ecg":ecg_list,"t":t_list}})
-	player.send({"type":"rem_stamina","id":player.statsid,"data":{"stamina":player.stamina}})
-	player.send({"type":"minutes_played","id":player.statsid,"data":{"minutes_played":(GAME_TIME-start_time)//60}})
+		player.send({"type":"stats","id":player.statsid,"data":{"bpm":bpm_list,"breathing_rate":breathing_rate_list,"speed":speed_list,"ecg":ecg_list,"t":t_list,"minutes_played":(GAME_TIME-start_time)//60}})
+	else:
+		player.send({"type":"minutes_played","id":player.statsid,"data":{"minutes_played":(GAME_TIME-start_time)//60}})
 	player.queue.close()
-
-	plt.ylim(0, 200)
-	plt.plot(bpm_list)
-	plt.show()
 
 if __name__ == "__main__":
 

@@ -1,6 +1,7 @@
 package com.PASSIT.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,6 +35,7 @@ public class Team {
     private String country;
 
     @OneToOne(mappedBy="team_id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Coach coach_id;
 
     @ManyToMany(cascade = {CascadeType.ALL, CascadeType.DETACH})

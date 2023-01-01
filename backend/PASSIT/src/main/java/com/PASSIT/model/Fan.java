@@ -46,4 +46,11 @@ public class Fan {
     @JoinTable(name = "fav_players", joinColumns = @JoinColumn(name = "fan_id"), inverseJoinColumns = @JoinColumn(name = "player_id"))
     private List<Player>fav_players = new ArrayList<>();
 
+    public String getPassword() {
+        return null;
+    }
+
+    public String password() {
+        return password;
+    }
 }

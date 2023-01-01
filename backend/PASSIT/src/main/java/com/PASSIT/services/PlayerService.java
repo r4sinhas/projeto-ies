@@ -3,6 +3,7 @@ package com.PASSIT.services;
 import com.PASSIT.model.Player;
 import com.PASSIT.model.StatsByGame;
 import com.PASSIT.model.Team;
+import com.PASSIT.repository.GameRepository;
 import com.PASSIT.repository.PlayerRepository;
 import com.PASSIT.repository.StatsByGameRepository;
 import com.PASSIT.repository.TeamRepository;
@@ -21,12 +22,15 @@ public class PlayerService {
     private final PlayerRepository playerRepository;
     private final StatsByGameRepository statsByGameRepository;
     private final TeamRepository teamRepository;
+    private final GameRepository gameRepository;
 
     @Autowired
-    public PlayerService(PlayerRepository playerRepository, StatsByGameRepository statsByGameRepository, TeamRepository teamRepository) {
+    public PlayerService(PlayerRepository playerRepository, StatsByGameRepository statsByGameRepository, TeamRepository teamRepository,
+                         GameRepository gameRepository) {
         this.playerRepository = playerRepository;
         this.statsByGameRepository = statsByGameRepository;
         this.teamRepository = teamRepository;
+        this.gameRepository = gameRepository;
     }
 
     public Player savePlayer(Player player) {
@@ -50,6 +54,7 @@ public class PlayerService {
             player.setStamina(stamina);
             playerRepository.save(player);
         }
+        System.out.println("Stamina not updated Sucefully");
     }
 
     public Date getLastGame(Long id) {
