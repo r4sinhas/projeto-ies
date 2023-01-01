@@ -40,9 +40,5 @@ public class Game {
         this.stats_list.add(stats);
     }
 
-    @JsonIgnore
-    public List<StatsByGame> getStats_list() {
-        return stats_list;
-    }
 }
 

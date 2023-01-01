@@ -117,15 +117,4 @@ public class StatsByGame {
     public TreeMap<Float,Float> getLastEcg(float last_sec) {
         return new TreeMap<>(ecg.entrySet().stream().filter(e -> e.getKey() >= last_sec).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
-
-
-    @JsonIgnore
-    public Player getPlayer_id() {
-        return player_id;
-    }
-
-    @JsonIgnore
-    public Game getGame_id() {
-        return game_id;
-    }
 }

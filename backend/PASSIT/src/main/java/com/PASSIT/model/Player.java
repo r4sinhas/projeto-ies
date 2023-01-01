@@ -95,13 +95,4 @@ public class Player {
     public void addFan(Fan fan) {
         fans_list.add(fan);
     }
-
-    @JsonIgnore
-    public List<Fan> getFans_list() {
-        return fans_list;
-    }
-    @JsonIgnore
-    public List<StatsByGame> getStats_list() {
-        return stats_list;
-    }
 }
