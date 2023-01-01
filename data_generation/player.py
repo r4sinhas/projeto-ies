@@ -210,7 +210,7 @@ def main(start_time, statsid, live):
 				ecg_list.extend(ecg)
 		i+=tm
 
-	player.send({"type":"rem_stamina","id":player.statsid,"data":{"stamina":player.stamina}})
+	#player.send({"type":"rem_stamina","id":player.statsid,"data":{"stamina":player.stamina}})
 	if not live:
 		t_list.append(player.last_t)
 		ecg_list.append(0)

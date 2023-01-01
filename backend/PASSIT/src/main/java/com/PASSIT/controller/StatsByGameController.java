@@ -57,7 +57,7 @@ public class StatsByGameController {
     }
 
     @GetMapping("/live/getstats/{id}")
-    public Map<String, TreeMap<Float, Float>> getStatsByGameLive(@PathVariable("id") Long id) {
+    public Map<String, Map<Float, Float>> getStatsByGameLive(@PathVariable("id") Long id) {
         return statsByGameService.getStatsByGameLive(id);
     }
 
@@ -65,7 +65,7 @@ public class StatsByGameController {
     public void addStatsLive(@PathVariable("id") Long id, @RequestParam("bpm") float bpm,
             @RequestParam("breathing_rate") float breathing_rate, @RequestParam("speed") float speed,
             @RequestParam("ecg") List<Float> ecg, @RequestParam("t") List<Float> t, @RequestParam("time") float time) {
-        TreeMap<Float, Float> ecgMap = new TreeMap<>();
+        HashMap<Float, Float> ecgMap = new HashMap<>();
         for (int i = 0; i < t.size(); i++) {
             ecgMap.put(t.get(i), ecg.get(i));
         }
