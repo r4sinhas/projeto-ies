@@ -119,7 +119,7 @@ class Player:
 	def sprint(self):
 		bpm=self.heart_rate(2)
 		self.stamina-=(((self.last_bpm/90)-1/1.112)*0.024+0.2261+0.15*((self.age_factor+1)/3.7)+0.05*abs(self.condition-1))/2
-		speed = self.v_max*(1-math.e**(-self.tm/(0.7+self.condition*0.3+((self.age_factor+1)/3.7)-self.start_point)))
+		speed = self.v_max*(1-math.e**(max(-self.tm/(0.7+self.condition*0.3+((self.age_factor+1)/3.7)-self.start_point),0)))
 		self.last_speed = speed
 		t, ecg = self.eletrocardiogram(bpm)
 		return bpm, Player.breathing_rate(bpm), speed, t, ecg
