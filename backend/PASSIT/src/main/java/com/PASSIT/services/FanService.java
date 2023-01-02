@@ -37,4 +37,11 @@ public class FanService {
         fan.getFav_players().add(player);
         fanRepository.save(fan);
     }
+
+    public void removeFavoritePlayer(Long fan, Long player) {
+        Fan fan1 = fanRepository.findById(fan).orElse(null);
+        Player player1 = playerService.getPlayerById(player);
+        fan1.getFav_players().remove(player1);
+        fanRepository.save(fan1);
+    }
 }

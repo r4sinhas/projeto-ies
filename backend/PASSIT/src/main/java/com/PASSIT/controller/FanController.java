@@ -38,10 +38,16 @@ public class FanController {
             return fanService.getFan(id);
         }
 
-        @PostMapping("/{id}/addFavoritePlayer/{idPlayer}")
-        public String addFavoritePlayer(@PathVariable("id") Long id, @PathVariable("idPlayer") Long idPlayer) {
+        @PostMapping("/addFavoritePlayer/{fan}/{player}")
+        public String addFavoritePlayer(@PathVariable("fan") Long id, @PathVariable("player") Long idPlayer) {
             fanService.addFavoritePlayer(id, idPlayer);
             return "New favorite player ADDED!";
+        }
+
+        @PostMapping("/removeFavoritePlayer/{fan}/{player}")
+        public String removeFavoritePlayer(@PathVariable("fan") Long fan, @PathVariable("player") Long player) {
+            fanService.removeFavoritePlayer(fan, player);
+            return "Favorite player REMOVED!";
         }
 
 }

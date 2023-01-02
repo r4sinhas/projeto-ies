@@ -12,7 +12,6 @@ export function PlayerInfo(props) {
   const [ecglive, setEcglive] = useState([]);
 
   let ecg_start = -1;
-  let stat_x = 0;
 
   if (props.flag_live === true) {
     //console.log("live");
@@ -27,28 +26,28 @@ export function PlayerInfo(props) {
       const stats = await response.json();
 
       if (stats.length !== 0) {
+
         bpmlive.push({
-          key: stat_x,
+          key: stats.bpm[0][0],
           value: stats.bpm[0][1],
         });
         setBpmlive([...bpmlive]);
         brlive.push({
-          key: stat_x,
+          key: stats.breathing_rate[0][0],
           value: stats.breathing_rate[0][1],
         });
         setBrlive([...brlive]);
         speedlive.push({
-          key: stat_x,
+          key: stats.speed[0][0],
           value: stats.speed[0][1],
         });
         setSpeedlive([...speedlive]);
-        stat_x += 1;
 
         let newecg = [];
         ecg_start = stats.ecg[0][0];
         for (let i = 0; i < stats.ecg.length; i++) {
           newecg.push({
-            key: stats.ecg[i][0]-ecg_start,
+            key: stats.ecg[i][0] - ecg_start,
             value: stats.ecg[i][1],
           });
         }
@@ -113,7 +112,6 @@ export function PlayerInfo(props) {
           <div className="box col-start-2 col-end-auto">
             <h1 className="z-10 mt-10 text-2xl font-semibold">ECG</h1>
             <LineChart width={390} height={330} data={ecglive}>
-              {console.log(ecglive.length)}
               <Line
                 type="monotone"
                 data={ecglive}
@@ -127,6 +125,7 @@ export function PlayerInfo(props) {
                 dataKey="key"
                 tickLine={false}
                 axisLine={false}
+                domain={["dataMin", "dataMax"]}
               />
               <YAxis
                 type="number"
@@ -141,13 +140,12 @@ export function PlayerInfo(props) {
                 tickLine={false}
                 axisLine={false}
               />
-              
+
             </LineChart>
           </div>
           <div className="box col-start-2 col-end-auto">
             <h1 className="z-10 mt-3 text-2xl font-semibold">BPM</h1>
             <LineChart width={390} height={330} data={bpmlive}>
-              {console.log(bpmlive.length)}
               <Line
                 type="monotone"
                 data={bpmlive}
@@ -160,6 +158,7 @@ export function PlayerInfo(props) {
                 dataKey="key"
                 tickLine={false}
                 axisLine={false}
+                domain={['dataMin', "dataMax"]}
               />
               <YAxis
                 type="number"
@@ -194,7 +193,6 @@ export function PlayerInfo(props) {
           <div className="box">
             <h1 className="z-10 mt-3 text-2xl font-semibold">Speed</h1>
             <LineChart width={390} height={330} data={speedlive}>
-              {console.log(speedlive.length)}
               {/*  data={props.speed} */}
               <Line
                 type="monotone"
@@ -208,6 +206,7 @@ export function PlayerInfo(props) {
                 dataKey="key"
                 tickLine={false}
                 axisLine={false}
+                domain={['dataMin', "dataMax"]}
               />
               <YAxis
                 type="number"
@@ -240,11 +239,8 @@ export function PlayerInfo(props) {
             </LineChart>
           </div>
           <div className="box row-start-1 row-end-auto col-start-3">
-            <h1 className="z-10 mt-10 text-2xl font-semibold">
-              Breathing Rythm
-            </h1>
+            <h1 className="z-10 mt-10 text-2xl font-semibold">Breathing Rythm</h1>
             <LineChart width={390} height={330} data={brlive}>
-              {console.log(brlive.length)}
               <Line
                 type="monotone"
                 data={brlive}
@@ -257,6 +253,7 @@ export function PlayerInfo(props) {
                 dataKey="key"
                 tickLine={false}
                 axisLine={false}
+                domain={['dataMin', "dataMax"]}
               />
               <YAxis
                 type="number"
@@ -303,7 +300,7 @@ export function PlayerInfo(props) {
           props.id
         );
         const newStats = await response.json();
-    
+
         setBpm(
           Object.keys(newStats).map((k) => ({
             key: k,
