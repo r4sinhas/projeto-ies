@@ -6,6 +6,7 @@ import { Coach } from "./pages/Coach";
 import { CoachReview } from "./pages/CoachReview";
 import { TeamAvg } from "./pages/Team";
 import { Fan } from "./pages/Fan";
+import { Games } from "./pages/Games";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path={"/coachreview"} element={<CoachReview />} />
         <Route path={"/team"} element={<TeamAvg />} />
         <Route path={"/fan"} element={<Fan />} />
+        <Route path={"/games"} element={<Games />} />
       </Routes>
     </BrowserRouter>
   );

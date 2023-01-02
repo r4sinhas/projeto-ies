@@ -8,14 +8,10 @@ import Loading from "../components/Loading";
 
 export function Player() {
   const { id, gameId } = useParams();
-  console.log("id: ", id);
-  console.log("gameId: ", gameId);
+  /* console.log("id: ", id);
+  console.log("gameId: ", gameId); */
   const API = "http://localhost:8080/api/v1/player/";
   const [player, setPlayers] = useState([]);
-  const API2 =
-    "http://localhost:8080/api/v1/player/stats_user_game/" + id + "/" + gameId;
-
-  const [stats, setStats] = useState([]);
 
   useEffect(() => {
     fetch(API + id)
@@ -24,18 +20,19 @@ export function Player() {
         setPlayers(result);
       });
   }, []);
-  console.log("player: ", player);
+
+  const [game, setGame] = useState([]);
+
   useEffect(() => {
-    fetch(API2)
+    fetch("http://localhost:8080/api/v1/game/" + gameId)
       .then((res) => res.json())
       .then((result) => {
-        setStats(result);
+        setGame(result);
       });
   }, []);
-  console.log("stats: ", stats);
-  const br_rate = stats.breathing_rate;
-  const bpm_rate = stats.bpm;
-  const speed = stats.speed;
+
+  if (game.length === 0) return <Loading></Loading>;
+
   if (player.length === 0)
     return (
       <div>
@@ -71,9 +68,7 @@ export function Player() {
           weight={player.weight}
           position={player.position}
           team={player.team_id.team_name}
-          br_rate={br_rate}
-          bpm_rate={bpm_rate}
-          speed={speed}
+          flag_live={game.flagLive}
         />
       </div>
     </div>
