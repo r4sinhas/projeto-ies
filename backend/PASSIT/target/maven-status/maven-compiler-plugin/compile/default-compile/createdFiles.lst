@@ -23,4 +23,3 @@ com\PASSIT\controller\PlayerController.class
 com\PASSIT\repository\PlayerRepository.class
 com\PASSIT\services\PlayerService.class
 com\PASSIT\services\TeamService.class
-com\PASSIT\model\StatsByGame$1.class
