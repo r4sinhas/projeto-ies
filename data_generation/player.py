@@ -210,13 +210,13 @@ def main(start_time, statsid, live):
 				ecg_list.extend(ecg)
 		i+=tm
 
-	#player.send({"type":"rem_stamina","id":player.statsid,"data":{"stamina":player.stamina}})
 	if not live:
 		t_list.append(player.last_t)
 		ecg_list.append(0)
 		player.send({"type":"stats","id":player.statsid,"data":{"bpm":bpm_list,"breathing_rate":breathing_rate_list,"speed":speed_list,"ecg":ecg_list,"t":t_list,"minutes_played":(GAME_TIME-start_time)//60}})
 	else:
 		player.send({"type":"minutes_played","id":player.statsid,"data":{"minutes_played":(GAME_TIME-start_time)//60}})
+	player.send({"type":"rem_stamina","id":player.statsid,"data":{"stamina":player.stamina}})
 	player.queue.close()
 
 if __name__ == "__main__":

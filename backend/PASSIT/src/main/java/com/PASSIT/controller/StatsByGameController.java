@@ -1,11 +1,9 @@
 package com.PASSIT.controller;
 import com.PASSIT.model.*;
 import com.PASSIT.services.*;
-import com.sun.source.tree.Tree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -45,9 +43,9 @@ public class StatsByGameController {
         System.out.println("Stats ADDED!");
     }
 
-    @GetMapping("/getstats/{id}")
-    public Map<String, Map<Float, Float>> getStatsByGame(@PathVariable("id") Long id) {
-        return statsByGameService.getStatsByGame(id);
+    @GetMapping("/getstats/{id}/{game}")
+    public Map<String, Map<Float, Float>> getStatsByGame(@PathVariable("id") Long id, @PathVariable("game") Long game) {
+        return statsByGameService.getStatsByGame(id, game);
     }
 
     @PutMapping("/minutesplayed/{id}")
@@ -56,9 +54,9 @@ public class StatsByGameController {
         System.out.println("Minutes played UPDATED!");
     }
 
-    @GetMapping("/live/getstats/{id}")
-    public Map<String, Map<Float, Float>> getStatsByGameLive(@PathVariable("id") Long id) {
-        return statsByGameService.getStatsByGameLive(id);
+    @GetMapping("/live/getstats/{id}/{game}")
+    public Map<String, Map<Float, Float>> getStatsByGameLive(@PathVariable("id") Long id, @PathVariable("game") Long game) {
+        return statsByGameService.getStatsByGameLive(id, game);
     }
 
     @PutMapping("/live/addstats/{id}")

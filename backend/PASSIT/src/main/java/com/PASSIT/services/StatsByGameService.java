@@ -7,10 +7,8 @@ import com.PASSIT.repository.GameRepository;
 import com.PASSIT.repository.StatsByGameRepository;
 import com.PASSIT.repository.PlayerRepository;
 
-import java.sql.Date;
 import java.util.*;
 
-import com.sun.source.tree.Tree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,19 +44,22 @@ public class StatsByGameService {
     }
 
     public StatsByGame addStats(Long id, Map<Float,Float>[] stats, int minutes_played) {
-        System.out.println("StatsByGameService.addStats");
         StatsByGame statsByGame = statsByGameRepository.findById(id).get();
         statsByGame.setBpm(stats[0]);
-        /*statsByGame.setSpeed(stats[1]);
-        statsByGame.setBreathing_rate(stats[2]);*/
+        statsByGame.setSpeed(stats[1]);
+        statsByGame.setBreathing_rate(stats[2]);
         statsByGame.setEcg(stats[3]);
         statsByGame.setMinutes_played(minutes_played);
-        System.out.println("Pan");
         return statsByGameRepository.save(statsByGame);
     }
 
     public StatsByGame addStatsLive(Long id, Float bpm, Float breathing_rate, Float speed, HashMap<Float,Float> ecg, Float time) {
         StatsByGame statsByGame = statsByGameRepository.findById(id).get();
+        Game game = gameRepository.findById(statsByGame.getGame()).orElse(null);
+        if (!game.getFlagLive()){
+            game.setFlagLive(true);
+            gameRepository.save(game);
+        }
         if (time > 0)
             this.last_sec = time-1;
         statsByGame.getBpm().put(time,bpm);
@@ -69,21 +70,25 @@ public class StatsByGameService {
     }
 
 
-    public Map<String,Map<Float,Float>> getStatsByGameLive(Long id) {
-        StatsByGame statsByGame = statsByGameRepository.findById(id).get();
-        System.out.println("Last sec: "+this.last_sec+"\nBPM: "+statsByGame.getBpm().get(this.last_sec)+ "\nBreathing Rate: "+statsByGame.getBreathing_rate().get(this.last_sec)+ "\nSpeed: "+statsByGame.getSpeed().get(this.last_sec));
+    public Map<String,Map<Float,Float>> getStatsByGameLive(Long id, Long game_id) {
+        StatsByGame statsByGame = statsByGameRepository.findAll().stream().filter(s -> s.getPlayer() == id && s.getGame() == game_id).findFirst().orElse(null);
         return Map.of("bpm",statsByGame.getLastBpm(last_sec), "speed",statsByGame.getLastSpeed(last_sec), "breathing_rate", statsByGame.getLastBreathingRate(last_sec), "ecg", statsByGame.getLastEcg(last_sec));
     }
 
-    public Map<String, Map<Float,Float>> getStatsByGame(Long id) {
-        StatsByGame statsByGame = statsByGameRepository.findById(id).get();
+    public Map<String, Map<Float,Float>> getStatsByGame(Long id, Long game_id) {
+        StatsByGame statsByGame = statsByGameRepository.findAll().stream().filter(s -> s.getPlayer() == id && s.getGame() == game_id).findFirst().orElse(null);
         return Map.of("bpm",statsByGame.getBpm(), "speed",statsByGame.getSpeed(), "breathing_rate", statsByGame.getBreathing_rate(), "ecg", statsByGame.getEcg());
     }
 
     public void setMinutesPlayed(Long id, int minutesPlayed) {
         StatsByGame statsByGame = statsByGameRepository.findById(id).get();
+        Game game = gameRepository.findById(statsByGame.getGame()).orElse(null);
         statsByGame.setMinutes_played(minutesPlayed);
         statsByGameRepository.save(statsByGame);
+        if (game.getFlagLive()){
+            game.setFlagLive(false);
+            gameRepository.save(game);
+        }
     }
 
 }
