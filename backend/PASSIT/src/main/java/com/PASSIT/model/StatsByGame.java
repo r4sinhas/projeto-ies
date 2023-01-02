@@ -103,16 +103,16 @@ public class StatsByGame {
         return allStats;
     }
 
-    public Map<Float,Float> getLastBpm(float last_sec) {
-        return new HashMap<>() {{put(last_sec,bpm.get(last_sec));}};
+    public float getLastBpm(float last_sec) {
+        return bpm.get(last_sec);
     }
 
-    public Map<Float,Float> getLastBreathingRate(float last_sec) {
-        return new HashMap<>() {{put(last_sec,breathing_rate.get(last_sec));}};
+    public float getLastBreathingRate(float last_sec) {
+        return breathing_rate.get(last_sec);
     }
 
-    public Map<Float,Float> getLastSpeed(float last_sec) {
-        return new HashMap<>() {{put(last_sec,speed.get(last_sec));}};
+    public float getLastSpeed(float last_sec) {
+        return speed.get(last_sec);
     }
 
     public Map<Float,Float> getLastEcg(float last_sec) {

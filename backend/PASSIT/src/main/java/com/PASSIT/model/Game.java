@@ -33,7 +33,6 @@ public class Game {
     private boolean flagLive = false;
 
     @ManyToMany(mappedBy ="games_list")
-    @JsonIdentityReference(alwaysAsId = true)
     private List<Team> teams_list = new ArrayList<>();
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "game_id")
@@ -50,6 +49,30 @@ public class Game {
 
     public boolean getFlagLive() {
         return flagLive;
+    }
+
+    public float getAvgBpm() {
+        float sum = 0;
+        for (StatsByGame stat : stats_list) {
+            sum += stat.avgBpm();
+        }
+        return sum / stats_list.size();
+    }
+
+    public float getAvgBreathingRate() {
+        float sum = 0;
+        for (StatsByGame stat : stats_list) {
+            sum += stat.avgBreathingRate();
+        }
+        return sum / stats_list.size();
+    }
+
+    public float getAvgSpeed() {
+        float sum = 0;
+        for (StatsByGame stat : stats_list) {
+            sum += stat.avgSpeed();
+        }
+        return sum / stats_list.size();
     }
 
 }
