@@ -16,11 +16,14 @@ import java.util.Map;
 public class TeamService {
     private final TeamRepository teamRepository;
     private final GameRepository gameRepository;
+    private final StatsByGameRepository statsByGameRepository;
 
     @Autowired
-    public TeamService(TeamRepository teamRepository, GameRepository gameRepository) {
+    public TeamService(TeamRepository teamRepository, GameRepository gameRepository,
+                       StatsByGameRepository statsByGameRepository) {
         this.teamRepository = teamRepository;
         this.gameRepository = gameRepository;
+        this.statsByGameRepository = statsByGameRepository;
     }
 
     public List<Team> getTeams() {
@@ -51,7 +54,7 @@ public class TeamService {
         teamRepository.deleteById(id);
     }
 
-    public Map<String,Double> statsTeamGame(Long id, Long game_id) {
+    public Map<String, Double> statsTeamGame(Long id, Long game_id) {
         Game game = gameRepository.findById(game_id).get();
         Map<String, Double> statsMap = new HashMap<>();
         statsMap.put("bpm", 0.0);
@@ -71,34 +74,36 @@ public class TeamService {
         return statsMap;
     }
 
-    public Player highestPlayerByStat(Long game_id, String stat) {
-        List<Player> players = teamRepository.findById(game_id).get().getPlayers_list();
+    public Player highestPlayerByStat(Long team_id, String stat) {
+        List<Player> players = teamRepository.findById(team_id).get().getPlayers_list();
         Player highestPlayer = players.get(0);
         float highestStat = 0;
-        for(Player player : players) {
-            StatsByGame statsByGame = player.getStatsByGame(gameRepository.findById(game_id).get());
-            switch (stat){
-                case "bpm":
-                    if(statsByGame.avgBpm() > highestStat) {
-                        highestPlayer = player;
-                        highestStat = statsByGame.avgBpm();
-                    }
-                    break;
-                case "speed":
-                    if(statsByGame.avgSpeed() > highestStat) {
-                        highestPlayer = player;
-                        highestStat = statsByGame.avgSpeed();
-                    }
-                    break;
-                case "breathing_rate":
-                    if(statsByGame.avgBreathingRate() > highestStat) {
-                        highestPlayer = player;
-                        highestStat = statsByGame.avgBreathingRate();
-                    }
-                    break;
-                default:
-                    System.out.println("Invalid stat");
-                    break;
+        for (Player player : players) {
+            for (Game game : teamRepository.findById(team_id).get().getGames_list()) {
+                StatsByGame statsByGame = player.getStatsByGame(game);
+                switch (stat) {
+                    case "bpm":
+                        if (statsByGame.avgBpm() > highestStat) {
+                            highestPlayer = player;
+                            highestStat = statsByGame.avgBpm();
+                        }
+                        break;
+                    case "speed":
+                        if (statsByGame.avgSpeed() > highestStat) {
+                            highestPlayer = player;
+                            highestStat = statsByGame.avgSpeed();
+                        }
+                        break;
+                    case "breathing_rate":
+                        if (statsByGame.avgBreathingRate() > highestStat) {
+                            highestPlayer = player;
+                            highestStat = statsByGame.avgBreathingRate();
+                        }
+                        break;
+                    default:
+                        System.out.println("Invalid stat");
+                        break;
+                }
             }
         }
         return highestPlayer;

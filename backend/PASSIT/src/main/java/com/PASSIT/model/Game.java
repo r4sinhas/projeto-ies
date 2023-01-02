@@ -21,7 +21,6 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "game")
 public class Game {
-    //id do jogo
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -29,6 +28,9 @@ public class Game {
 
     @Column(name = "date")
     private Date date;
+
+    @Column(name = "flagLive")
+    private boolean flagLive = false;
 
     @ManyToMany(mappedBy ="games_list")
     @JsonIdentityReference(alwaysAsId = true)
@@ -44,6 +46,10 @@ public class Game {
     @JsonIgnore
     public List<StatsByGame> getStats_list() {
         return stats_list;
+    }
+
+    public boolean getFlagLive() {
+        return flagLive;
     }
 
 }

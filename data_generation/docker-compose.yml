@@ -1,8 +1,8 @@
-version: '3.7'
+version: '4.15'
 
 services:
   rabbitmq3:
-    image: rabbitmq:3.11.5-management
+    image: rabbitmq:latest
     container_name: rabbitmq3
     hostname: rabbitmq3
     ports:

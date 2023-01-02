@@ -16,7 +16,7 @@ def get(url, headers=None):
 
 def insert_data(type_insert, url):
     if type_insert == 'player':
-        with open('players.txt', 'r') as f:
+        with open('players.txt', 'r', encoding='utf-8') as f:
             for line in f:
                 line = line.split(';')
                 if len(line) == 12:
@@ -60,7 +60,7 @@ def insert_data(type_insert, url):
                                 })
 
     elif type_insert == 'coach':
-        with open('coaches.txt', 'r') as f:
+        with open('coaches.txt', 'r', encoding='utf-8') as f:
             for line in f:
                 line = line.split(';')
                 post(url, json={'name': line[0],
@@ -83,7 +83,7 @@ def insert_data(type_insert, url):
                         })
 
     elif type_insert == 'game':
-        with open('games.txt', 'r') as f:
+        with open('games.txt', 'r', encoding='utf-8') as f:
             for line in f:
                 line = line.split(';')
                 post(url, json={'date': line[0],
@@ -98,7 +98,7 @@ def insert_data(type_insert, url):
                                 })
 
     elif type_insert == 'statsbygame':
-        with open('statsbygame.txt', 'r') as f:
+        with open('statsbygame.txt', 'r', encoding='utf-8') as f:
             for line in f:
                 line = line.split(';')
                 post(url, json={'game': line[0],
