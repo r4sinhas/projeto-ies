@@ -3,6 +3,81 @@ import Loading from "../components/Loading";
 import { React, useState, useEffect } from "react";
 
 export function Games() {
+  const data = [
+    {
+      id: 1,
+      team1: "Team 1",
+      team2: "Team 2",
+      date: "2021-05-01",
+    },
+    {
+      id: 2,
+      team1: "Team 3",
+      team2: "Team 4",
+      date: "2021-05-02",
+    },
+    {
+      id: 3,
+      team1: "Team 5",
+      team2: "Team 6",
+      date: "2021-05-03",
+    },
+    {
+      id: 1,
+      team1: "Team 1",
+      team2: "Team 2",
+      date: "2021-05-01",
+    },
+    {
+      id: 2,
+      team1: "Team 3",
+      team2: "Team 4",
+      date: "2021-05-02",
+    },
+    {
+      id: 3,
+      team1: "Team 5",
+      team2: "Team 6",
+      date: "2021-05-03",
+    },
+    {
+      id: 1,
+      team1: "Team 1",
+      team2: "Team 2",
+      date: "2021-05-01",
+    },
+    {
+      id: 2,
+      team1: "Team 3",
+      team2: "Team 4",
+      date: "2021-05-02",
+    },
+    {
+      id: 3,
+      team1: "Team 5",
+      team2: "Team 6",
+      date: "2021-05-03",
+    },
+    {
+      id: 1,
+      team1: "Team 1",
+      team2: "Team 2",
+      date: "2021-05-01",
+    },
+    {
+      id: 2,
+      team1: "Team 3",
+      team2: "Team 4",
+      date: "2021-05-02",
+    },
+    {
+      id: 3,
+      team1: "Team 5",
+      team2: "Team 6",
+      date: "2021-05-03",
+    },
+  ];
+
   const [games, setGames] = useState([]);
   const [t1, setTeam1] = useState([]);
   const [t2, setTeam2] = useState([]);
@@ -13,7 +88,7 @@ export function Games() {
         setGames(result);
       });
   }, []);
-
+  console.log("games: ", games);
   if (games.length === 0)
     return (
       <div>
@@ -43,35 +118,35 @@ export function Games() {
           className="bg-secondary-content bg-opacity-[97%] rounded-lg overflow-hidden flex gap-1 shadow-2xl"
           style={{ height: "800px", width: "1330px" }}
         >
-          <div className="overflow-x-auto w-2/3 mt-6 mb-6 ml-6">
+          <div className="overflow-x-auto w-full m-5">
             <table className="table w-full text-secondary">
               <thead>
                 <tr>
-                  <th>Team1</th>
-                  <th>Team2</th>
+                  <th>Team1 - Name</th>
+                  <th>Team2 - Name</th>
                   <th>Date</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                {games.map((game, index) => {
-                  if (game.teams_list.length > 0) {
-                    let t1 = game.teams_list[0].team_name;
-                    let t2 = game.teams_list[1].team_name;
-                  }
-                  console.log("game: ", game);
-                  console.log("game.teams_list: ", game.teams_list);
-                  return (
-                    <tr key={index}>
-                      <td>{t1}</td>
-                      <td>{t2}</td>
-                      <td>{game.date}</td>
-                      <td>
-                        <button className="btn btn-primary">View</button>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {data.map((game) => (
+                  <tr key={game.id}>
+                    <td>
+                      <div>
+                        <div className="font-bold">{game.team1}</div>
+                      </div>
+                    </td>
+                    <td>
+                      <div>
+                        <div className="font-bold">{game.team2}</div>
+                      </div>
+                    </td>
+                    <td>{game.date}</td>
+                    <td>
+                      <button className="btn btn-primary">View</button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

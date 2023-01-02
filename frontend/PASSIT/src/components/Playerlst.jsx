@@ -3,30 +3,38 @@ import { React, useState, useEffect } from "react";
 import { Sidebar } from "../components/Sidebar";
 import { useParams } from "react-router-dom";
 
-export function Fan() {
-  const { id } = useParams();
-
+export function Playerlst() {
+  const { id } = useParams(); // id is the fan id -> use to add player to fav list
+  const data1 = [];
+  let all_players = [];
   const fetchData = async () => {
-    const response = await fetch(
-      "http://localhost:8080/api/v1/fan/" + id + "/players"
-    );
-    const favPlayers = await response.json();
+    const response = await fetch("http://localhost:8080/api/v1/player/all");
+    all_players = await response.json();
 
-    if (favPlayers.length !== 0) {
-      console.log("favPlayers: ", favPlayers);
-      favPlayers.forEach((player) => {
+    if (all_players.length !== 0) {
+      console.log("all_players: ", all_players);
+      all_players.forEach((player) => {
         data.push({
           id: player.id,
+          img_url: player.img_url,
           name: player.name,
           team: player.team_id.team_name,
           position: player.position,
         });
       });
+      data1 = data;
+    } else {
+      return (
+        <div>
+          {" "}
+          <Loading></Loading>{" "}
+        </div>
+      );
     }
   };
 
   useEffect(() => {
-    //  fetchData();
+    fetchData();
   }, []);
   const data = [
     {
@@ -106,30 +114,19 @@ export function Fan() {
     });
     setNewData(result);
     console.log("newData: ", result);
+
     if (value === "") {
-      setNewData(data);
+      setNewData(data1);
     }
     // here you can filter the data
   }
 
-  function handleRemPlayer(idp) {
-    console.log("id: ", idp);
+  function handleAddPlayer(id) {
+    console.log("id: ", id);
     const result = [];
     newData.forEach((player) => {
-      if (player.id !== idp) {
+      if (player.id !== id) {
         result.push(player);
-
-        // call api to remove player from fav list
-        const requestOptions = {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-        };
-        fetch(
-          "http://localhost:8080/api/v1/fan/removeFavoritePlayer/" + id + idp,
-          requestOptions
-        )
-          .then((response) => response.json())
-          .then((data) => console.log(data));
       }
     });
     setNewData(result);
@@ -199,7 +196,7 @@ export function Fan() {
                 </tr>
               </thead>
               <tbody>
-                {newData.map((player) => (
+                {all_players.map((player) => (
                   <tr key={player.id}>
                     <td>
                       <div className="flex items-center space-x-3">
@@ -224,9 +221,9 @@ export function Fan() {
                     <td>
                       <button
                         className="btn btn-secondary"
-                        onClick={() => handleRemPlayer(player.id)}
+                        onClick={() => handleAddPlayer(player.id)}
                       >
-                        Rem
+                        ADD
                       </button>
                     </td>
                   </tr>
