@@ -1,16 +1,17 @@
 package com.PASSIT.model;
 
-import com.fasterxml.jackson.annotation.*;
-import com.sun.source.tree.Tree;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
 import java.util.HashMap;
-import java.util.TreeMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 @Entity
@@ -76,21 +77,21 @@ public class StatsByGame {
         float sum = 0;
         for (float bpm : this.bpm.values())
             sum += bpm;
-        return sum / this.bpm.keySet().size();
+        return Math.round(sum / this.bpm.keySet().size()*10)/10.0f;
     }
 
-    public Float avgBreathingRate() {
+    public float avgBreathingRate() {
         float sum = 0;
-        for (Float breathing_rate : this.breathing_rate.values())
+        for (float breathing_rate : this.breathing_rate.values())
             sum += breathing_rate;
-        return sum / this.breathing_rate.keySet().size();
+        return Math.round(sum / this.breathing_rate.keySet().size()*10)/10.0f;
     }
 
-    public Float avgSpeed() {
+    public float avgSpeed() {
         float sum = 0;
-        for (Float ecg : this.speed.values())
+        for (float ecg : this.speed.values())
             sum += ecg;
-        return sum / this.speed.keySet().size();
+        return Math.round(sum / this.speed.keySet().size()*10)/10.0f;
     }
 
     public Map<String, Map<Float,Float>> allStats() {
@@ -102,16 +103,16 @@ public class StatsByGame {
         return allStats;
     }
 
-    public Map<Float,Float> getLastBpm(float last_sec) {
-        return new HashMap<>() {{put(last_sec,bpm.get(last_sec));}};
+    public float getLastBpm(float last_sec) {
+        return bpm.get(last_sec);
     }
 
-    public Map<Float,Float> getLastBreathingRate(float last_sec) {
-        return new HashMap<>() {{put(last_sec,breathing_rate.get(last_sec));}};
+    public float getLastBreathingRate(float last_sec) {
+        return breathing_rate.get(last_sec);
     }
 
-    public Map<Float,Float> getLastSpeed(float last_sec) {
-        return new HashMap<>() {{put(last_sec,speed.get(last_sec));}};
+    public float getLastSpeed(float last_sec) {
+        return speed.get(last_sec);
     }
 
     public Map<Float,Float> getLastEcg(float last_sec) {
