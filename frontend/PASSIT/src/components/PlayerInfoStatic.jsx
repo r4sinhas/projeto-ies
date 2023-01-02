@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { LineChart, Line, Tooltip, XAxis, YAxis } from "recharts";
 
-export function PlayerInfo(props) {
+export function PlayerInfoStatic(props) {
   const navigate = useNavigate();
   const data = [
     { name: "Page A", player: 10, average: 40, amt: 40 },

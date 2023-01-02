@@ -56,7 +56,6 @@ public class Player {
 
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
-    @JsonIdentityReference(alwaysAsId = true)
     private Team team_id;
 
     @Column(name = "last_stamina", nullable = false)
