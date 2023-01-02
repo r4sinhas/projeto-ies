@@ -95,7 +95,7 @@ public class StatsByGameService {
                 stats.put(i++, List.of(
                         new float[]{statsByGame.avgBpm(), statsByGame.getGame_id().getAvgBpm()},
                         new float[]{statsByGame.avgSpeed(), statsByGame.getGame_id().getAvgSpeed()},
-                        new float[]{statsByGame.avgBreathingRate(), statsByGame.getGame_id().getAvgSpeed()}
+                        new float[]{statsByGame.avgBreathingRate(), statsByGame.getGame_id().getAvgBreathingRate()}
                 ));
         }
         return stats;

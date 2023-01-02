@@ -43,7 +43,7 @@ public class StatsByGameController {
         System.out.println("Stats ADDED!");
     }
 
-    @GetMapping("/getstats/{id}/{game}")
+    @GetMapping("/getstats/{id}")
     public Map<Integer,List<float[]>> getStatsByPlayer(@PathVariable("id") Long id) {
         return statsByGameService.getStatsByPlayer(id);
     }
