@@ -8,6 +8,7 @@ import com.PASSIT.repository.StatsByGameRepository;
 import com.PASSIT.repository.PlayerRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,14 +71,34 @@ public class StatsByGameService {
     }
 
 
-    public Map<String,Map<Float,Float>> getStatsByGameLive(Long id, Long game_id) {
+    public Map<String,List<float[]>> getStatsByGameLive(Long id, Long game_id) {
         StatsByGame statsByGame = statsByGameRepository.findAll().stream().filter(s -> s.getPlayer() == id && s.getGame() == game_id).findFirst().orElse(null);
-        return Map.of("bpm",statsByGame.getLastBpm(last_sec), "speed",statsByGame.getLastSpeed(last_sec), "breathing_rate", statsByGame.getLastBreathingRate(last_sec), "ecg", statsByGame.getLastEcg(last_sec));
+        if (statsByGame.getGame_id().getFlagLive())
+            return Map.of(
+                    "bpm", List.of(new float[]{last_sec, statsByGame.getLastBpm(last_sec)}),
+                    "breathing_rate", List.of(new float[]{last_sec, statsByGame.getLastBreathingRate(last_sec)}),
+                    "speed", List.of(new float[]{last_sec, statsByGame.getLastSpeed(last_sec)}),
+                    "ecg", statsByGame.getLastEcg(last_sec).entrySet().stream()
+                            .map(entry -> new float[]{entry.getKey(), entry.getValue()})
+                            .collect(Collectors.toList())
+            );
+        else
+            return null;
+
     }
 
-    public Map<String, Map<Float,Float>> getStatsByGame(Long id, Long game_id) {
-        StatsByGame statsByGame = statsByGameRepository.findAll().stream().filter(s -> s.getPlayer() == id && s.getGame() == game_id).findFirst().orElse(null);
-        return Map.of("bpm",statsByGame.getBpm(), "speed",statsByGame.getSpeed(), "breathing_rate", statsByGame.getBreathing_rate(), "ecg", statsByGame.getEcg());
+    public Map<Integer,List<float[]>> getStatsByPlayer(Long id) {
+        HashMap<Integer,List<float[]>> stats = new HashMap<>();
+        int i = 1;
+        for (StatsByGame statsByGame : statsByGameRepository.findAll()) {
+            if (statsByGame.getPlayer() == id)
+                stats.put(i++, List.of(
+                        new float[]{statsByGame.avgBpm(), statsByGame.getGame_id().getAvgBpm()},
+                        new float[]{statsByGame.avgSpeed(), statsByGame.getGame_id().getAvgSpeed()},
+                        new float[]{statsByGame.avgBreathingRate(), statsByGame.getGame_id().getAvgSpeed()}
+                ));
+        }
+        return stats;
     }
 
     public void setMinutesPlayed(Long id, int minutesPlayed) {

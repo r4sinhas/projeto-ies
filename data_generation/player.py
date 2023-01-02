@@ -6,6 +6,7 @@ import json
 import mysql.connector
 from rabbitmq import Queue
 import argparse
+import multiprocessing
 
 GAME_TIME = 90
 GAME_TIME = GAME_TIME*60
