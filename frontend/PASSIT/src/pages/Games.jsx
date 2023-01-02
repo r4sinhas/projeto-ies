@@ -4,6 +4,8 @@ import { React, useState, useEffect } from "react";
 
 export function Games() {
   const [games, setGames] = useState([]);
+  const [t1, setTeam1] = useState([]);
+  const [t2, setTeam2] = useState([]);
   useEffect(() => {
     fetch("http://localhost:8080/api/v1/game/all") // game??
       .then((res) => res.json())
@@ -41,7 +43,7 @@ export function Games() {
           className="bg-secondary-content bg-opacity-[97%] rounded-lg overflow-hidden flex gap-1 shadow-2xl"
           style={{ height: "800px", width: "1330px" }}
         >
-          <div className="overflow-x-auto w-2/3 mt-5 mb-5 ml-5">
+          <div className="overflow-x-auto w-2/3 mt-6 mb-6 ml-6">
             <table className="table w-full text-secondary">
               <thead>
                 <tr>
@@ -52,56 +54,26 @@ export function Games() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    <div className="flex items-center space-x-3">
-                      <div className="avatar">
-                        <div className="mask mask-squircle w-12 h-12">
-                          <img
-                            src="https://i.pravatar.cc/300"
-                            alt="Avatar Tailwind CSS Component"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <div className="font-bold"></div>
-                      </div>
-                    </div>
-                  </td>
-                  <td></td>
-                  <th>
-                    <button className="btn btn-ghost btn-s rounded-lg">
-                      details
-                    </button>
-                  </th>
-                </tr>
+                {games.map((game, index) => {
+                  if (game.teams_list.length > 0) {
+                    let t1 = game.teams_list[0].team_name;
+                    let t2 = game.teams_list[1].team_name;
+                  }
+                  console.log("game: ", game);
+                  console.log("game.teams_list: ", game.teams_list);
+                  return (
+                    <tr key={index}>
+                      <td>{t1}</td>
+                      <td>{t2}</td>
+                      <td>{game.date}</td>
+                      <td>
+                        <button className="btn btn-primary">View</button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
-          </div>
-          <div className="stats stats-vertical shadow w-1/4 my-5 ml-16">
-            <div className="stat">
-              <div className="stat-title">Fastest Player</div>
-              <div className="stat-value text-primary text-5xl mb-0 h-12 ">
-                Lionel Pessi
-              </div>
-              <div className="stat-value text-3xl ">3.3 m/s</div>
-            </div>
-
-            <div className="stat">
-              <div className="stat-title">Fastest Player</div>
-              <div className="stat-value text-primary text-5xl h-12">
-                Lionel Pessi
-              </div>
-              <div className="stat-value text-3xl ">3.3 m/s</div>
-            </div>
-
-            <div className="stat">
-              <div className="stat-title">Fastest Player</div>
-              <div className="stat-value text-primary text-5xl h-12">
-                Lionel Pessi
-              </div>
-              <div className="stat-value text-3xl ">3.3 m/s</div>
-            </div>
           </div>
         </div>
       </div>
