@@ -6,61 +6,58 @@ import { LineChart, Line, Tooltip, XAxis, YAxis } from "recharts";
 export function PlayerInfo(props) {
   const navigate = useNavigate();
 
-  let bpm = [];
-  let br = [];
-  let speed = [];
-  let ecg = [];
+  const [bpmlive, setBpmlive] = useState([]);
+  const [brlive, setBrlive] = useState([]);
+  const [speedlive, setSpeedlive] = useState([]);
+  const [ecglive, setEcglive] = useState([]);
 
-  const updateArray = (array, value) => {
-    array.push(value);
-    return array;
-  };
+  let ecg_start = -1;
+  let stat_x = 0;
 
   if (props.flag_live === true) {
     //console.log("live");
 
-    const [stats, setStats] = useState([]);
-    let ecg_start = -1;
-    const fetchData = async (bpm, br, speed, ecg) => {
+    const fetchData = async () => {
       const response = await fetch(
         "http://localhost:8080/api/v1/statsbygame/live/getstats/" +
-          props.id +
-          "/" +
-          props.gameId
+        props.id +
+        "/" +
+        props.gameId
       );
       const stats = await response.json();
-      setStats(stats);
 
-      console.log("stats inside: ", stats);
       if (stats.length !== 0) {
-        let v1 = stats.bpm[0][1];
-        let v2 = stats.breathing_rate[0][1];
-        let v3 = stats.speed[0][1];
-        // update array
-        bpm.push({ name: "bpm", value: v1 });
-        br.push({ name: "br", value: v2 });
-        speed.push({ name: "speed", value: v3 });
+        bpmlive.push({
+          key: stat_x,
+          value: stats.bpm[0][1],
+        });
+        setBpmlive([...bpmlive]);
+        brlive.push({
+          key: stat_x,
+          value: stats.breathing_rate[0][1],
+        });
+        setBrlive([...brlive]);
+        speedlive.push({
+          key: stat_x,
+          value: stats.speed[0][1],
+        });
+        setSpeedlive([...speedlive]);
+        stat_x += 1;
 
-        console.log("bpm: ", bpm);
-        console.log("br: ", br);
-
-        if (ecg_start < 0) {
-          ecg_start = stats.ecg[0][0];
-        }
-
+        let newecg = [];
+        ecg_start = stats.ecg[0][0];
         for (let i = 0; i < stats.ecg.length; i++) {
-          ecg = ecg.concat({
-            name: "ecg",
-            key: stats.ecg[i][0],
+          newecg.push({
+            key: stats.ecg[i][0]-ecg_start,
             value: stats.ecg[i][1],
           });
         }
+        setEcglive([...newecg]);
       }
     };
 
     useEffect(() => {
-      fetchData(bpm, br, speed, ecg);
-      const interval = setInterval(() => fetchData(bpm, br, speed, ecg), 1000);
+      const interval = setInterval(fetchData, 1000);
       return () => clearInterval(interval);
     }, []);
 
@@ -115,15 +112,25 @@ export function PlayerInfo(props) {
           </div>
           <div className="box col-start-2 col-end-auto">
             <h1 className="z-10 mt-10 text-2xl font-semibold">ECG</h1>
-            <LineChart width={390} height={330} data={data}>
+            <LineChart width={390} height={330} data={ecglive}>
+              {console.log(ecglive.length)}
               <Line
                 type="monotone"
+                data={ecglive}
                 dataKey="value"
                 stroke="#1fd65f"
                 strokeWidth="2"
+                dot={false}
+              />
+              <XAxis
+                type="number"
+                dataKey="key"
+                tickLine={false}
+                axisLine={false}
               />
               <YAxis
                 type="number"
+                dataKey="value"
                 label={{
                   value: "(merdas/shit)",
                   angle: -90,
@@ -134,40 +141,29 @@ export function PlayerInfo(props) {
                 tickLine={false}
                 axisLine={false}
               />
-              <Tooltip
-                cursor={false}
-                contentStyle={{
-                  backgroundColor: "rgba(0,0,0,0.5)",
-                  border: "rgba(0,0,0,0)",
-                  fontWeight: "bold",
-                }}
-                wrapperStyle={{
-                  color: "#1fd65f",
-                  outline: "none",
-                  border: "10px solid rgba(0,0,0,0.5)",
-                  borderRadius: 10,
-                  lineHeight: "40px",
-                }}
-              />
+              
             </LineChart>
           </div>
           <div className="box col-start-2 col-end-auto">
             <h1 className="z-10 mt-3 text-2xl font-semibold">BPM</h1>
-            <LineChart width={390} height={330} data={bpm}>
+            <LineChart width={390} height={330} data={bpmlive}>
+              {console.log(bpmlive.length)}
               <Line
                 type="monotone"
+                data={bpmlive}
                 dataKey="value"
                 stroke="#1fd65f"
                 strokeWidth="2"
               />
-              <Line
-                type="monotone"
-                dataKey="average"
-                stroke="#fff"
-                strokeWidth="2"
+              <XAxis
+                type="number"
+                dataKey="key"
+                tickLine={false}
+                axisLine={false}
               />
               <YAxis
                 type="number"
+                dataKey="value"
                 label={{
                   value: "(merdas/shit)",
                   angle: -90,
@@ -197,23 +193,25 @@ export function PlayerInfo(props) {
           </div>
           <div className="box">
             <h1 className="z-10 mt-3 text-2xl font-semibold">Speed</h1>
-            <LineChart width={390} height={330} data={speed}>
-              {" "}
+            <LineChart width={390} height={330} data={speedlive}>
+              {console.log(speedlive.length)}
               {/*  data={props.speed} */}
               <Line
                 type="monotone"
-                dataKey="player"
+                data={speedlive}
+                dataKey="value"
                 stroke="#1fd65f"
                 strokeWidth="2"
               />
-              <Line
-                type="monotone"
-                dataKey="average"
-                stroke="#fff"
-                strokeWidth="2"
+              <XAxis
+                type="number"
+                dataKey="key"
+                tickLine={false}
+                axisLine={false}
               />
               <YAxis
                 type="number"
+                dataKey="value"
                 label={{
                   value: "(merdas/shit)",
                   angle: -90,
@@ -245,22 +243,24 @@ export function PlayerInfo(props) {
             <h1 className="z-10 mt-10 text-2xl font-semibold">
               Breathing Rythm
             </h1>
-            <LineChart width={390} height={330} data={br}>
-              {/* data={props.br_rate} */}
+            <LineChart width={390} height={330} data={brlive}>
+              {console.log(brlive.length)}
               <Line
                 type="monotone"
-                dataKey="player"
+                data={brlive}
+                dataKey="value"
                 stroke="#1fd65f"
                 strokeWidth="2"
               />
-              <Line
-                type="monotone"
-                dataKey="average"
-                stroke="#fff"
-                strokeWidth="2"
+              <XAxis
+                type="number"
+                dataKey="key"
+                tickLine={false}
+                axisLine={false}
               />
               <YAxis
                 type="number"
+                dataKey="value"
                 label={{
                   value: "(merdas/shit)",
                   angle: -90,
@@ -291,17 +291,7 @@ export function PlayerInfo(props) {
         </div>
       </div>
     );
-  } else if (props.flag_live === false) {
-    {
-      /*const data = [
-      { name: "Page A", value: 100 },
-      { name: "Page B", value: 200 },
-      { name: "Page C", value: 300 },
-      { name: "Page D", value: 400 },
-      { name: "Page E", value: 500 },
-      { name: "Page F", value: 600 },
-    ];*/
-    }
+  } else {
     const [bpm, setBpm] = useState([]);
     const [br, setBr] = useState([]);
     const [speed, setSpeed] = useState([]);
@@ -310,27 +300,31 @@ export function PlayerInfo(props) {
       const fetchData = async () => {
         const response = await fetch(
           "http://localhost:8080/api/v1/statsbygame/getstats/" +
-            props.id +
-            "/" +
-            props.gameId
+          props.id
         );
         const newStats = await response.json();
-
-        Object.keys(newStats).forEach((k) => {
-          setBpm((bpm) => [
-            ...bpm,
-            { key: k, player: newStats[k][0][0], average: newStats[k][0][1] },
-          ]);
-          setBr((br) => [
-            ...br,
-            { key: k, player: newStats[k][1][0], average: newStats[k][1][1] },
-          ]);
-
-          setSpeed((speed) => [
-            ...speed,
-            { key: k, player: newStats[k][2][0], average: newStats[k][2][1] },
-          ]);
-        });
+    
+        setBpm(
+          Object.keys(newStats).map((k) => ({
+            key: k,
+            player: newStats[k][0][0],
+            average: newStats[k][0][1],
+          }))
+        );
+        setBr(
+          Object.keys(newStats).map((k) => ({
+            key: k,
+            player: newStats[k][1][0],
+            average: newStats[k][1][1],
+          }))
+        );
+        setSpeed(
+          Object.keys(newStats).map((k) => ({
+            key: k,
+            player: newStats[k][2][0],
+            average: newStats[k][2][1],
+          }))
+        );
       };
 
       fetchData();
@@ -389,6 +383,7 @@ export function PlayerInfo(props) {
             <h1 className="z-10 mt-3 text-2xl font-semibold">BPM</h1>
             {console.log("as", bpm)}
             <LineChart width={390} height={330} data={bpm}>
+              {console.log(bpm)}
               <Line
                 type="monotone"
                 dataKey="player"
@@ -439,7 +434,7 @@ export function PlayerInfo(props) {
           <div className="box">
             <h1 className="z-10 mt-3 text-2xl font-semibold">Speed</h1>
             <LineChart width={390} height={330} data={speed}>
-              {/*  data={props.speed} */}
+              {console.log(speed)}
               <Line
                 type="monotone"
                 dataKey="player"
@@ -492,7 +487,7 @@ export function PlayerInfo(props) {
               Breathing Rythm
             </h1>
             <LineChart width={390} height={330} data={br}>
-              {/* data={props.br_rate} */}
+              {console.log(br)}
               <Line
                 type="monotone"
                 dataKey="player"
