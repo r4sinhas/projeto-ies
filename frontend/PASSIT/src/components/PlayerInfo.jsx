@@ -14,7 +14,6 @@ export function PlayerInfo(props) {
   let ecg_start = -1;
 
   if (props.flag_live === true) {
-    //console.log("live");
 
     const fetchData = async () => {
       const response = await fetch(
@@ -308,14 +307,14 @@ export function PlayerInfo(props) {
             average: newStats[k][0][1],
           }))
         );
-        setBr(
+        setSpeed(
           Object.keys(newStats).map((k) => ({
             key: k,
             player: newStats[k][1][0],
             average: newStats[k][1][1],
           }))
         );
-        setSpeed(
+        setBr(
           Object.keys(newStats).map((k) => ({
             key: k,
             player: newStats[k][2][0],
@@ -378,9 +377,7 @@ export function PlayerInfo(props) {
           </div>
           <div className="box col-start-2 col-end-auto">
             <h1 className="z-10 mt-3 text-2xl font-semibold">BPM</h1>
-            {console.log("as", bpm)}
             <LineChart width={390} height={330} data={bpm}>
-              {console.log(bpm)}
               <Line
                 type="monotone"
                 dataKey="player"
@@ -410,6 +407,7 @@ export function PlayerInfo(props) {
                 dataKey="key"
                 tickLine={false}
                 axisLine={false}
+                domain={["dataMin", "dataMax"]}
               />
               <Tooltip
                 cursor={false}
@@ -431,7 +429,6 @@ export function PlayerInfo(props) {
           <div className="box">
             <h1 className="z-10 mt-3 text-2xl font-semibold">Speed</h1>
             <LineChart width={390} height={330} data={speed}>
-              {console.log(speed)}
               <Line
                 type="monotone"
                 dataKey="player"
@@ -461,6 +458,7 @@ export function PlayerInfo(props) {
                 dataKey="key"
                 tickLine={false}
                 axisLine={false}
+                domain={["dataMin", "dataMax"]}
               />
               <Tooltip
                 cursor={false}
@@ -484,7 +482,6 @@ export function PlayerInfo(props) {
               Breathing Rythm
             </h1>
             <LineChart width={390} height={330} data={br}>
-              {console.log(br)}
               <Line
                 type="monotone"
                 dataKey="player"
@@ -516,6 +513,7 @@ export function PlayerInfo(props) {
                 dataKey="key"
                 tickLine={false}
                 axisLine={false}
+                domain={["dataMin", "dataMax"]}
               />
               <Tooltip
                 cursor={false}

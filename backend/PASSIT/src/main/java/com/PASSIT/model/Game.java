@@ -14,7 +14,7 @@ import java.util.List;
 
 
 @Entity
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+//@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -33,25 +33,23 @@ public class Game {
     private boolean flagLive = false;
 
     @ManyToMany(mappedBy ="games_list")
+    @JsonIgnoreProperties({"players_list", "games_list"})
     private List<Team> teams_list = new ArrayList<>();
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "game_id")
+    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnoreProperties({"game_id","player_id"})
     private List<StatsByGame> stats_list;
 
     public void addStatsByGame(StatsByGame stats) {
         this.stats_list.add(stats);
     }
 
-    @JsonIgnore
-    public List<StatsByGame> getStats_list() {
-        return stats_list;
-    }
-
-    public boolean getFlagLive() {
+    public boolean flagLive() {
         return flagLive;
     }
 
-    public float getAvgBpm() {
+    public float avgBpm() {
         float sum = 0;
         for (StatsByGame stat : stats_list) {
             sum += stat.avgBpm();
@@ -59,7 +57,7 @@ public class Game {
         return sum / stats_list.size();
     }
 
-    public float getAvgBreathingRate() {
+    public float avgBreathingRate() {
         float sum = 0;
         for (StatsByGame stat : stats_list) {
             sum += stat.avgBreathingRate();
@@ -67,7 +65,7 @@ public class Game {
         return sum / stats_list.size();
     }
 
-    public float getAvgSpeed() {
+    public float avgSpeed() {
         float sum = 0;
         for (StatsByGame stat : stats_list) {
             sum += stat.avgSpeed();

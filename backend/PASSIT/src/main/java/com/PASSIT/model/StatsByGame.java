@@ -1,8 +1,7 @@
 package com.PASSIT.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
+
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +14,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 @Entity
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+//@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -30,19 +29,21 @@ public class StatsByGame {
     private long id;
 
     @Column(name = "player", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private long player;
 
     @Column(name = "game", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private long game;
 
     @ManyToOne
     @JoinColumn(name = "game_id")
-    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnoreProperties({"flagLive", "teams_list", "stats_list"})
     private Game game_id;
 
     @ManyToOne
     @JoinColumn(name = "player_id")
-    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnoreProperties({"stats_list", "team_id", "username", "password", "email", "role", "position", "age", "height", "weight", "number", "img_url", "last_stamina"})
     private Player player_id;
 
     @Column(name = "minutes_played", nullable = false)
@@ -89,8 +90,8 @@ public class StatsByGame {
 
     public float avgSpeed() {
         float sum = 0;
-        for (float ecg : this.speed.values())
-            sum += ecg;
+        for (float speed : this.speed.values())
+            sum += speed;
         return Math.round(sum / this.speed.keySet().size()*10)/10.0f;
     }
 
@@ -103,19 +104,19 @@ public class StatsByGame {
         return allStats;
     }
 
-    public float getLastBpm(float last_sec) {
+    public float lastBpm(float last_sec) {
         return bpm.get(last_sec);
     }
 
-    public float getLastBreathingRate(float last_sec) {
+    public float lastBreathingRate(float last_sec) {
         return breathing_rate.get(last_sec);
     }
 
-    public float getLastSpeed(float last_sec) {
+    public float lastSpeed(float last_sec) {
         return speed.get(last_sec);
     }
 
-    public Map<Float,Float> getLastEcg(float last_sec) {
+    public Map<Float,Float> lastEcg(float last_sec) {
         return new HashMap<>(ecg.entrySet().stream().filter(e -> e.getKey() >= last_sec).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 

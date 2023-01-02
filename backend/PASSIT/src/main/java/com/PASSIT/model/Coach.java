@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import javax.persistence.*;
 
 @Entity
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+//@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -31,6 +31,7 @@ public class Coach {
     private String username;
 
     @Column(name = "password", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(name = "email", nullable = false)
@@ -41,14 +42,7 @@ public class Coach {
 
     @OneToOne(cascade = {CascadeType.ALL, CascadeType.DETACH})
     @JoinColumn(name = "team_id", nullable = false)
-    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnoreProperties({"coach_id", "players_list"})
     private Team team_id;
 
-    public String getPassword() {
-        return null;
-    }
-
-    public String password() {
-        return password;
-    }
 }

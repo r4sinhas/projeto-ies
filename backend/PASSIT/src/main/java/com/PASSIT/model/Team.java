@@ -2,6 +2,7 @@ package com.PASSIT.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.util.*;
 import javax.persistence.*;
 
 @Entity
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+//@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -36,13 +37,16 @@ public class Team {
 
     @OneToOne(mappedBy="team_id")
     @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnoreProperties({"team_id", "username", "password", "email"})
     private Coach coach_id;
 
     @ManyToMany(cascade = {CascadeType.ALL, CascadeType.DETACH})
     @JoinTable(name = "games_list", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "game_id"))
+    @JsonIgnoreProperties({"teams_list", "flagLive", "stats_list"})
     private List<Game> games_list = new ArrayList<>();
 
     @OneToMany(cascade = {CascadeType.ALL, CascadeType.DETACH}, mappedBy = "team_id")
+    @JsonIgnoreProperties({"team_id", "stats_list", "last_stamina", "username", "password", "email"})
     private List<Player> players_list = new ArrayList<>();
 
     public void addPlayer(Player player) {
