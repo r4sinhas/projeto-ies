@@ -45,7 +45,7 @@ public class StatsByGameController {
 
     @GetMapping("/getstats/{id}")
     public Map<Integer,List<float[]>> getStatsByPlayer(@PathVariable("id") Long id) {
-        return statsByGameService.getStatsByPlayer(id);
+        return statsByGameService.statsByPlayer(id);
     }
 
     @PutMapping("/minutesplayed/{id}")
@@ -56,7 +56,7 @@ public class StatsByGameController {
 
     @GetMapping("/live/getstats/{id}/{game}")
     public Map<String, List<float[]>> getStatsByGameLive(@PathVariable("id") Long id, @PathVariable("game") Long game) {
-        return statsByGameService.getStatsByGameLive(id, game);
+        return statsByGameService.statsByGameLive(id, game);
     }
 
     @PutMapping("/live/addstats/{id}")

@@ -1,9 +1,6 @@
 package com.PASSIT.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +12,7 @@ import java.util.ArrayList;
 import javax.persistence.*;
 
 @Entity
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+//@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -34,6 +31,7 @@ public class Fan {
     private String username;
 
     @Column(name = "password", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(name = "email", nullable = false)
@@ -44,13 +42,7 @@ public class Fan {
 
     @ManyToMany(cascade = {CascadeType.ALL, CascadeType.DETACH})
     @JoinTable(name = "fav_players", joinColumns = @JoinColumn(name = "fan_id"), inverseJoinColumns = @JoinColumn(name = "player_id"))
+    @JsonIgnoreProperties({"stats_list","username","password","email","team_id","last_stamina"})
     private List<Player>fav_players = new ArrayList<>();
 
-    public String getPassword() {
-        return null;
-    }
-
-    public String password() {
-        return password;
-    }
 }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+//@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -31,6 +31,7 @@ public class Player {
     private String username;
 
     @Column(name = "password", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(name = "email", nullable = false)
@@ -56,6 +57,7 @@ public class Player {
 
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
+    @JsonIgnoreProperties({"games_list","players_list", "coach_id"})
     private Team team_id;
 
     @Column(name = "last_stamina", nullable = false)
@@ -65,7 +67,7 @@ public class Player {
     private String img_url = "https://img.a.transfermarkt.technology/portrait/header/default.jpg";
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "player_id")
-    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnoreProperties({"player_id"})
     private List<StatsByGame> stats_list = new ArrayList<>();
     
     public void setStamina(Double stamina) {
@@ -85,11 +87,4 @@ public class Player {
         stats_list.add(stats);
     }
 
-    public String getPassword() {
-        return null;
-    }
-
-    public String password() {
-        return password;
-    }
 }

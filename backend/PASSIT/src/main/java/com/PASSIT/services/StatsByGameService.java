@@ -57,7 +57,7 @@ public class StatsByGameService {
     public StatsByGame addStatsLive(Long id, Float bpm, Float breathing_rate, Float speed, HashMap<Float,Float> ecg, Float time) {
         StatsByGame statsByGame = statsByGameRepository.findById(id).get();
         Game game = gameRepository.findById(statsByGame.getGame()).orElse(null);
-        if (!game.getFlagLive()){
+        if (!game.flagLive()){
             game.setFlagLive(true);
             gameRepository.save(game);
         }
@@ -71,14 +71,14 @@ public class StatsByGameService {
     }
 
 
-    public Map<String,List<float[]>> getStatsByGameLive(Long id, Long game_id) {
+    public Map<String,List<float[]>> statsByGameLive(Long id, Long game_id) {
         StatsByGame statsByGame = statsByGameRepository.findAll().stream().filter(s -> s.getPlayer() == id && s.getGame() == game_id).findFirst().orElse(null);
-        if (statsByGame.getGame_id().getFlagLive()) {
+        if (statsByGame.getGame_id().flagLive()) {
             return Map.of(
-                    "bpm", List.of(new float[]{last_sec, statsByGame.getLastBpm(last_sec)}),
-                    "breathing_rate", List.of(new float[]{last_sec, statsByGame.getLastBreathingRate(last_sec)}),
-                    "speed", List.of(new float[]{last_sec, statsByGame.getLastSpeed(last_sec)}),
-                    "ecg", statsByGame.getLastEcg(last_sec).entrySet().stream()
+                    "bpm", List.of(new float[]{last_sec, statsByGame.lastBpm(last_sec)}),
+                    "breathing_rate", List.of(new float[]{last_sec, statsByGame.lastBreathingRate(last_sec)}),
+                    "speed", List.of(new float[]{last_sec, statsByGame.lastSpeed(last_sec)}),
+                    "ecg", statsByGame.lastEcg(last_sec).entrySet().stream()
                             .map(entry -> new float[]{entry.getKey(), entry.getValue()})
                             .collect(Collectors.toList())
             );
@@ -87,15 +87,15 @@ public class StatsByGameService {
 
     }
 
-    public Map<Integer,List<float[]>> getStatsByPlayer(Long id) {
+    public Map<Integer,List<float[]>> statsByPlayer(Long id) {
         HashMap<Integer,List<float[]>> stats = new HashMap<>();
         int i = 1;
         for (StatsByGame statsByGame : statsByGameRepository.findAll()) {
             if (statsByGame.getPlayer() == id)
                 stats.put(i++, List.of(
-                        new float[]{statsByGame.avgBpm(), statsByGame.getGame_id().getAvgBpm()},
-                        new float[]{statsByGame.avgSpeed(), statsByGame.getGame_id().getAvgSpeed()},
-                        new float[]{statsByGame.avgBreathingRate(), statsByGame.getGame_id().getAvgBreathingRate()}
+                        new float[]{statsByGame.avgBpm(), statsByGame.getGame_id().avgBpm()},
+                        new float[]{statsByGame.avgSpeed(), statsByGame.getGame_id().avgSpeed()},
+                        new float[]{statsByGame.avgBreathingRate(), statsByGame.getGame_id().avgBreathingRate()}
                 ));
         }
         return stats;
@@ -106,7 +106,7 @@ public class StatsByGameService {
         Game game = gameRepository.findById(statsByGame.getGame()).orElse(null);
         statsByGame.setMinutes_played(minutesPlayed);
         statsByGameRepository.save(statsByGame);
-        if (game.getFlagLive()){
+        if (game.flagLive()){
             game.setFlagLive(false);
             gameRepository.save(game);
         }
