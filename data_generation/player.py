@@ -60,16 +60,16 @@ class Player:
 			if init > 125+10*(1-self.stamina/100):
 				self.last_bpm = init-0.5-0.5*(1-self.stamina/100)
 			else:
-				self.last_bpm = max(init-0.25, 100+10*(1-self.stamina/100))
+				self.last_bpm = max(init-0.25, 95+10*(1-self.stamina/100)+random.random()*10)
 		elif run == 1:
 			if init > 145+10*(1-self.stamina/100):
 				self.last_bpm = init-0.1-0.1*(((self.age_factor+1)/3.7))
 			elif init < 125+10*(1-self.stamina/100):
 				self.last_bpm = init+0.21+2*self.stamina/100+0.5*((self.age_factor+1)/3.7)
 			else:
-				self.last_bpm = max(init-(0.8*self.stamina/100), 135+10*(1-self.stamina/100))
+				self.last_bpm = max(init-(0.8*self.stamina/100), 130+10*(1-self.stamina/100)+random.random()*10)
 		else:
-			self.last_bpm = min(init*(1.1+0.1*(((self.age_factor+1)/3.7)-0.1*(self.stamina/100))), 190+10*(1-self.stamina/100))
+			self.last_bpm = min(init*(1.1+0.1*(((self.age_factor+1)/3.7)-0.1*(self.stamina/100))), 185+10*(1-self.stamina/100)+random.random()*10)
 		return int(self.last_bpm)
 
 	def eletrocardiogram(self, bpm):
@@ -185,7 +185,7 @@ def main(start_time, statsid, live):
 	while i < (GAME_TIME-start_time):
 		r=random.randrange(0, 100)
 		tm1 = random.randrange(1, 8)
-		tm2 = random.randrange(3, 25)
+		tm2 = random.randrange(10, 25)
 		if r < 7 and player.can_do(1, GAME_TIME-start_time-i, tm1):
 			func = player.sprint
 			tm=tm1
@@ -195,7 +195,7 @@ def main(start_time, statsid, live):
 			func = player.run
 			tm=tm2
 		else:
-			tm=random.randrange(1, 20)
+			tm=random.randrange(15, 30)
 			func = player.walk
 		for e in range(tm):
 			bpm, breathing_rate, speed, t, ecg = func()

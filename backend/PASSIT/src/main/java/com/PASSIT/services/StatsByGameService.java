@@ -73,7 +73,7 @@ public class StatsByGameService {
 
     public Map<String,List<float[]>> getStatsByGameLive(Long id, Long game_id) {
         StatsByGame statsByGame = statsByGameRepository.findAll().stream().filter(s -> s.getPlayer() == id && s.getGame() == game_id).findFirst().orElse(null);
-        if (statsByGame.getGame_id().getFlagLive())
+        if (statsByGame.getGame_id().getFlagLive()) {
             return Map.of(
                     "bpm", List.of(new float[]{last_sec, statsByGame.getLastBpm(last_sec)}),
                     "breathing_rate", List.of(new float[]{last_sec, statsByGame.getLastBreathingRate(last_sec)}),
@@ -82,7 +82,7 @@ public class StatsByGameService {
                             .map(entry -> new float[]{entry.getKey(), entry.getValue()})
                             .collect(Collectors.toList())
             );
-        else
+        } else
             return null;
 
     }
