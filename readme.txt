@@ -1,4 +1,9 @@
 Executar setup.sh para dar setup do ambiente (Apenas uma vez)
+Neste momento deverá correr dois terminais na pasta data_generation com os seguintes comandos
+
+python3 receiver.py --live
+python3 receiver.py
+
 Executar run.sh para ativar o ambiente
 (Em caso de algo inesperado aconselha-se correr em diferentes terminais separadamente e seguir os
 comandos nos ficheiros .sh referidos)
