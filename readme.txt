@@ -17,7 +17,7 @@ user: roger password: roger
 
 Para player
 
-user: leo password: messi
+user: ody password: ody
 
 Para Fan
 
