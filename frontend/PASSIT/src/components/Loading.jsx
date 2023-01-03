@@ -1,7 +1,7 @@
 import React from "react";
 import ReactLoading from "react-loading";
 
-export default function Loading() {
+export default function Loading2() {
   return (
     <div
       className="hero min-h-screen"

@@ -44,6 +44,7 @@ public class FanController {
             return "New favorite player ADDED!";
         }
 
+        @CrossOrigin
         @PostMapping("/removeFavoritePlayer/{fan}/{player}")
         public String removeFavoritePlayer(@PathVariable("fan") Long fan, @PathVariable("player") Long player) {
             fanService.removeFavoritePlayer(fan, player);

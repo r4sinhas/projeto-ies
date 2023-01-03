@@ -22,60 +22,6 @@ export function Games() {
       team2: "Team 6",
       date: "2021-05-03",
     },
-    {
-      id: 1,
-      team1: "Team 1",
-      team2: "Team 2",
-      date: "2021-05-01",
-    },
-    {
-      id: 2,
-      team1: "Team 3",
-      team2: "Team 4",
-      date: "2021-05-02",
-    },
-    {
-      id: 3,
-      team1: "Team 5",
-      team2: "Team 6",
-      date: "2021-05-03",
-    },
-    {
-      id: 1,
-      team1: "Team 1",
-      team2: "Team 2",
-      date: "2021-05-01",
-    },
-    {
-      id: 2,
-      team1: "Team 3",
-      team2: "Team 4",
-      date: "2021-05-02",
-    },
-    {
-      id: 3,
-      team1: "Team 5",
-      team2: "Team 6",
-      date: "2021-05-03",
-    },
-    {
-      id: 1,
-      team1: "Team 1",
-      team2: "Team 2",
-      date: "2021-05-01",
-    },
-    {
-      id: 2,
-      team1: "Team 3",
-      team2: "Team 4",
-      date: "2021-05-02",
-    },
-    {
-      id: 3,
-      team1: "Team 5",
-      team2: "Team 6",
-      date: "2021-05-03",
-    },
   ];
 
   const [games, setGames] = useState([]);
@@ -129,24 +75,39 @@ export function Games() {
                 </tr>
               </thead>
               <tbody>
-                {data.map((game) => (
-                  <tr key={game.id}>
-                    <td>
-                      <div>
-                        <div className="font-bold">{game.team1}</div>
-                      </div>
-                    </td>
-                    <td>
-                      <div>
-                        <div className="font-bold">{game.team2}</div>
-                      </div>
-                    </td>
-                    <td>{game.date}</td>
-                    <td>
-                      <button className="btn btn-primary">View</button>
-                    </td>
-                  </tr>
-                ))}
+                {games.map(
+                  (game) => (
+                    console.log("game: ", game.team_list),
+                    (
+                      <tr key={game.id}>
+                        <td>
+                          <div>
+                            <div className="font-bold">
+                              {game.teams_list[0].team_name}
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div>
+                            <div className="font-bold">
+                              {game.teams_list[1].team_name}
+                            </div>
+                          </div>
+                        </td>
+                        <td>{game.date}</td>
+                        <td>
+                          <a
+                            href={
+                              "http://localhost:5173/coachreview/" + game.id
+                            }
+                          >
+                            <button className="btn btn-primary">View</button>
+                          </a>
+                        </td>
+                      </tr>
+                    )
+                  )
+                )}
               </tbody>
             </table>
           </div>

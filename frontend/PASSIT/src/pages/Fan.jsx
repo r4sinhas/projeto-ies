@@ -6,28 +6,25 @@ import { useParams } from "react-router-dom";
 export function Fan() {
   const { id } = useParams();
 
-  const fetchData = async () => {
-    const response = await fetch(
-      "http://localhost:8080/api/v1/fan/" + id + "/players"
-    );
-    const favPlayers = await response.json();
+  let [favPlayers, setFavPlayers] = useState([]);
 
-    if (favPlayers.length !== 0) {
-      console.log("favPlayers: ", favPlayers);
-      favPlayers.forEach((player) => {
-        data.push({
-          id: player.id,
-          name: player.name,
-          team: player.team_id.team_name,
-          position: player.position,
-        });
-      });
+  const [newData, setNewData] = useState([]);
+
+  const fetchData = async () => {
+    const response = await fetch("http://localhost:8080/api/v1/fan/" + id);
+    const rp = await response.json();
+
+    if (rp.length !== 0) {
+      setFavPlayers(rp.fav_players);
     }
+    setNewData(rp.fav_players);
+    return favPlayers;
   };
 
   useEffect(() => {
-    //  fetchData();
+    fetchData();
   }, []);
+  console.log("favPlayers ya: ", favPlayers);
   const data = [
     {
       id: 1,
@@ -61,40 +58,6 @@ export function Fan() {
     },
   ];
 
-  const [newData, setNewData] = useState([
-    {
-      id: 1,
-      name: "Lionel Messi",
-      team: "Barcelona",
-      position: "Forward",
-    },
-    {
-      id: 2,
-      name: "Cristiano Ronaldo",
-      team: "Juventus",
-      position: "Forward",
-    },
-    {
-      id: 3,
-      name: "Neymar",
-      team: "Paris Saint-Germain",
-      position: "Forward",
-    },
-    {
-      id: 4,
-      name: "Kylian Mbappe",
-      team: "Paris Saint-Germain",
-      position: "Forward",
-    },
-    {
-      id: 5,
-      name: "Mohamed Salah",
-      team: "Liverpool",
-      position: "Forward",
-    },
-  ]);
-
-  console.log("newData: ", newData);
   function handleChange(event) {
     console.log("yayay", event.target.value);
     const value = event.target.value.toLowerCase();
@@ -107,34 +70,36 @@ export function Fan() {
     setNewData(result);
     console.log("newData: ", result);
     if (value === "") {
-      setNewData(data);
+      setNewData(favPlayers);
     }
-    // here you can filter the data
   }
 
-  function handleRemPlayer(idp) {
-    console.log("id: ", idp);
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleRemPlayer = async (idp) => {
+    console.log("REMOVE id: ", idp);
+    const response = await fetch(
+      "http://localhost:8080/api/v1/fan/removeFavoritePlayer/" + id + "/" + idp,
+
+      {
+        method: "POST",
+      }
+    );
+    // update the newData array to remove the player
     const result = [];
     newData.forEach((player) => {
       if (player.id !== idp) {
         result.push(player);
-
-        // call api to remove player from fav list
-        const requestOptions = {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-        };
-        fetch(
-          "http://localhost:8080/api/v1/fan/removeFavoritePlayer/" + id + idp,
-          requestOptions
-        )
-          .then((response) => response.json())
-          .then((data) => console.log(data));
       }
     });
     setNewData(result);
-  }
-
+    console.log("newData: ", result);
+    if (newData.length === 0) {
+      setNewData(favPlayers);
+    }
+  };
   return (
     <div
       className="flex select-none"
@@ -199,38 +164,43 @@ export function Fan() {
                 </tr>
               </thead>
               <tbody>
-                {newData.map((player) => (
-                  <tr key={player.id}>
-                    <td>
-                      <div className="flex items-center space-x-3">
-                        <div className="avatar">
-                          <div className="mask mask-squircle w-12 h-12">
-                            <img
-                              src={player.img_url}
-                              alt="Avatar Tailwind CSS Component"
-                            />
+                {newData.map(
+                  (player) => (
+                    console.log("player: ", player),
+                    (
+                      <tr key={player.id}>
+                        <td>
+                          <div className="flex items-center space-x-3">
+                            <div className="avatar">
+                              <div className="mask mask-squircle w-12 h-12">
+                                <img
+                                  src={player.img_url}
+                                  alt="Avatar Tailwind CSS Component"
+                                />
+                              </div>
+                            </div>
+                            <div>
+                              <div className="font-bold">{player.name}</div>
+                            </div>
                           </div>
-                        </div>
-                        <div>
-                          <div className="font-bold">{player.name}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td>{player.team}</td>
-                    <td>{player.position}</td>
-                    <td>
-                      <button className="btn btn-primary">View</button>
-                    </td>
-                    <td>
-                      <button
-                        className="btn btn-secondary"
-                        onClick={() => handleRemPlayer(player.id)}
-                      >
-                        Rem
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                        </td>
+                        <td>{player.position}</td>
+                        <td>{player.team_id.team_name}</td>
+                        <td>
+                          <button className="btn btn-primary">View</button>
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-secondary"
+                            onClick={() => handleRemPlayer(player.id)}
+                          >
+                            Rem
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                  )
+                )}
               </tbody>
             </table>
           </div>
