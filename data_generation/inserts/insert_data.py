@@ -71,10 +71,10 @@ def insert_data(type_insert, url):
                                 })
 
     elif type_insert == 'fan':
-        post(url, json={'name': 'Pedro',
-                        'username': 'r4sinhas',
-                        'password': 'r4sinhas',
-                        'email': 'r4sinhas@',
+        post(url, json={'name': 'Myke',
+                        'username': 'mike',
+                        'password': 'tyson',
+                        'email': 'mk@gmail.com',
                         'player_id': {
                             'id': 1
                         }
