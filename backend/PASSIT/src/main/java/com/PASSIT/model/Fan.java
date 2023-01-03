@@ -42,7 +42,7 @@ public class Fan {
 
     @ManyToMany(cascade = {CascadeType.ALL, CascadeType.DETACH})
     @JoinTable(name = "fav_players", joinColumns = @JoinColumn(name = "fan_id"), inverseJoinColumns = @JoinColumn(name = "player_id"))
-    @JsonIgnoreProperties({"stats_list","username","password","email","team_id","last_stamina"})
+    @JsonIgnoreProperties({"stats_list","username","password","email","last_stamina"})
     private List<Player>fav_players = new ArrayList<>();
 
 }

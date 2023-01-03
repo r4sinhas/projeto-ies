@@ -73,5 +73,14 @@ public class Game {
         return sum / stats_list.size();
     }
 
+    public List<Player> players_list() {
+        List<Player> players = new ArrayList<>();
+        for (Team team: teams_list) {
+            for (Player player: team.getPlayers_list())
+                players.add(player);
+        }
+        return players;
+    }
+
 }
 

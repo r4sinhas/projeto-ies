@@ -11,8 +11,6 @@ export function PlayerInfo(props) {
   const [speedlive, setSpeedlive] = useState([]);
   const [ecglive, setEcglive] = useState([]);
 
-  let ecg_start = -1;
-
   if (props.flag_live === true) {
 
     const fetchData = async () => {
@@ -43,14 +41,13 @@ export function PlayerInfo(props) {
         setSpeedlive([...speedlive]);
 
         let newecg = [];
-        ecg_start = stats.ecg[0][0];
         for (let i = 0; i < stats.ecg.length; i++) {
           newecg.push({
-            key: stats.ecg[i][0] - ecg_start,
+            key: stats.ecg[i][0],
             value: stats.ecg[i][1],
           });
         }
-        setEcglive([...newecg]);
+        setEcglive([...newecg].sort((a, b) => a.key));
       }
     };
 
@@ -111,6 +108,7 @@ export function PlayerInfo(props) {
           <div className="box col-start-2 col-end-auto">
             <h1 className="z-10 mt-10 text-2xl font-semibold">ECG</h1>
             <LineChart width={390} height={330} data={ecglive}>
+              {console.log(ecglive)}
               <Line
                 type="monotone"
                 data={ecglive}
@@ -120,6 +118,7 @@ export function PlayerInfo(props) {
                 dot={false}
               />
               <XAxis
+                hideXAxisLabel={true}
                 type="number"
                 dataKey="key"
                 tickLine={false}
@@ -129,11 +128,6 @@ export function PlayerInfo(props) {
               <YAxis
                 type="number"
                 dataKey="value"
-                label={{
-                  value: "(merdas/shit)",
-                  angle: -90,
-                  position: "insideLeft",
-                }}
                 domain={["auto", "auto"]}
                 padding={{ top: 20, bottom: 20 }}
                 tickLine={false}
@@ -163,7 +157,7 @@ export function PlayerInfo(props) {
                 type="number"
                 dataKey="value"
                 label={{
-                  value: "(merdas/shit)",
+                  value: "(BPM)",
                   angle: -90,
                   position: "insideLeft",
                 }}
@@ -211,7 +205,7 @@ export function PlayerInfo(props) {
                 type="number"
                 dataKey="value"
                 label={{
-                  value: "(merdas/shit)",
+                  value: "(Km/h)",
                   angle: -90,
                   position: "insideLeft",
                 }}
@@ -258,7 +252,7 @@ export function PlayerInfo(props) {
                 type="number"
                 dataKey="value"
                 label={{
-                  value: "(merdas/shit)",
+                  value: "(Breaths/min)",
                   angle: -90,
                   position: "insideLeft",
                 }}
@@ -393,7 +387,7 @@ export function PlayerInfo(props) {
               <YAxis
                 type="number"
                 label={{
-                  value: "(merdas/shit)",
+                  value: "(BPM)",
                   angle: -90,
                   position: "insideLeft",
                 }}
@@ -444,7 +438,7 @@ export function PlayerInfo(props) {
               <YAxis
                 type="number"
                 label={{
-                  value: "(merdas/shit)",
+                  value: "(Km/h)",
                   angle: -90,
                   position: "insideLeft",
                 }}
@@ -478,9 +472,7 @@ export function PlayerInfo(props) {
             </LineChart>
           </div>
           <div className="box row-start-1 row-end-auto col-start-3">
-            <h1 className="z-10 mt-10 text-2xl font-semibold">
-              Breathing Rythm
-            </h1>
+            <h1 className="z-10 mt-10 text-2xl font-semibold">Breathing Rythm</h1>
             <LineChart width={390} height={330} data={br}>
               <Line
                 type="monotone"
@@ -499,7 +491,7 @@ export function PlayerInfo(props) {
               <YAxis
                 type="number"
                 label={{
-                  value: "(merdas/shit)",
+                  value: "(Breaths/Min)",
                   angle: -90,
                   position: "insideLeft",
                 }}

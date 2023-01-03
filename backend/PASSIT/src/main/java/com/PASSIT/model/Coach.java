@@ -41,8 +41,12 @@ public class Coach {
     private String role="coach";
 
     @OneToOne(cascade = {CascadeType.ALL, CascadeType.DETACH})
-    @JoinColumn(name = "team_id", nullable = false)
+    @JoinColumn(name = "team_id")
     @JsonIgnoreProperties({"coach_id", "players_list"})
     private Team team_id;
+
+    @Column(name = "team", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private long team;
 
 }

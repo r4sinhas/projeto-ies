@@ -1,9 +1,11 @@
 from datetime import date
 import math
 import random
+import sys
 import time
 import json
 import mysql.connector
+import requests
 from rabbitmq import Queue
 import argparse
 
@@ -20,14 +22,15 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 
+queue = Queue("localhost", 5672, "admin", "admin", "live_data", durable=False)
+queue.connect()
+
 class Player:
 
 	def __init__(self, start_time, statsid):
 		mycursor.execute(f"SELECT player_id FROM stats_by_game WHERE id={statsid};")
 		self.id = mycursor.fetchone()[0]
 		self.statsid = statsid
-		self.queue = Queue("localhost", 5672, "admin", "admin", "player_data")
-		self.queue.connect()
 		mycursor.execute(f"SELECT age, height, last_stamina FROM player WHERE id={self.id};")
 		result = mycursor.fetchone()
 		self.age = result[0]
@@ -42,10 +45,19 @@ class Player:
 		self.last_t = start_time
 		self.tm = None
 		self.start_point = None
+		self.i = 0
+		self.init = time.time()
+		self.e = None
+		self.func = None
+		self.bpm = None
+		self.speed = None
+		self.t = None
+		self.ecg = None
+		self.breathing = None
 
-	def send(self, m):
+	def send(m):
 		message = json.dumps(m)
-		self.queue.send(message)
+		queue.send(message)
 
 	def heart_rate(self, run):
 		init = self.last_bpm
@@ -164,43 +176,42 @@ class Player:
 			else:
 				return True
 
-def main(start_time, statsid):
-	player = Player(start_time, statsid)
-	i=0
-	bpm_list= []
-	breathing_rate_list = []
-	speed_list = []
-	t_list = []
-	ecg_list = []
+def main(start_time, statsid_list):
+	player_list = []
 
-	while i < (GAME_TIME-start_time):
-		r=random.randrange(0, 100)
-		tm1 = random.randrange(1, 8)
-		tm2 = random.randrange(10, 25)
-		if r < 7 and player.can_do(1, GAME_TIME-start_time-i, tm1):
-			func = player.sprint
-			tm=tm1
-			player.tm = tm
-			player.start_point = -math.log(-player.last_speed/player.v_max+1)
-		elif r < 28 and player.can_do(0, GAME_TIME-start_time-i, tm2):
-			func = player.run
-			tm=tm2
-		else:
-			tm=random.randrange(15, 30)
-			func = player.walk
-		for e in range(tm):
-			bpm, breathing_rate, speed, t, ecg = func()
-			bpm_list.append(bpm)
-			breathing_rate_list.append(breathing_rate)
-			speed_list.append(speed)
-			t_list.extend(t)
-			ecg_list.extend(ecg)
-		i+=tm
+	for statsid in statsid_list:
+		player_list.append(Player(start_time, statsid))
 
+	while player_list:
+		for player in player_list:
+			if player.i < (GAME_TIME-start_time):
+				if player.init+1 > time.time():
+					r=random.randrange(0, 100)
+					tm1 = random.randrange(1, 8)
+					tm2 = random.randrange(10, 25)
+					if r < 7 and player.can_do(1, GAME_TIME-start_time-player.i, tm1):
+						player.func = player.sprint
+						tm=tm1
+						player.tm = tm
+						player.start_point = -math.log(-player.last_speed/player.v_max+1)
+					elif r < 28 and player.can_do(0, GAME_TIME-start_time-player.i, tm2):
+						player.func = player.run
+						tm=tm2
+					else:
+						tm=random.randrange(15, 30)
+						player.func = player.walk
+					player.e = 0
+				if player.e < player.tm:
+					player.bpm, player.breathing, player.speed, player.t, player.ecg = player.func()
+					player.init = time.time()
+					player.e+=1
+				player.i+=tm
+			else:
+				player_list.remove(player)
+		
+		Player.send({"type":"live","data":[{"id":player.id,"bpm":player.bpm,"breathing_rate":player.breathing,"speed":player.speed,"ecg":player.ecg,"t":player.t, "time":player.i+player.e+start_time} for player in player_list]})
 
-	t_list.append(player.last_t)
-	ecg_list.append(0)
-	player.send({"type":"stats","id":player.statsid,"data":{"bpm":bpm_list,"breathing_rate":breathing_rate_list,"speed":speed_list,"ecg":ecg_list,"t":t_list,"minutes_played":(GAME_TIME-start_time)//60}})
+	player.send({"type":"minutes_played","id":player.statsid,"data":{"minutes_played":(GAME_TIME-start_time)//60}})
 	player.send({"type":"rem_stamina","id":player.statsid,"data":{"stamina":player.stamina}})
 	player.queue.close()
 
@@ -208,7 +219,18 @@ if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser()
 	parser.add_argument("start_time", type=int, help="Start time of the game in seconds")
-	parser.add_argument("statsid", type=str, help="StatsByGame Id")
+	parser.add_argument("team1", type=str, default=None, help="Team 1 id")
+	parser.add_argument("team2", type=str, default=None, help="Team 2 id")
+	parser.add_argument("date", type=str, default=None, help="Date of the game (YYYY-MM-DD)")
 	args = parser.parse_args()
 
-	main(args.start_time, args.statsid)
+	print("Live game")
+	res = requests.post(f"http://localhost:8080/api/v1/game/add/", json={"date":args.date,"teams_list":[{"id":args.team1}, {"id":args.team2}]})
+	game = res.json()["id"]
+	res = requests.get(f"http://localhost:8080/api/v1/game/players/{game}")
+	lst=[]
+	for player in res.json():
+		lst.append(requests.post(f"http://localhost:8080/api/v1/statsbygame/add", json={"game":game,"player":player["id"]}))
+
+	main(args.start_time, lst)
+	print("Game finished")

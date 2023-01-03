@@ -7,6 +7,7 @@ import com.PASSIT.repository.GameRepository;
 import com.PASSIT.repository.StatsByGameRepository;
 import com.PASSIT.repository.PlayerRepository;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -71,18 +72,17 @@ public class StatsByGameService {
     }
 
 
-    public Map<String,List<float[]>> statsByGameLive(Long id, Long game_id) {
+    public Map<String, List<float[]>> statsByGameLive(Long id, Long game_id) {
         StatsByGame statsByGame = statsByGameRepository.findAll().stream().filter(s -> s.getPlayer() == id && s.getGame() == game_id).findFirst().orElse(null);
-        if (statsByGame.getGame_id().flagLive()) {
+        if (statsByGame.getGame_id().flagLive())
             return Map.of(
                     "bpm", List.of(new float[]{last_sec, statsByGame.lastBpm(last_sec)}),
                     "breathing_rate", List.of(new float[]{last_sec, statsByGame.lastBreathingRate(last_sec)}),
                     "speed", List.of(new float[]{last_sec, statsByGame.lastSpeed(last_sec)}),
                     "ecg", statsByGame.lastEcg(last_sec).entrySet().stream()
                             .map(entry -> new float[]{entry.getKey(), entry.getValue()})
-                            .collect(Collectors.toList())
-            );
-        } else
+                            .collect(Collectors.toList()));
+        else
             return null;
 
     }

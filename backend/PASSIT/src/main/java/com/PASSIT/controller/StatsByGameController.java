@@ -19,9 +19,9 @@ public class StatsByGameController {
         this.statsByGameService = statsByGameService;
     }
     @PostMapping("/add")
-    public String add(@RequestBody StatsByGame statsByGame) {
+    public long add(@RequestBody StatsByGame statsByGame) {
         statsByGameService.saveStatsByGame(statsByGame);
-        return "New statsByGame ADDED!";
+        return statsByGame.getId();
     }
     @GetMapping("/all")
     public List<StatsByGame> getStatsByGames() {

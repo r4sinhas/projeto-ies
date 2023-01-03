@@ -89,6 +89,12 @@ public class PlayerService {
         return stats;
     }
 
-
+    public boolean login(String username, String password) {
+        for (Player player : playerRepository.findAll()) {
+            if (player.getUsername().equals(username) && player.getPassword().equals(password))
+                return true;
+        }
+        return false;
+    }
 
 }
