@@ -1,13 +1,51 @@
 import "../pages/Landing.css";
-import React from "react";
+import { React, useState, useEffect } from "react";
 
 export function PlayerModal(props) {
-  console.log("props: ", props);
-  const URL_PLAYER =
-    "http://localhost:5173/player/" + props.id + "/" + props.gameID;
+  //console.log("props: ", props.id);
+  let player_id = props.pid;
+  let playerxx = props.player;
+  console;
+  let URL_PLAYER = "";
+  const [player, setPlayer] = useState({ playerxx });
+  //console.log("player: ", player);
+
+  if (props.gameID == null) {
+    URL_PLAYER =
+      "http://localhost:8080/api/v1/player/stats_user_game/" + player_id;
+  } else {
+    //console.log("helo");
+    if (player_id == undefined) {
+      player_id = 1;
+    }
+    URL_PLAYER =
+      "http://localhost:8080/api/v1/player/stats_user_game/" +
+      player_id +
+      "/" +
+      props.gameID;
+  }
+  // fetch das médias!
+  //console.log("yo");
+  if (player_id == undefined) {
+    player_id = props.id;
+  }
+  useEffect(() => {
+    //console.log("result1: ");
+    fetch(URL_PLAYER)
+      .then((res) => res.json())
+      .then((result) => {
+        //console.log("result: ", result);
+        setPlayer(result);
+      });
+  }, []);
+
+  console.log("player stats: ", player);
+
+  if (player.length === 0) return <Loading></Loading>;
+
   return (
     <div
-      className="flex select-none mt-[3.4rem]"
+      className="flex select-none justify-start mt-1 mr-20"
       style={{
         fontFamily:
           'font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
@@ -25,7 +63,7 @@ export function PlayerModal(props) {
               alt="Shoes"
             />
             <div className="card-body pt-12 mb-24 absolute top-80 ">
-              <h2 className="card-title text-4xl text-secondary-content font-bold">
+              <h2 className="card-title text-4xl text-primary font-bold">
                 {props.name}
               </h2>
               <div className="stats stats-vertical shadow bg-opacity-60 ml-1">
@@ -60,27 +98,35 @@ export function PlayerModal(props) {
           <div className="stat">
             <div className="stat-title">Avg Speed</div>
             <div className="stat-value text-primary text-5xl mb-0 h-12 ">
-              Avg Value m/s
+              {player.speed} km/h
             </div>
           </div>
 
           <div className="stat">
             <div className="stat-title">Avg BPM</div>
             <div className="stat-value text-primary text-5xl mb-0 h-12 ">
-              Lionel Pessi bpm/min
+              {player.bpm} bpm
             </div>
           </div>
 
           <div className="stat">
             <div className="stat-title">Avg Breathing Rhythm</div>
             <div className="stat-value text-primary text-5xl mb-0 h-12 ">
-              Lionel Pessi breaths/min
+              {player.breathing_rate} breaths/min
             </div>
           </div>
           <div className="stat">
-            <a href={URL_PLAYER}>
-              <button className="btn bg-primary w-24 mx-auto">Details</button>
-            </a>
+            {props.gameID === null ? (
+              <div className="stat-title"></div>
+            ) : (
+              <a
+                href={
+                  "http://localhost:5173/player/" + props.pid + props.gameID
+                }
+              >
+                <button className="btn bg-primary w-24 mx-auto">Details</button>
+              </a>
+            )}
           </div>
         </div>
       </div>

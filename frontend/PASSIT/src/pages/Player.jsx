@@ -8,8 +8,8 @@ import Loading from "../components/Loading";
 
 export function Player() {
   const { id, gameId } = useParams();
-  /* console.log("id: ", id);
-  console.log("gameId: ", gameId); */
+  console.log("id: ", id);
+  console.log("gameId: ", gameId);
   const API = "http://localhost:8080/api/v1/player/";
   const [player, setPlayers] = useState([]);
 
@@ -40,7 +40,6 @@ export function Player() {
         <Loading></Loading>{" "}
       </div>
     );
-
   return (
     <div
       className="flex select-none"
@@ -58,7 +57,7 @@ export function Player() {
       >
         <PlayerInfo
           id={player.id}
-          gameId={1}
+          gameId={gameId}
           img={
             player.img_url ? player.img_url : "https://i.imgur.com/5uGqXtG.png"
           }

@@ -16,10 +16,10 @@ function App() {
         <Route path={"*"} element={<Landing />} />
         <Route path={"/"} element={<Landing />} />
         <Route path={"player/:id/:gameId"} element={<Player />} />
-        <Route path={"player/:id/:gameId"} element={<Player />} />
+        <Route path={"playerPage/:id"} element={<Player />} />
         <Route path={"/login"} element={<Login />} />
         <Route path={"/coach/:gameId"} element={<Coach />} />
-        <Route path={"/coachreview"} element={<CoachReview />} />
+        <Route path={"/coachreview/:id"} element={<CoachReview />} />
         <Route path={"/team"} element={<TeamAvg />} />
         <Route path={"/fan/:id/favPlayers"} element={<Fan />} />
         <Route path={"/fan/:id/players"} element={<Playerlst />} />

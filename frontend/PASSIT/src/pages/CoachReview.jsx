@@ -1,18 +1,31 @@
 import { Sidebar } from "../components/Sidebar";
 import Loading from "../components/Loading";
 import { React, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 export function CoachReview() {
+  const { id } = useParams();
+  console.log("id: ", id);
   const [team, setTeam] = useState([]);
   useEffect(() => {
-    fetch("http://localhost:8080/api/v1/team/1") // game??
+    fetch("http://localhost:8080/api/v1/team/" + id) // game??
       .then((res) => res.json())
       .then((result) => {
         setTeam(result);
       });
   }, []);
 
-  if (team.length === 0)
+  const [dataStat, setDataStat] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/v1/team/highest_player_stat/1/" + id) // id is game id -> 1 is team id
+      .then((res) => res.json())
+      .then((result) => {
+        setTeam(result);
+      });
+  }, []);
+  console.log("dataStat: ", dataStat);
+  if (team.length === 0 || dataStat.length === 0)
     return (
       <div>
         {" "}
@@ -70,9 +83,18 @@ export function CoachReview() {
                   </td>
                   <td>{player_lst[0].position}</td>
                   <th>
-                    <button className="btn btn-ghost btn-s rounded-lg">
-                      details
-                    </button>
+                    <a
+                      href={
+                        "http://localhost:5173/player/" +
+                        player_lst[0].id +
+                        "/" +
+                        id
+                      }
+                    >
+                      <button className="btn btn-ghost btn-s rounded-lg">
+                        details
+                      </button>
+                    </a>
                   </th>
                 </tr>
 
@@ -95,9 +117,18 @@ export function CoachReview() {
                   <td>{player_lst[1].position}</td>
 
                   <th>
-                    <button className="btn btn-ghost btn-s rounded-lg">
-                      details
-                    </button>
+                    <a
+                      href={
+                        "http://localhost:5173/player/" +
+                        player_lst[1].id +
+                        "/" +
+                        id
+                      }
+                    >
+                      <button className="btn btn-ghost btn-s rounded-lg">
+                        details
+                      </button>
+                    </a>
                   </th>
                 </tr>
 
@@ -119,9 +150,18 @@ export function CoachReview() {
                   </td>
                   <td>{player_lst[2].position}</td>
                   <th>
-                    <button className="btn btn-ghost btn-s rounded-lg">
-                      details
-                    </button>
+                    <a
+                      href={
+                        "http://localhost:5173/player/" +
+                        player_lst[2].id +
+                        "/" +
+                        id
+                      }
+                    >
+                      <button className="btn btn-ghost btn-s rounded-lg">
+                        details
+                      </button>
+                    </a>
                   </th>
                 </tr>
 
@@ -143,10 +183,18 @@ export function CoachReview() {
                   </td>
                   <td>{player_lst[3].position}</td>
                   <th>
-                    <button className="btn btn-ghost btn-s rounded-lg">
-                      details
-                      {/* CALL  */}
-                    </button>
+                    <a
+                      href={
+                        "http://localhost:5173/player/" +
+                        player_lst[3].id +
+                        "/" +
+                        id
+                      }
+                    >
+                      <button className="btn btn-ghost btn-s rounded-lg">
+                        details
+                      </button>
+                    </a>
                   </th>
                 </tr>
                 <tr>
@@ -168,9 +216,18 @@ export function CoachReview() {
                   <td>{player_lst[4].position}</td>
 
                   <th>
-                    <button className="btn btn-ghost btn-s rounded-lg">
-                      details
-                    </button>
+                    <a
+                      href={
+                        "http://localhost:5173/player/" +
+                        player_lst[4].id +
+                        "/" +
+                        id
+                      }
+                    >
+                      <button className="btn btn-ghost btn-s rounded-lg">
+                        details
+                      </button>
+                    </a>
                   </th>
                 </tr>
                 <tr>
@@ -192,9 +249,18 @@ export function CoachReview() {
                   <td>{player_lst[5].position}</td>
 
                   <th>
-                    <button className="btn btn-ghost btn-s rounded-lg">
-                      details
-                    </button>
+                    <a
+                      href={
+                        "http://localhost:5173/player/" +
+                        player_lst[5].id +
+                        "/" +
+                        id
+                      }
+                    >
+                      <button className="btn btn-ghost btn-s rounded-lg">
+                        details
+                      </button>
+                    </a>
                   </th>
                 </tr>
                 <tr>
@@ -216,9 +282,18 @@ export function CoachReview() {
                   <td>{player_lst[6].position}</td>
 
                   <th>
-                    <button className="btn btn-ghost btn-s rounded-lg">
-                      details
-                    </button>
+                    <a
+                      href={
+                        "http://localhost:5173/player/" +
+                        player_lst[6].id +
+                        "/" +
+                        id
+                      }
+                    >
+                      <button className="btn btn-ghost btn-s rounded-lg">
+                        details
+                      </button>
+                    </a>
                   </th>
                 </tr>
                 <tr>
@@ -239,9 +314,18 @@ export function CoachReview() {
                   </td>
                   <td>{player_lst[7].position}</td>
                   <th>
-                    <button className="btn btn-ghost btn-s rounded-lg">
-                      details
-                    </button>
+                    <a
+                      href={
+                        "http://localhost:5173/player/" +
+                        player_lst[7].id +
+                        "/" +
+                        id
+                      }
+                    >
+                      <button className="btn btn-ghost btn-s rounded-lg">
+                        details
+                      </button>
+                    </a>
                   </th>
                 </tr>
                 <tr>
@@ -263,9 +347,18 @@ export function CoachReview() {
                   <td>{player_lst[8].position}</td>
 
                   <th>
-                    <button className="btn btn-ghost btn-s rounded-lg">
-                      details
-                    </button>
+                    <a
+                      href={
+                        "http://localhost:5173/player/" +
+                        player_lst[8].id +
+                        "/" +
+                        id
+                      }
+                    >
+                      <button className="btn btn-ghost btn-s rounded-lg">
+                        details
+                      </button>
+                    </a>
                   </th>
                 </tr>
                 <tr>
@@ -287,9 +380,18 @@ export function CoachReview() {
                   <td>{player_lst[9].position}</td>
 
                   <th>
-                    <button className="btn btn-ghost btn-s rounded-lg">
-                      details
-                    </button>
+                    <a
+                      href={
+                        "http://localhost:5173/player/" +
+                        player_lst[9].id +
+                        "/" +
+                        id
+                      }
+                    >
+                      <button className="btn btn-ghost btn-s rounded-lg">
+                        details
+                      </button>
+                    </a>
                   </th>
                 </tr>
                 <tr>
@@ -311,9 +413,18 @@ export function CoachReview() {
                   <td>{player_lst[10].position}</td>
 
                   <th>
-                    <button className="btn btn-ghost btn-s rounded-lg">
-                      details
-                    </button>
+                    <a
+                      href={
+                        "http://localhost:5173/player/" +
+                        player_lst[10].id +
+                        "/" +
+                        id
+                      }
+                    >
+                      <button className="btn btn-ghost btn-s rounded-lg">
+                        details
+                      </button>
+                    </a>
                   </th>
                 </tr>
               </tbody>
@@ -323,25 +434,25 @@ export function CoachReview() {
             <div className="stat">
               <div className="stat-title">Fastest Player</div>
               <div className="stat-value text-primary text-5xl mb-0 h-12 ">
-                Lionel Pessi
+                {dataStat}
               </div>
-              <div className="stat-value text-3xl ">3.3 m/s</div>
+              <div className="stat-value text-3xl ">{dataStat}</div>
             </div>
 
             <div className="stat">
               <div className="stat-title">Fastest Player</div>
               <div className="stat-value text-primary text-5xl h-12">
-                Lionel Pessi
+                {dataStat}
               </div>
-              <div className="stat-value text-3xl ">3.3 m/s</div>
+              <div className="stat-value text-3xl ">{dataStat}</div>
             </div>
 
             <div className="stat">
               <div className="stat-title">Fastest Player</div>
               <div className="stat-value text-primary text-5xl h-12">
-                Lionel Pessi
+                {dataStat}
               </div>
-              <div className="stat-value text-3xl ">3.3 m/s</div>
+              <div className="stat-value text-3xl ">{dataStat}</div>
             </div>
           </div>
         </div>

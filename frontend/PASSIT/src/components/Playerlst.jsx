@@ -2,105 +2,27 @@ import { useNavigate } from "react-router-dom";
 import { React, useState, useEffect } from "react";
 import { Sidebar } from "../components/Sidebar";
 import { useParams } from "react-router-dom";
+import Loading from "../components/Loading";
+import { PlayerModal } from "../components/PlayerModal";
+import { render } from "react-dom";
 
 export function Playerlst() {
   const { id } = useParams(); // id is the fan id -> use to add player to fav list
-  const data1 = [];
-  let all_players = [];
-  const fetchData = async () => {
-    const response = await fetch("http://localhost:8080/api/v1/player/all");
-    all_players = await response.json();
-
-    if (all_players.length !== 0) {
-      console.log("all_players: ", all_players);
-      all_players.forEach((player) => {
-        data.push({
-          id: player.id,
-          img_url: player.img_url,
-          name: player.name,
-          team: player.team_id.team_name,
-          position: player.position,
-        });
-      });
-      data1 = data;
-    } else {
-      return (
-        <div>
-          {" "}
-          <Loading></Loading>{" "}
-        </div>
-      );
-    }
-  };
+  let data1 = [];
+  let [all_players, setAllPlayers] = useState([]);
+  const [newData, setNewData] = useState([]);
 
   useEffect(() => {
-    fetchData();
+    fetch("http://localhost:8080/api/v1/player/all")
+      .then((res) => res.json())
+      .then((result) => {
+        setNewData(result);
+        setAllPlayers(result);
+      });
   }, []);
-  const data = [
-    {
-      id: 1,
-      name: "Lionel Messi",
-      team: "Barcelona",
-      position: "Forward",
-    },
-    {
-      id: 2,
-      name: "Cristiano Ronaldo",
-      team: "Juventus",
-      position: "Forward",
-    },
-    {
-      id: 3,
-      name: "Neymar",
-      team: "Paris Saint-Germain",
-      position: "Forward",
-    },
-    {
-      id: 4,
-      name: "Kylian Mbappe",
-      team: "Paris Saint-Germain",
-      position: "Forward",
-    },
-    {
-      id: 5,
-      name: "Mohamed Salah",
-      team: "Liverpool",
-      position: "Forward",
-    },
-  ];
-
-  const [newData, setNewData] = useState([
-    {
-      id: 1,
-      name: "Lionel Messi",
-      team: "Barcelona",
-      position: "Forward",
-    },
-    {
-      id: 2,
-      name: "Cristiano Ronaldo",
-      team: "Juventus",
-      position: "Forward",
-    },
-    {
-      id: 3,
-      name: "Neymar",
-      team: "Paris Saint-Germain",
-      position: "Forward",
-    },
-    {
-      id: 4,
-      name: "Kylian Mbappe",
-      team: "Paris Saint-Germain",
-      position: "Forward",
-    },
-    {
-      id: 5,
-      name: "Mohamed Salah",
-      team: "Liverpool",
-      position: "Forward",
-    },
-  ]);
+  const [clickedIndex, setClickedIndex] = useState(0);
+  const [player, setPlayer] = useState({});
+  if (newData.length === 0) return <Loading></Loading>;
 
   console.log("newData: ", newData);
   function handleChange(event) {
@@ -116,21 +38,25 @@ export function Playerlst() {
     console.log("newData: ", result);
 
     if (value === "") {
-      setNewData(data1);
+      setNewData(all_players);
     }
     // here you can filter the data
   }
 
-  function handleAddPlayer(id) {
-    console.log("id: ", id);
-    const result = [];
-    newData.forEach((player) => {
-      if (player.id !== id) {
-        result.push(player);
+  const handleAddPlayer = async (idp) => {
+    console.log("id: ", idp);
+    const response = await fetch(
+      "http://localhost:8080/api/v1/fan/addFavoritePlayer/" + id + "/" + idp,
+
+      {
+        method: "POST",
       }
-    });
+    );
+
+    const rp = await response.json();
+    console.log("rp: ", rp);
     setNewData(result);
-  }
+  };
 
   return (
     <div
@@ -196,7 +122,7 @@ export function Playerlst() {
                 </tr>
               </thead>
               <tbody>
-                {all_players.map((player) => (
+                {newData.map((player) => (
                   <tr key={player.id}>
                     <td>
                       <div className="flex items-center space-x-3">
@@ -213,10 +139,19 @@ export function Playerlst() {
                         </div>
                       </div>
                     </td>
-                    <td>{player.team}</td>
+                    <td>{player.team_id.team_name}</td>
                     <td>{player.position}</td>
                     <td>
-                      <button className="btn btn-primary">View</button>
+                      <label
+                        htmlFor="my-drawer-4"
+                        className="w-3/3 btn btn-primary bg-primary"
+                        onClick={() => {
+                          setPlayer(player);
+                          console.log("player: ", player);
+                        }}
+                      >
+                        View
+                      </label>
                     </td>
                     <td>
                       <button
@@ -230,6 +165,28 @@ export function Playerlst() {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      </div>
+      <input type="checkbox" id="my-drawer-4" className="modal-toggle" />
+      <div className="modal modal-bottom">
+        <div className="modal-box bg-transparent ">
+          <ul className=" m-40 text-base-content" style={{ zIndex: "20" }}>
+            <PlayerModal
+              id={player.id}
+              name={player.name}
+              team={player.team}
+              position={player.position}
+              img={player.img_url}
+              age={player.age}
+              height={player.height}
+              gameID={null}
+            />
+          </ul>
+          <div className="modal-action">
+            <label htmlFor="my-drawer-4" className="btn">
+              Yay!
+            </label>
           </div>
         </div>
       </div>

@@ -6,8 +6,7 @@ import { PlayerModal } from "../components/PlayerModal";
 import { useParams } from "react-router-dom";
 
 export function Coach() {
-  const [clickedIndex, setClickedIndex] = useState(0);
-
+  const [player, setPlayer] = useState({});
   const [team, setTeam] = useState([]);
   const { gameId } = useParams();
 
@@ -27,9 +26,6 @@ export function Coach() {
       </div>
     );
   console.log("team: ", team);
-  const player_lst = team.players_list;
-
-  /* before loading -> check if gameId actually exists  */
 
   return (
     <div
@@ -57,7 +53,7 @@ export function Coach() {
                 htmlFor="my-drawer-4"
                 className="w-3/3"
                 onClick={() => {
-                  setClickedIndex(0);
+                  setPlayer(team.players_list[0]);
                 }}
               >
                 <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-0 border-0 cursor-pointer">
@@ -76,7 +72,7 @@ export function Coach() {
                 htmlFor="my-drawer-4"
                 className="w-3/3"
                 onClick={() => {
-                  setClickedIndex(1);
+                  setPlayer(team.players_list[1]);
                 }}
               >
                 <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-150 border-0 hover:-translate-y-1 hover:scale-110 bg-opacity-80 duration-300 cursor-pointer">
@@ -93,7 +89,7 @@ export function Coach() {
                 htmlFor="my-drawer-4"
                 className="w-3/3"
                 onClick={() => {
-                  setClickedIndex(2);
+                  setPlayer(team.players_list[2]);
                 }}
               >
                 <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-150 border-0 hover:-translate-y-1 hover:scale-110 bg-opacity-80 duration-300 hover:opacity-90 cursor-pointer">
@@ -110,7 +106,7 @@ export function Coach() {
                 htmlFor="my-drawer-4"
                 className="w-3/3"
                 onClick={() => {
-                  setClickedIndex(3);
+                  setPlayer(team.players_list[3]);
                 }}
               >
                 <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-150 border-0 hover:-translate-y-1 hover:scale-110 bg-opacity-80 duration-300 hover:opacity-90 cursor-pointer">
@@ -127,7 +123,7 @@ export function Coach() {
                 htmlFor="my-drawer-4"
                 className="w-3/3"
                 onClick={() => {
-                  setClickedIndex(4);
+                  setPlayer(team.players_list[4]);
                 }}
               >
                 <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-150 border-0 hover:-translate-y-1 hover:scale-110 bg-opacity-80 duration-300 hover:opacity-90 cursor-pointer">
@@ -146,7 +142,7 @@ export function Coach() {
                 htmlFor="my-drawer-4"
                 className="w-3/3"
                 onClick={() => {
-                  setClickedIndex(5);
+                  setPlayer(team.players_list[5]);
                 }}
               >
                 <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-150 border-0 hover:-translate-y-1 hover:scale-110 bg-opacity-80 duration-300 hover:opacity-90 cursor-pointer">
@@ -163,7 +159,7 @@ export function Coach() {
                 htmlFor="my-drawer-4"
                 className="w-3/3"
                 onClick={() => {
-                  setClickedIndex(6);
+                  setPlayer(team.players_list[6]);
                 }}
               >
                 <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-150 border-0 hover:-translate-y-1 hover:scale-110 bg-opacity-80 duration-300 hover:opacity-90 cursor-pointer">
@@ -180,7 +176,7 @@ export function Coach() {
                 htmlFor="my-drawer-4"
                 className="w-3/3"
                 onClick={() => {
-                  setClickedIndex(7);
+                  setPlayer(team.players_list[7]);
                 }}
               >
                 <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-150 border-0 hover:-translate-y-1 hover:scale-110 bg-opacity-80 duration-300 hover:opacity-90 cursor-pointer">
@@ -199,7 +195,7 @@ export function Coach() {
                 htmlFor="my-drawer-4"
                 className="w-3/3"
                 onClick={() => {
-                  setClickedIndex(8);
+                  setPlayer(team.players_list[8]);
                 }}
               >
                 <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-150 border-0 hover:-translate-y-1 hover:scale-110 bg-opacity-80 duration-300 hover:opacity-90 cursor-pointer">
@@ -216,7 +212,7 @@ export function Coach() {
                 htmlFor="my-drawer-4"
                 className="w-3/3"
                 onClick={() => {
-                  setClickedIndex(9);
+                  setPlayer(team.players_list[9]);
                 }}
               >
                 <div className="card w-12 aspect-[7/5] bg-opacity-0 shadow-xl image-full transition ease-in-out delay-150 border-0 hover:-translate-y-1 hover:scale-110 bg-opacity-80 duration-300 hover:opacity-90 cursor-pointer">
@@ -233,7 +229,7 @@ export function Coach() {
                 htmlFor="my-drawer-4"
                 className="w-3/3"
                 onClick={() => {
-                  setClickedIndex(10);
+                  setPlayer(team.players_list[10]);
                   console.log("clicked ::", clickedIndex);
                 }}
               >
@@ -266,15 +262,18 @@ export function Coach() {
               className="menu p-4 w-[1500px] text-base-content"
               style={{ zIndex: "20" }}
             >
+              {" "}
+              {console.log("player ::", player)}
               <PlayerModal
-                id={player_lst[clickedIndex].id}
+                pid={player.id}
+                player={player}
                 gameID={gameId}
-                img={player_lst[clickedIndex].img_url}
-                name={player_lst[clickedIndex].name}
-                age={player_lst[clickedIndex].age}
-                height={player_lst[clickedIndex].height}
-                weight={player_lst[clickedIndex].weight}
-                position={player_lst[clickedIndex].position}
+                img={player.img_url}
+                name={player.name}
+                age={player.age}
+                height={player.height}
+                weight={player.weight}
+                position={player.position}
                 team={team.team_name}
               />
             </ul>

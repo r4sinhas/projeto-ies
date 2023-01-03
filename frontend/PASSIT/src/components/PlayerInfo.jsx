@@ -14,18 +14,16 @@ export function PlayerInfo(props) {
   let ecg_start = -1;
 
   if (props.flag_live === true) {
-
     const fetchData = async () => {
       const response = await fetch(
         "http://localhost:8080/api/v1/statsbygame/live/getstats/" +
-        props.id +
-        "/" +
-        props.gameId
+          props.id +
+          "/" +
+          props.gameId
       );
       const stats = await response.json();
 
       if (stats.length !== 0) {
-
         bpmlive.push({
           key: stats.bpm[0][0],
           value: stats.bpm[0][1],
@@ -139,7 +137,6 @@ export function PlayerInfo(props) {
                 tickLine={false}
                 axisLine={false}
               />
-
             </LineChart>
           </div>
           <div className="box col-start-2 col-end-auto">
@@ -157,7 +154,7 @@ export function PlayerInfo(props) {
                 dataKey="key"
                 tickLine={false}
                 axisLine={false}
-                domain={['dataMin', "dataMax"]}
+                domain={["dataMin", "dataMax"]}
               />
               <YAxis
                 type="number"
@@ -205,7 +202,7 @@ export function PlayerInfo(props) {
                 dataKey="key"
                 tickLine={false}
                 axisLine={false}
-                domain={['dataMin', "dataMax"]}
+                domain={["dataMin", "dataMax"]}
               />
               <YAxis
                 type="number"
@@ -238,7 +235,9 @@ export function PlayerInfo(props) {
             </LineChart>
           </div>
           <div className="box row-start-1 row-end-auto col-start-3">
-            <h1 className="z-10 mt-10 text-2xl font-semibold">Breathing Rythm</h1>
+            <h1 className="z-10 mt-10 text-2xl font-semibold">
+              Breathing Rythm
+            </h1>
             <LineChart width={390} height={330} data={brlive}>
               <Line
                 type="monotone"
@@ -252,7 +251,7 @@ export function PlayerInfo(props) {
                 dataKey="key"
                 tickLine={false}
                 axisLine={false}
-                domain={['dataMin', "dataMax"]}
+                domain={["dataMin", "dataMax"]}
               />
               <YAxis
                 type="number"
@@ -295,8 +294,7 @@ export function PlayerInfo(props) {
     useEffect(() => {
       const fetchData = async () => {
         const response = await fetch(
-          "http://localhost:8080/api/v1/statsbygame/getstats/" +
-          props.id
+          "http://localhost:8080/api/v1/statsbygame/getstats/" + props.id
         );
         const newStats = await response.json();
 
