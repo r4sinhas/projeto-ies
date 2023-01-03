@@ -38,7 +38,7 @@ public class StatsByGame {
 
     @ManyToOne
     @JoinColumn(name = "game_id")
-    @JsonIgnoreProperties({"flagLive", "teams_list", "stats_list"})
+    @JsonIgnoreProperties({"teams_list", "stats_list"})
     private Game game_id;
 
     @ManyToOne
@@ -46,8 +46,8 @@ public class StatsByGame {
     @JsonIgnoreProperties({"stats_list", "team_id", "username", "password", "email", "role", "position", "age", "height", "weight", "number", "img_url", "last_stamina"})
     private Player player_id;
 
-    @Column(name = "minutes_played", nullable = false)
-    private int minutes_played;
+    @Column(name = "minutes_played")
+    private int minutes_played = 0;
 
     @ElementCollection
     @CollectionTable(name = "bpm_values")
@@ -117,7 +117,7 @@ public class StatsByGame {
     }
 
     public Map<Float,Float> lastEcg(float last_sec) {
-        return new HashMap<>(ecg.entrySet().stream().filter(e -> e.getKey() >= last_sec).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        return new TreeMap<>(ecg.entrySet().stream().filter(e -> e.getKey() >= last_sec).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
 }

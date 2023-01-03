@@ -1,6 +1,7 @@
 package com.PASSIT.services;
 
 import com.PASSIT.model.Coach;
+import com.PASSIT.model.Player;
 import com.PASSIT.model.Team;
 import com.PASSIT.repository.CoachRepository;
 import com.PASSIT.repository.TeamRepository;
@@ -22,7 +23,8 @@ public class CoachService {
     }
 
     public Coach saveCoach(Coach coach) {
-        Team team = teamRepository.findById(coach.getTeam_id().getId()).orElse(null);
+        Team team = teamRepository.findById(coach.getTeam()).orElse(null);
+        team.setCoach_id(coach);
         coach.setTeam_id(team);
         return coachRepository.save(coach);
     }
@@ -37,6 +39,14 @@ public class CoachService {
 
     public Coach getCoachById(Long id) {
         return coachRepository.findById(id).orElse(null);
+    }
+
+    public boolean login(String username, String password) {
+        for (Coach coach : coachRepository.findAll()) {
+            if (coach.getUsername().equals(username) && coach.getPassword().equals(password))
+                return true;
+        }
+        return false;
     }
 
 }

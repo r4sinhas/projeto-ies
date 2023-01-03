@@ -38,7 +38,7 @@ public class Game {
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "game_id")
     @JsonIdentityReference(alwaysAsId = true)
-    @JsonIgnoreProperties({"game_id","player_id"})
+    @JsonIgnoreProperties({"game_id","player_id", "bpm", "speed", "breathing_rate", "ecg"})
     private List<StatsByGame> stats_list;
 
     public void addStatsByGame(StatsByGame stats) {
@@ -71,6 +71,15 @@ public class Game {
             sum += stat.avgSpeed();
         }
         return sum / stats_list.size();
+    }
+
+    public List<Player> players_list() {
+        List<Player> players = new ArrayList<>();
+        for (Team team: teams_list) {
+            for (Player player: team.getPlayers_list())
+                players.add(player);
+        }
+        return players;
     }
 
 }

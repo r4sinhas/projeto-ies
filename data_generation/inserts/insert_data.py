@@ -67,9 +67,7 @@ def insert_data(type_insert, url):
                                 'username': line[1],
                                 'password': line[2],
                                 'email': line[3],
-                                'team_id': {
-                                    'id': line[4]
-                                }
+                                'team': line[4],
                                 })
 
     elif type_insert == 'fan':
@@ -102,8 +100,7 @@ def insert_data(type_insert, url):
             for line in f:
                 line = line.split(';')
                 post(url, json={'game': line[0],
-                'player': line[1],
-                "minutes_played": line[2]
+                'player': line[1]
                 })
 
 

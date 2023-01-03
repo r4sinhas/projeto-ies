@@ -1,6 +1,7 @@
 package com.PASSIT.services;
 
 import com.PASSIT.model.Game;
+import com.PASSIT.model.Player;
 import com.PASSIT.model.Team;
 import com.PASSIT.repository.GameRepository;
 import com.PASSIT.repository.TeamRepository;
@@ -26,7 +27,8 @@ public class GameService {
             Team team2 = teamRepository.findById(team.getId()).orElse(null);
             team2.addGame(game);
         }
-        return gameRepository.save(game);
+        gameRepository.save(game);
+        return game;
     }
 
     public Game getGameById(Long id) {
@@ -35,6 +37,11 @@ public class GameService {
 
     public List<Game> getGames() {
         return gameRepository.findAll();
+    }
+
+    public List<Player> players(Long id) {
+        Game game = gameRepository.findById(id).orElse(null);
+        return game.players_list();
     }
 
 }

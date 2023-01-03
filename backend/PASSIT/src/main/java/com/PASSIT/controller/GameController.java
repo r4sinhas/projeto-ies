@@ -1,6 +1,7 @@
 package com.PASSIT.controller;
 
 import com.PASSIT.model.Game;
+import com.PASSIT.model.Player;
 import com.PASSIT.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +19,8 @@ public class GameController {
     }
 
     @PostMapping("/add")
-    public String add(@RequestBody Game game) {
-        gameService.addGame(game);
-        return "New Game ADDED!";
+    public Game add(@RequestBody Game game) {
+        return gameService.addGame(game);
     }
 
     @GetMapping("{id}")
@@ -31,6 +31,11 @@ public class GameController {
     @GetMapping("/all")
     public List<Game> getGames() {
         return gameService.getGames();
+    }
+
+    @GetMapping("/players/{id}")
+    public List<Player> players(@PathVariable Long id) {
+        return gameService.players(id);
     }
 
 }

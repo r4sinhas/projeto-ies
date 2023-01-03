@@ -44,4 +44,12 @@ public class FanService {
         fan1.getFav_players().remove(player1);
         fanRepository.save(fan1);
     }
+
+    public boolean login(String username, String password) {
+        for (Fan fan : fanRepository.findAll()) {
+            if (fan.getUsername().equals(username) && fan.getPassword().equals(password))
+                return true;
+        }
+        return false;
+    }
 }
