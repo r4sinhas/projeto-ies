@@ -30,7 +30,7 @@ export function Login() {
       }, 1500);
     }
 
-    if (username === "leo" && password === "messi") {
+    if (username === "ody" && password === "ody") {
       setTimeout(() => {
         navigate("/playerPage/1");
       }, 1500);
