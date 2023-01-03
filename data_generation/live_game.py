@@ -1,7 +1,6 @@
 from datetime import date
 import math
 import random
-import sys
 import time
 import json
 import mysql.connector
