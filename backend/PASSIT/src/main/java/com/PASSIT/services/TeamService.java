@@ -74,8 +74,8 @@ public class TeamService {
         return statsMap;
     }
 
-    public Map<String, Map<Player, Float>> highestPlayerByStat(Long team_id, Long game_id) {
-        Map<String, Map<Player, Float>> map = new HashMap<>();
+    public Map<String, Map<String, Float>> highestPlayerByStat(Long team_id, Long game_id) {
+        Map<String, Map<String, Float>> map = new HashMap<>();
         float bpm = 0;
         float speed = 0;
         Team team = teamRepository.findById(team_id).get();
@@ -85,11 +85,11 @@ public class TeamService {
             StatsByGame statsByGame = player.getStatsByGame(game);
             if (statsByGame.avgBpm() > bpm) {
                 bpm = statsByGame.avgBpm();
-                map.put("bpm", Map.of(player, bpm));
+                map.put("bpm", Map.of(player.getName(), bpm));
             }
             if (statsByGame.avgSpeed() > speed) {
                 speed = statsByGame.avgSpeed();
-                map.put("speed", Map.of(player, speed));
+                map.put("speed", Map.of(player.getName(), speed));
             }
         }
         return map;

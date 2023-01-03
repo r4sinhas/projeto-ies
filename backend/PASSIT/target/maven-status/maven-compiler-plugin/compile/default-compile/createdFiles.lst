@@ -3,6 +3,7 @@ com\PASSIT\model\Player.class
 com\PASSIT\controller\StatsByGameController.class
 com\PASSIT\model\Fan.class
 com\PASSIT\controller\GameController.class
+com\PASSIT\controller\SystemController.class
 com\PASSIT\model\StatsByGame.class
 com\PASSIT\repository\FanRepository.class
 com\PASSIT\repository\CoachRepository.class
