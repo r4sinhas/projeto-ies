@@ -38,7 +38,7 @@ public class Game {
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "game_id")
     @JsonIdentityReference(alwaysAsId = true)
-    @JsonIgnoreProperties({"game_id","player_id"})
+    @JsonIgnoreProperties({"game_id","player_id", "bpm", "speed", "breathing_rate", "ecg"})
     private List<StatsByGame> stats_list;
 
     public void addStatsByGame(StatsByGame stats) {

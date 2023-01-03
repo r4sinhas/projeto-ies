@@ -74,39 +74,25 @@ public class TeamService {
         return statsMap;
     }
 
-    public Player highestPlayerByStat(Long team_id, String stat) {
-        List<Player> players = teamRepository.findById(team_id).get().getPlayers_list();
-        Player highestPlayer = players.get(0);
-        float highestStat = 0;
-        for (Player player : players) {
-            for (Game game : teamRepository.findById(team_id).get().getGames_list()) {
-                StatsByGame statsByGame = player.getStatsByGame(game);
-                switch (stat) {
-                    case "bpm":
-                        if (statsByGame.avgBpm() > highestStat) {
-                            highestPlayer = player;
-                            highestStat = statsByGame.avgBpm();
-                        }
-                        break;
-                    case "speed":
-                        if (statsByGame.avgSpeed() > highestStat) {
-                            highestPlayer = player;
-                            highestStat = statsByGame.avgSpeed();
-                        }
-                        break;
-                    case "breathing_rate":
-                        if (statsByGame.avgBreathingRate() > highestStat) {
-                            highestPlayer = player;
-                            highestStat = statsByGame.avgBreathingRate();
-                        }
-                        break;
-                    default:
-                        System.out.println("Invalid stat");
-                        break;
-                }
+    public Map<String, Map<Player, Float>> highestPlayerByStat(Long team_id, Long game_id) {
+        Map<String, Map<Player, Float>> map = new HashMap<>();
+        float bpm = 0;
+        float speed = 0;
+        Team team = teamRepository.findById(team_id).get();
+        Game game = gameRepository.findById(game_id).get();
+        List<Player> players_list = team.getPlayers_list();
+        for (Player player : players_list) {
+            StatsByGame statsByGame = player.getStatsByGame(game);
+            if (statsByGame.avgBpm() > bpm) {
+                bpm = statsByGame.avgBpm();
+                map.put("bpm", Map.of(player, bpm));
+            }
+            if (statsByGame.avgSpeed() > speed) {
+                speed = statsByGame.avgSpeed();
+                map.put("speed", Map.of(player, speed));
             }
         }
-        return highestPlayer;
+        return map;
     }
 
 }

@@ -10,7 +10,6 @@ import argparse
 GAME_TIME = 90
 GAME_TIME = GAME_TIME*60
 
-
 mydb = mysql.connector.connect(
 	host="localhost",
 	user="admin",
@@ -22,11 +21,15 @@ mycursor = mydb.cursor()
 
 class Player:
 
-	def __init__(self, start_time, statsid):
+	def __init__(self, start_time, statsid, live):
 		mycursor.execute(f"SELECT player_id FROM stats_by_game WHERE id={statsid};")
 		self.id = mycursor.fetchone()[0]
 		self.statsid = statsid
-		self.queue = Queue("localhost", 5672, "admin", "admin", "player_data")
+		if live:
+			self.queue = Queue("localhost", 5672, "admin", "admin", "live_data", durable=False)
+		else:
+			self.queue = Queue("localhost", 5672, "admin", "admin", "player_data")
+		self.live_queue = None
 		self.queue.connect()
 		mycursor.execute(f"SELECT age, height, last_stamina FROM player WHERE id={self.id};")
 		result = mycursor.fetchone()
@@ -46,6 +49,8 @@ class Player:
 	def send(self, m):
 		message = json.dumps(m)
 		self.queue.send(message)
+		if self.live_queue:
+			self.live_queue.send(message)
 
 	def heart_rate(self, run):
 		init = self.last_bpm
@@ -82,16 +87,16 @@ class Player:
 
 		for _ in range(nbps):
 			#pr
-			for i in range(7):
-				t.append(start+pr/12*i)
-				ecg.append(math.sqrt(max((pr/2)**2-(pr/12*i-pr/4)**2/((pr/4)**2)*((pr/2)**2), 0)))
+			for i in range(11):
+				t.append(start+pr/20*i)
+				ecg.append(math.sqrt(max((pr/2)**2-(pr/20*i-pr/4)**2/((pr/4)**2)*((pr/2)**2), 0)))
 			#qrs
 			t.extend([start+pr, start+pr+qrs/4, start+pr+qrs/2, start+pr+3*qrs/4, start+pr+qrs, start+pr+qrs+qt/2-0.01])
 			ecg.extend([-0.01, -0.08-0.02*random.random(), 0.8+0.2*random.random(), -0.35-0.05*random.random(), -0.05, 0])
 			#qrs
-			for i in range(1,6):
-				t.append(start+pr+qrs+qt/2+qt/12*i)
-				ecg.append(math.sqrt(max((qt/2)**2-(qt/12*i-qt/4)**2/((qt/4)**2)*((qt/2)**2),0)))
+			for i in range(1,10):
+				t.append(start+pr+qrs+qt/2+qt/20*i)
+				ecg.append(math.sqrt(max((qt/2)**2-(qt/20*i-qt/4)**2/((qt/4)**2)*((qt/2)**2),0)))
 			#final
 			t.append(start+pr+qrs+qt+0.01)
 			start+=60/bpm
@@ -164,14 +169,16 @@ class Player:
 			else:
 				return True
 
-def main(start_time, statsid):
-	player = Player(start_time, statsid)
+def main(start_time, statsid, live):
+	player = Player(start_time, statsid, live)
 	i=0
-	bpm_list= []
-	breathing_rate_list = []
-	speed_list = []
-	t_list = []
-	ecg_list = []
+	init = time.time()
+	if not live:
+		bpm_list= []
+		breathing_rate_list = []
+		speed_list = []
+		t_list = []
+		ecg_list = []
 
 	while i < (GAME_TIME-start_time):
 		r=random.randrange(0, 100)
@@ -190,17 +197,24 @@ def main(start_time, statsid):
 			func = player.walk
 		for e in range(tm):
 			bpm, breathing_rate, speed, t, ecg = func()
-			bpm_list.append(bpm)
-			breathing_rate_list.append(breathing_rate)
-			speed_list.append(speed)
-			t_list.extend(t)
-			ecg_list.extend(ecg)
+			if live:
+				player.send({"type":"live","id":player.id,"data":{"bpm":bpm,"breathing_rate":breathing_rate,"speed":speed,"ecg":ecg,"t":t, "time":i+e+start_time}})
+				time.sleep(max(1-time.time()+init, 0))
+				init = time.time()
+			else:
+				bpm_list.append(bpm)
+				breathing_rate_list.append(breathing_rate)
+				speed_list.append(speed)
+				t_list.extend(t)
+				ecg_list.extend(ecg)
 		i+=tm
 
-
-	t_list.append(player.last_t)
-	ecg_list.append(0)
-	player.send({"type":"stats","id":player.statsid,"data":{"bpm":bpm_list,"breathing_rate":breathing_rate_list,"speed":speed_list,"ecg":ecg_list,"t":t_list,"minutes_played":(GAME_TIME-start_time)//60}})
+	if not live:
+		t_list.append(player.last_t)
+		ecg_list.append(0)
+		player.send({"type":"stats","id":player.statsid,"data":{"bpm":bpm_list,"breathing_rate":breathing_rate_list,"speed":speed_list,"ecg":ecg_list,"t":t_list,"minutes_played":(GAME_TIME-start_time)//60}})
+	else:
+		player.send({"type":"minutes_played","id":player.statsid,"data":{"minutes_played":(GAME_TIME-start_time)//60}})
 	player.send({"type":"rem_stamina","id":player.statsid,"data":{"stamina":player.stamina}})
 	player.queue.close()
 
@@ -209,6 +223,7 @@ if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
 	parser.add_argument("start_time", type=int, help="Start time of the game in seconds")
 	parser.add_argument("statsid", type=str, help="StatsByGame Id")
+	parser.add_argument("--live", action="store_true", default=False, help="If the game is live or not")
 	args = parser.parse_args()
 
-	main(args.start_time, args.statsid)
+	main(args.start_time, args.statsid, args.live)
