@@ -48,7 +48,7 @@ public class TeamController {
     }
 
     @GetMapping("/highest_player_stat/{id}/{game}")
-    public Map<String, Map<Player, Float>> highestPlayerByStat(@PathVariable("id") Long id, @PathVariable("game") Long game) {
+    public Map<String, Map<String, Float>> highestPlayerByStat(@PathVariable("id") Long id, @PathVariable("game") Long game) {
         return teamService.highestPlayerByStat(id, game);
     }
 }

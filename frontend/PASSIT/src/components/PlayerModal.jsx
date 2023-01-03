@@ -8,7 +8,6 @@ export function PlayerModal(props) {
   console;
   let URL_PLAYER = "";
   const [player, setPlayer] = useState({ playerxx });
-  //console.log("player: ", player);
 
   if (props.gameID == null) {
     URL_PLAYER =

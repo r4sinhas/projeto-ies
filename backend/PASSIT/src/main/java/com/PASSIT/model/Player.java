@@ -67,7 +67,7 @@ public class Player {
     private String img_url = "https://img.a.transfermarkt.technology/portrait/header/default.jpg";
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "player_id")
-    @JsonIgnoreProperties({"player_id", "bpm", "speed", "breathing_rate", "ecg"})
+    @JsonIgnoreProperties({"player_id", "bpm", "speed", "breathing_rate", "ecg", "game_id"})
     private List<StatsByGame> stats_list = new ArrayList<>();
     
     public void setStamina(Double stamina) {

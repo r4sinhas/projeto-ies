@@ -32,7 +32,7 @@ export function Login() {
 
     if (username === "leo" && password === "messi") {
       setTimeout(() => {
-        navigate("/player/1");
+        navigate("/playerPage/1");
       }, 1500);
     }
   };

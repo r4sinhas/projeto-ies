@@ -2,14 +2,14 @@ import { useNavigate } from "react-router-dom";
 import { React, useState, useEffect } from "react";
 import { Sidebar } from "../components/Sidebar";
 import { useParams } from "react-router-dom";
-
+import { PlayerModal } from "../components/PlayerModal";
 export function Fan() {
   const { id } = useParams();
 
   let [favPlayers, setFavPlayers] = useState([]);
 
   const [newData, setNewData] = useState([]);
-
+  const [player, setPlayer] = useState({});
   const fetchData = async () => {
     const response = await fetch("http://localhost:8080/api/v1/fan/" + id);
     const rp = await response.json();
@@ -120,7 +120,7 @@ export function Fan() {
           className="bg-secondary-content bg-opacity-[97%] rounded-lg overflow-hidden flex gap-1 shadow-2xl"
           style={{ height: "800px", width: "1330px" }}
         >
-          <div className="overflow-x-auto w-full m-5">
+          <div className="overflow-x-auto w-full m-5 flex-col">
             <div>
               <form class="flex items-center">
                 <label for="simple-search" class="sr-only">
@@ -187,7 +187,16 @@ export function Fan() {
                         <td>{player.position}</td>
                         <td>{player.team_id.team_name}</td>
                         <td>
-                          <button className="btn btn-primary">View</button>
+                          <label
+                            htmlFor="my-drawer-4"
+                            className="w-3/3 btn btn-primary bg-primary"
+                            onClick={() => {
+                              setPlayer(player);
+                              console.log("player: ", player);
+                            }}
+                          >
+                            View
+                          </label>
                         </td>
                         <td>
                           <button
@@ -203,6 +212,33 @@ export function Fan() {
                 )}
               </tbody>
             </table>
+            <a href={"http://localhost:5173/fan/" + id + "/players"}>
+              <div className="flex btn mt-20 p-5 items-center text-center">
+                Click here to see the full list of players
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <input type="checkbox" id="my-drawer-4" className="modal-toggle" />
+      <div className="modal modal-bottom">
+        <div className="modal-box bg-transparent ">
+          <ul className=" m-40 text-base-content" style={{ zIndex: "20" }}>
+            <PlayerModal
+              id={player.id}
+              name={player.name}
+              team={player.team}
+              position={player.position}
+              img={player.img_url}
+              age={player.age}
+              height={player.height}
+              gameID={null}
+            />
+          </ul>
+          <div className="modal-action">
+            <label htmlFor="my-drawer-4" className="btn">
+              Yay!
+            </label>
           </div>
         </div>
       </div>

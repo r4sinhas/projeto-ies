@@ -2,6 +2,7 @@ import { Sidebar } from "../components/Sidebar";
 import Loading from "../components/Loading";
 import { React, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { data } from "autoprefixer";
 
 export function CoachReview() {
   const { id } = useParams();
@@ -21,10 +22,41 @@ export function CoachReview() {
     fetch("http://localhost:8080/api/v1/team/highest_player_stat/1/" + id) // id is game id -> 1 is team id
       .then((res) => res.json())
       .then((result) => {
-        setTeam(result);
+        setDataStat(result);
       });
   }, []);
-  console.log("dataStat: ", dataStat);
+
+  if (dataStat.length === 0) return <Loading></Loading>;
+
+  console.log("dataStat: ", dataStat.bpm);
+
+  let keys = [];
+  if (dataStat.bpm) {
+    keys.push(Object.keys(dataStat.bpm));
+  } else {
+    keys = [];
+  }
+  if (dataStat.speed) {
+    keys.push(Object.keys(dataStat.speed));
+  } else {
+    keys = [];
+  }
+  console.log("keys: ", keys);
+  const value1 = Object.values(dataStat.bpm);
+  console.log("value: ", value1);
+  const value2 = Object.values(dataStat.speed);
+  console.log("value: ", value2);
+
+  /*   const keys = Object.keys(dataStat.bpm);
+  console.log("keys: ", keys);
+  const innerValues = [];
+  for (const key of keys) {
+    const value = dataStat.bpm[key];
+    // do something with the key and value
+    innerValues.push(dataStat["bpm"][innerKey]);
+  }
+  console.log("innerValues: ", innerValues); */
+
   if (team.length === 0 || dataStat.length === 0)
     return (
       <div>
@@ -43,7 +75,6 @@ export function CoachReview() {
           'font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
       }}
     >
-      <Sidebar />
       <div
         className="hero min-h-screen"
         style={{
@@ -430,29 +461,21 @@ export function CoachReview() {
               </tbody>
             </table>
           </div>
-          <div className="stats stats-vertical shadow w-1/4 my-5 ml-16">
-            <div className="stat">
-              <div className="stat-title">Fastest Player</div>
-              <div className="stat-value text-primary text-5xl mb-0 h-12 ">
-                {dataStat}
+          <div className="stats stats-vertical shadow w-1/4 my-5 overflow-x-hidden">
+            <div className="stat w-24 flex-col align-center">
+              <div className="stat-title">Most bpms</div>
+              <div className="stat-value text-primary text-2xl mb-0 h-12 ">
+                {keys[0]}
               </div>
-              <div className="stat-value text-3xl ">{dataStat}</div>
+              <div className="stat-value text-3xl ">{value1}</div>
             </div>
 
-            <div className="stat">
+            <div className="stat w-24 flex-col">
               <div className="stat-title">Fastest Player</div>
-              <div className="stat-value text-primary text-5xl h-12">
-                {dataStat}
+              <div className="stat-value text-primary text-2xl h-12">
+                {keys[1]}
               </div>
-              <div className="stat-value text-3xl ">{dataStat}</div>
-            </div>
-
-            <div className="stat">
-              <div className="stat-title">Fastest Player</div>
-              <div className="stat-value text-primary text-5xl h-12">
-                {dataStat}
-              </div>
-              <div className="stat-value text-3xl ">{dataStat}</div>
+              <div className="stat-value text-3xl ">{value2}</div>
             </div>
           </div>
         </div>

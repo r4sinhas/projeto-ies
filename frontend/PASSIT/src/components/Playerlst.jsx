@@ -79,7 +79,12 @@ export function Playerlst() {
           style={{ height: "800px", width: "1330px" }}
         >
           <div className="overflow-x-auto w-full m-5">
-            <div>
+            <a href={"http://localhost:5173/fan/" + id + "/favPlayers"}>
+              <div className="flex btn mt-5 p-5 items-center text-center">
+                Click here to see your favourite players
+              </div>
+            </a>
+            <div lassName="mt-5 p-5">
               <form class="flex items-center">
                 <label for="simple-search" class="sr-only">
                   Search
