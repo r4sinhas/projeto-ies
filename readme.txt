@@ -28,6 +28,8 @@ Para gerar dados live deve correr-se o ficheiro player.py da pasta data_generati
 
 python3 player.py <segundos> <id> --live
 
+É possível verificar que os dados estão a ser gerados na página de coach, na página de cada jogador para cada jogo
+
 sendo <segundos> o número de segundos no jogo em que o jogador entrou em campo
 (Para efeitos de não sobrecarga da API aconcelhamos usar 5100, sendo que pode ir de 0 a 5400.
 Caso a geração live seja interrompida antes do tempo pelo utilizador deve correr-se o mesmo comando mas com 

@@ -11,4 +11,4 @@ cd ../../data_generation/inserts
 chmod +x inserts.sh
 ./inserts.sh
 cd ../../frontend/PASSIT
-npm start dev
+npm run dev

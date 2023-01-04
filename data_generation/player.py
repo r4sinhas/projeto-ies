@@ -177,8 +177,6 @@ def main(start_time, statsid, live):
 		bpm_list= []
 		breathing_rate_list = []
 		speed_list = []
-		t_list = []
-		ecg_list = []
 
 	while i < (GAME_TIME-start_time):
 		r=random.randrange(0, 100)
@@ -205,14 +203,10 @@ def main(start_time, statsid, live):
 				bpm_list.append(bpm)
 				breathing_rate_list.append(breathing_rate)
 				speed_list.append(speed)
-				t_list.extend(t)
-				ecg_list.extend(ecg)
 		i+=tm
 
 	if not live:
-		t_list.append(player.last_t)
-		ecg_list.append(0)
-		player.send({"type":"stats","id":player.statsid,"data":{"bpm":bpm_list,"breathing_rate":breathing_rate_list,"speed":speed_list,"ecg":ecg_list,"t":t_list,"minutes_played":(GAME_TIME-start_time)//60}})
+		player.send({"type":"stats","id":player.statsid,"data":{"bpm":bpm_list,"breathing_rate":breathing_rate_list,"speed":speed_list,"minutes_played":(GAME_TIME-start_time)//60}})
 	else:
 		player.send({"type":"minutes_played","id":player.statsid,"data":{"minutes_played":(GAME_TIME-start_time)//60}})
 	player.send({"type":"rem_stamina","id":player.statsid,"data":{"stamina":player.stamina}})

@@ -50,7 +50,6 @@ public class StatsByGameService {
         statsByGame.setBpm(stats[0]);
         statsByGame.setSpeed(stats[1]);
         statsByGame.setBreathing_rate(stats[2]);
-        statsByGame.setEcg(stats[3]);
         statsByGame.setMinutes_played(minutes_played);
         return statsByGameRepository.save(statsByGame);
     }

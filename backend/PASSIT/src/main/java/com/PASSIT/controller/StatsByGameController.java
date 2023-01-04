@@ -31,13 +31,12 @@ public class StatsByGameController {
     @PutMapping("/addstats/{id}")
     public void addStat(@PathVariable("id") Long id, @RequestParam("bpm") List<Float> bpm,
             @RequestParam("breathing_rate") List<Float> breathing_rate, @RequestParam("speed") List<Float> speed,
-            @RequestParam("ecg") List<Float> ecg, @RequestParam("t") List<Float> t, @RequestParam("minutes_played") int minutes_played) {
+            @RequestParam("minutes_played") int minutes_played) {
 
         statsByGameService.addStats(id, new TreeMap[] {
                 new TreeMap<>(IntStream.range(0, bpm.size()).boxed().collect(Collectors.toMap(i -> (float) i, bpm::get))),
                 new TreeMap<>(IntStream.range(0, breathing_rate.size()).boxed().collect(Collectors.toMap(i -> (float) i, breathing_rate::get))),
-                new TreeMap<>(IntStream.range(0, speed.size()).boxed().collect(Collectors.toMap(i -> (float) i, speed::get))),
-                IntStream.range(0, t.size()).boxed().collect(Collectors.toMap(t::get, ecg::get, (k, v) -> v, TreeMap::new))
+                new TreeMap<>(IntStream.range(0, speed.size()).boxed().collect(Collectors.toMap(i -> (float) i, speed::get)))
         }, minutes_played);
         
         System.out.println("Stats ADDED!");
