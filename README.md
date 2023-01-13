@@ -10,10 +10,10 @@ PASSIT allows for the persistent permeation of data as well as long-term trackin
 
 | Role          | Nome              | **Email**                   | NMEC   |Nota|
 | ------------- | ----------------- | --------------------------- | ------ |----|
-| Team Manager  | Daniel Ferreira   | danielmartinsferreira@ua.pt | 102442 | 17 |
-| Product Owner | Gonçalo Silva     | goncalo.silva02@ua.pt       | 103668 | 13 |
-| DevOps Master | Guilherme Antunes | guilherme.antunes@ua.pt     | 103600 | 17 |
-| Architect     | Pedro Rasinhas    | rasinhas@ua.pt              | 103541 | 16 |
+| Team Manager  | Daniel Ferreira   | danielmartinsferreira@ua.pt | 102442 |  17|
+| Product Owner | Gonçalo Silva     | goncalo.silva02@ua.pt       | 103668 |  13|
+| DevOps Master | Guilherme Antunes | guilherme.antunes@ua.pt     | 103600 |  17|
+| Architect     | Pedro Rasinhas    | rasinhas@ua.pt              | 103541 |  16|
 
 ### Project resources:
 
